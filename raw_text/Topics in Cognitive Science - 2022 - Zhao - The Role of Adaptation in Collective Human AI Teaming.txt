@@ -1,0 +1,2488 @@
+TopicsinCognitiveScience17(2025)291–323
+© 2022 The Authors. Topics in Cognitive Science published by Wiley Periodicals LLC on behalf of Cognitive
+ScienceSociety.
+ISSN:1756-8765online
+DOI:10.1111/tops.12633
+Thisarticleispartofthetopic“BuildingtheSocio-CognitiveArchitectureof
+COHUMAIN:CollectiveHuman-MachineIntelligence,”CleotildeGonzalez,Henny
+Admoni,ScottBrownandAnitaWilliamsWoolley(TopicEditors).
+The Role of Adaptation in Collective Human–AI Teaming
+Michelle Zhao, Reid Simmons, Henny Admoni
+RoboticsInstitute,CarnegieMellonUniversity
+Received30June2022;receivedinrevisedform17October2022;accepted19October2022
+Abstract
+This paper explores a framework for defining artificial intelligence (AI) that adapts to individuals
+within a group, and discusses the technical challenges for collaborative AI systems that must work
+withdifferenthumanpartners.CollaborativeAIisnotone-size-fits-all,andthusAIsystemsmusttune
+their output based on each human partner’s needs and abilities. For example, when communicating
+with a partner, an AI should consider how prepared their partner is to receive and correctly interpret
+theinformationtheyarereceiving.Forgoingsuchindividualconsiderationsmayadverselyimpactthe
+partner’s mental state and proficiency. On the other hand, successfully adapting to each person’s (or
+teammember’s)behaviorandabilitiescanyieldperformancebenefitsforthehuman–AIteam.Under
+thisframework,anAIteammateadaptstohumanpartnersbyfirstlearningcomponentsofthehuman’s
+decision-makingprocessandthenupdatingitsownbehaviorstopositivelyinfluencetheongoingcol-
+laboration.ThispaperexplainstheroleofthisAIadaptationformalismindyadichuman–AIinterac-
+tionsandexaminesitsapplicationthroughacasestudyinasimulatednavigationdomain.
+Keywords:Human–AIteaming;Humanrobotinteraction;Adaptation;Human–robotcollaboration
+CorrespondenceshouldbesenttoMichelleZhao,RoboticsInstitute,CarnegieMellonUniversity,5000Forbes
+Ave.,Pittsburgh,Pennsylvania,15213,USA.E-mail:mzhao2@andrew.cmu.edu
+ThisisanopenaccessarticleunderthetermsoftheCreativeCommonsAttribution-NonCommercial-NoDerivs
+License,whichpermitsuseanddistributioninanymedium,providedtheoriginalworkisproperlycited,theuse
+isnon-commercialandnomodificationsoradaptationsaremade.
+
+292 M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025)
+1. Introduction
+Robots and artificial intelligence (AI) increasingly serve as collaborative partners to
+humans. With rapid advancements in machine learning, AI and robot partners have become
+better equipped to collaborate with humans on joint tasks, such as robot-assisted care
+(Mertensetal.,2011)andcooking(Koppula,Jain,&Saxena,2016;Torrey,Fussell,&Kiesler,
+2013).Human–AIteamingfocusesoninteractionsbetweenhumanandAIteammateswherea
+teammustjointlyaccomplishcollaborativetaskswithsharedgoals.Inajointactivity,mem-
+bers of the team participate to achieve certain dominant goals (Walker, 1997). The actions
+available to each team member may not be identical. For example, a coach providing guid-
+ancetoplayersdoesnotplaythegame,butisworkingwiththeplayerstowardajointgoalof
+winning the match. Teams comprising of humans and AI agents may also have asymmetric
+abilitieswhileperformingajointactivity.
+Human–AI collaboration evolves dynamically as the team progresses through a task
+(Chilton,Hardgrave,&Armstrong,2010;Sonnentag&Frese,2012).Therequiredactivities
+of each member may vary as the team progresses through different stages of the interaction.
+For example, in a cooking collaboration, team members may first prepare ingredients, then
+transition to cooking dishes, and later clean up at the end of the interaction. Shared knowl-
+edge about a team’s history may emerge in collaborations that occur over extended periods
+oftimeorrepeatedinteractions(Clark&Wilkes-Gibbs,1986;Walker,1997).Learningfrom
+shared history may also change the way in which team members interact by way of form-
+ingconventions(Hawkins,Frank,&Goodman,2017;Khani,Goodman,&Liang,2018).For
+example, in a task-oriented collaboration, role specialization may evolve as a type of con-
+vention,astheteamcollectivelyrealizesthatsomemembersarebestsuitedforspecificroles
+basedontheirskills(Aggarwal,Woolley,Chabris,&Malone,2019;Shih,Sawhney,Kondic,
+Ermon, & Sadigh, 2021). In other cases, AI designed for teaming may not consistently col-
+laborate with the same human partners. Instead, AI or robot agents may need to collaborate
+ad-hoc with new partners on-the-fly and reason about how their behavior meshes with the
+behaviorofdifferenthumanteammatesinordertopromotefluentcoordinationandeffective
+teaming(Barrett,Rosenfeld,Kraus,&Stone,2017;Dafoeetal.,2020).Inthispaper,wewill
+consider collaborative interactions between humans and autonomous agents serving as team
+members. The agents, having autonomous decision-making processes, may be robots or AI
+agents, depending on the context and nature of the interaction. As such, we will refer in this
+articletotheautonomouspartnerasarobotorAIinterchangeably.
+Human partners may also differ in their preferences (Gombolay, Huang, & Shah, 2015),
+capabilities(Dunnette,2014), knowledge(Motowildo, Borman, & Schmit, 1997), intentions
+(Nicholls, Cheung, Lauer, & Patashnick, 1989), or preferred strategies for accomplishing
+sharedgoals(Gobet,Richman,Staszewski,&Simon,1997).Asteammembersinteract,indi-
+vidual differences in preferences, tendencies, and capabilities manifest in behavioral differ-
+ences (Burke, Stagl, Salas, Pierce, & Kendall, 2006). These behavioral differences require
+other teammates to adapt their actions in order to better coordinate their behaviors, strate-
+gies,orroles.Thesefeaturescanalsochangeovertimeduringalong-terminteraction(Koay,
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of
+use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025) 293
+Syrdal,Walters,&Dautenhahn,2007),soadaptingtheagent’sbehaviorbasedonadeveloped
+anddynamicunderstandingofthehumanpartneriskeyforimprovingcollaboration.
+Inliteratureonthepsychologyofhumanteams,adaptationisdefinedasachangeinteam
+structuresorgoal-directedactionsinresponsetoasalientcue,inordertoachieveafunctional
+performance outcome (Burke et al., 2006). In teams with humans and machines, teaming is
+similarly defined as a context-aware dynamic arrangement of human and AI team members
+aimedtowardefficientpursuitofsharedgoals(Madni&Madni,2018).Hence,adaptationin
+human teams (Burke et al., 2006) and human–AI teams (Madni & Madni, 2018) both rely
+on cues or cue streams to inform some change within the team structures. In the context of
+AI adaptation to human partners, the cue for adaptation consists of salient features related
+to the human. Adaptation involves identifying such features, or cues, that signal an impor-
+tantneedforchangeandrespondingwithaplanthatcontinuestopursueadesiredoutcome.
+CollaborativeAIandrobotswillnotworkinisolation,butwillneedtobeproficientatteam-
+ing with different and new human partners, requiring the ability to adapt online to salient
+features observed in human partners. Reducing the scope of our definition to robot(/AI)-to-
+human adaptation, we define robot adaptation to human partners in human–robot teaming
+as an interaction in which a robot changes its behavior, based on understanding of human
+teammateslearnedfromobservationofsalientcuesnotobservedaprioritotheinteraction.
+When designing interactions that facilitate robot adaptation to human partners, two
+assumptions underlie the adaptive human–robot interaction design. First, adapting robot
+behavior to human partners assumes that humans differ along particular features. We refer
+to an adaptation parameter (AP) as the set of salient and relevant human features that the
+robot learns and uses to guide its actions. The second assumption is that learning the adap-
+tation parameter will allow the robot to change its behavior in a way that will positively
+influence some aspect of the collaboration, which may be measured by task performance,
+collaborative fluency (CF) (Hoffman, 2019), team trust (Hancock et al., 2011; Kwon, Jung,
+& Knepper, 2016; Lewis, Sycara, & Walker, 2018), engagement (Sidner & Lee, 2003), or
+anotherevaluationmeasure.
+The goal of this paper is to present a perspective for formalizing agent adaptation that
+can be used when designing adaptation in different contexts. We decompose the process of
+adaptation into two steps: (1) developing understanding of relevant characteristics of human
+teammates, and (2) adapting agent behavior based on the learned features. The objectives of
+the human–robot collaboration influence the features of human partners that will be particu-
+larlyrelevantforadaptation.Forexample,theadaptationparameterlearnedbytherobotcan
+be cognitive factors internal to the human teammate, such as fatigue (Peternel, Tsagarakis,
+Caldwell,&Ajoudani,2018)andintentions(Nguyenetal.,2011),butcanalsobeamodelof
+humanbehavior,suchasalearnedpolicy(Barrettetal.,2017).Humandecision-makingpro-
+cesseshavebeenrepresentedinpriorworkaspartiallyobservableMarkovdecisionprocesses
+(POMDP) (Boutilier, Dean, & Hanks, 1999; Hauskrecht, 2000; Kaelbling, Littman, & Cas-
+sandra, 1998; Monahan, 1982). While representing humans as POMDP decision makers is
+commonintheliterature(Brown&Tellex,2010;Lam&Sastry,2014a;Rosenthal&Veloso,
+2011a; Woodward & Wood, 2012a), we additionally denote the adaptation cue as a compo-
+nent of the robot’s estimate of the human’s Markov decision process (MDP), which allows
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of
+use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+294 M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025)
+theframeworkgeneralizetodifferentadaptationparameters.Thisformulationinterpretsrobot
+adaptationaslearningandinfluencingacomponentofthehuman’sdecisionprocess.
+2. Relatedwork
+Inhuman–AIteaming,thehumanandAIpartnersmustcollaborateonjointtasksandcoor-
+dinate their actions to achieve a set of shared goals. This collaboration dynamically evolves
+overthecourseofaninteraction,astherequiredtasks,collaborationpatterns,andteamcom-
+position may change over time. People may use information they learn about the task, their
+partner,andtheexternalenvironmentinordertoupdatehowtheyapproachthetask.AIteam-
+matesmustlearntoadapttodifferentbehaviorsanddifferentteammembersinordertocoor-
+dinate well (Ahmad, Mubin, & Orlando, 2017). Key to adaptation is understanding people’s
+behaviorthroughobservationduringaninteraction(Nikolaidis,Nath,Procaccia,&Srinivasa,
+2017;Pateletal.,2015)oroverthecourseofrepeatedinteractions(Shihetal.,2021).Inthis
+section, we examine human–robot or human–AI interactions in which an autonomous agent
+adaptstosomesalientfeatureofthehuman’sbehavior.Selectionofsuchafeatureimpliesthat
+thefeaturetowhichtheagentadaptsisrelevanttotheobjectiveoftheinteraction.Depending
+on the context of the interaction, adaptation parameters may be human intentions, physical
+factors,cognitivefeatures,orlearnedmodelsofhumanbehavior.Whilenotexhaustive,each
+paragraph below focuses on one of these categories of adaptation parameter. We examine
+these different adaptation parameters prior to examining how our formalism (Section 3) can
+beappliedgenerallyacrossinteractionswithdifferentadaptationfeatures(Section3.3).
+Adaptation to goals and intentions. AI partners designed for teaming must learn from
+interactions with human teammates to develop a better understanding of the team members.
+Onewayinwhichagentscanunderstandthebehaviorofhumanpartnersisbyinferringtheir
+goals. MDPs are a common framework for goal recognition (Sutton & Barto, 2018). Intent
+inference has been posed as a problem of inverse reinforcement learning (Ng & Russell,
+2000) or inverse optimal control (Ziebart et al., 2009). Bayesian approaches are common in
+goal inference (Baker, Tenenbaum, & Saxe, 2006; Baker, Saxe, & Tenenbaum, 2009; Mon-
+fort,Liu,&Ziebart,2015).Nguyenetal.(2011)introduceacollaborativeframeworkinwhich
+anAIservesasanNPC(nonplayercharacter)inanonlinegame.TheAIinferstheintention
+of the human partner, specifically which subtask the human partner is aiming to complete,
+and assists on a matching subtask. Understanding the intended goals can then inform how a
+robotpartnershouldupdateitsbehavior(Koertetal.,2019;Levine&Williams,2018).Kho-
+ramshahi and Billard (2019) develop an adaptive control framework that allows a robot to
+learn the intended task a human partner is trying to accomplish by maintaining a belief dis-
+tributionovereachtask,andupdatingitsbeliefsbasedonobservedhumanactions.Therobot
+adapts by switching tasks to the one intended by the human partner. Huang, Cakmak, and
+Mutlu(2015)adaptrobothandoverstrategyinaphysicaltaskbasedonhigh-levelobjectives
+(reaching, placing, and idling) inferred from human actions. The human partner’s objectives
+andintentionscanserveasacuebasedonwhichtherobotadaptsitscollaborativebehavior.
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of
+use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025) 295
+Adaptation to internal cognitive features. In addition to inferring goals, learning cogni-
+tive or internal features of human partners facilitates robot-to-human adaptation. Nikolaidis,
+Hsu,andSrinivasa(2017)developsacomputationalformalismformutualadaptationbetween
+arobotandhumanpartnerinacollaborativetask,usingamodelthatlearnshowadaptablea
+humanistotheirpartner.Therobotutilizesthemeasureofhumanadaptivenesstodetermine
+howtobestcollaborateandwhethertoguidethehumanpartnertowardabetterstrategy.Ina
+user study, participants were more likely to adapt when working with the mutually adaptive
+robot, over a baseline cross-trained robot (Nikolaidis & Shah, 2013). Another cognitive fea-
+ture that influences behavior in a collaboration is the human’s awareness of and aversion to
+risk.InKwonetal.(2020),humansaremodeledasbeingrisk-aware,notingthatpeoplemay
+variablyperceivedifferencesbetweenpositiveandnegativerewards,anddifferinhowaverse
+they are to receiving negative rewards. In Görür, Rosman, Sivrikaya, and Albayrak (2018),
+collaborativeagentsanticipateandadapttothestateofmindofhumanpartnersintwostages.
+In the first stage, the agent anticipates the human’s availability and capability of performing
+the task, in addition to the intended task itself. In the second stage, the robot selects actions
+to take, deciding whether it should assist the human or intervene in other ways. Hawkins,
+Kwon, Sadigh, and Goodman (2020) learns and adapts to human speaking conventions in a
+repeated conversational task. The approach leverages the observation that humans form new
+linguisticconventionstomoreeffectivelycommunicatewithpartnersinrepeatedinteractions.
+In an online task, Rookhuiszen, Obbink, and Theune (2009) infers human experience from
+clickusage,inordertodynamicallyswitchbetweencomplexitylevelsofinstruction.Ourcase
+study investigates a similar concept of adapting the levels of complexity in task instructions
+(Section5).
+Adaptationtophysicalfactors. Inphysicalhuman–robotcollaborations,humanphysical
+factors may inform robot adaptation. For example, fatigue is an internal factor which influ-
+ences one’s ability to exert effort in a task. Peternel et al. (2018) adapts a robot’s assistance
+onlinetohumanmotorfatigue.Thehumanmuscleactivityismeasuredthroughelectromyo-
+graphy, and when fatigue reaches a predefined threshold, the robot adjusts its stiffness of
+motiontotakeovercompletionofthetask,allowingthehumanpartnertoexertlessphysical
+effort. Zhang, Chen, Zhang, & Jia (2020) considers a human–robot physical collaboration
+in a manufacturing assembly scheduling problem. Using the key insight that the capability
+of robots is usually stable, while human capability usually varies, the system periodically
+observes how well the human partner is performing, measured on performance indices, and
+estimates the human’s capability. The human’s capability affects their ability to perform the
+actions needed for the task, and a scheduler responds accordingly by increasing the tasks
+assigned to the robot teammate when necessary. Li et al. (2015a) develops a robot adapta-
+tion framework that adapts to a human’s leading or following actions, where the amount of
+force exerted by a human partner indicates their intention to lead or follow. When a human
+persistently takes leadership actions by exerting strong force, the robot yields control and
+becomes the follower. Nemec, Likar, Gams, and Ude (2018) adapts robot control in a phys-
+ical human–robot interaction based on measurements of the speed and variance of human
+demonstrations. In a similar collaborative shared control task, Li et al. (2015b); Li, Yang,
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of
+use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+296 M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025)
+andHe(2016)updatesrobotcontrolbasedonthemagnitudeofforcesexertedbythehuman
+partner. The human partner’s physical constraints and capabilities are examples of physical
+adaptationparametersusedinthecontextofhuman–robotcollaborations.
+Adaptation to learned human models. Instead of internal features, a learned model of
+humanbehaviorcanalsoserveasanadaptationcue.BarrettandStone(2015)performsadap-
+tationtonewteammatesbyreusingknowledgelearnedfrominteractionswithpastteammates.
+Bylearningapolicyforworkingwitheachteaminatrainingset,theagentidentifiesthemost
+similar player type to the new partner and acts according to the complementary policy. Li
+etal.(2021)appliedabest-responseapproachtoselectingpoliciesfromalibraryofresponse
+policies that best match a particular player type. The agent identifies the policy that most
+closely matches the actions taken by the human as observed by the agent. The agent adapts
+byactingaccordingtothecomplementarypolicy.Priorwork(Barrettetal.,2017)proposesa
+generalpurposealgorithmthatlearnspoliciesfromprevioushumanteammates,andusesthe
+learnedmodelstoquicklyadapttonewteammates.Zanchettin,Casalino,Piroddi,andRocco
+(2018)predictsthepatternsofhumanactivityinorderinferwhenahumanwillbeperforming
+a particular activity and will request a specific collaborative operation with a robot. Predict-
+ing the activity and activity’s duration allows the robot to adapt its own actions in order to
+improvetheassistanceitprovidestothehumanpartner.
+3. POMDPmodelofhumanpartners
+In this section, we describe a framework for learning salient human features for adapta-
+tion.Thecollaboration’sobjectiveandcontextinfluencethesalientcuesrelatedtothehuman
+partner learned by the robot for adaptation. As outlined in Section 2, the learned adapta-
+tionparametermaybeamodelofhumanbehavior(i.e.,policy),butmayalsobecognitiveor
+physicalfeatures(i.e.,adaptabilityandfatigue).Adaptingtosomeestimatedhumanfeature(s)
+implicitlyassumesthatthechosenfeature(s)affectsthehuman’sbehaviorinthecollaboration
+andthatcollaborationmaybepositivelyinfluencedbychangingrobotbehaviorinresponseto
+learningthefeature.Hence,weformalizeAIlearningofparticularhumanfeaturesbyreduc-
+ing it to estimation of a component of the human’s decision process. If the human feature
+does not affect their behavior in the collaboration in any way, learning the feature has no
+bearing on how the robot should change its behavior to benefit the collaboration. We aim
+to develop a formalism for robot-to-human adaptation that is agnostic to the different types
+of human adaptation parameter. Our focus is on human–robot dyads, with generalization to
+many-to-onehuman–robotteams.
+3.1. Humandecisionprocess
+Human–robot teams operate together to perform a joint activity (Walker, 1997), in which
+members of the team participate to achieve certain dominant goals. Team members perform
+joint actions over some period of time, and the actions available to each team member may
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of
+use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025) 297
+not be symmetric. The human partner in a human–AI team is also operating under a deci-
+sion process independent from the robot. Although actions are not decided upon jointly,
+they are performed jointly. Thus, the robot’s actions do not influence the human’s deci-
+sion process directly; the robot’s actions influence the state of the world, which subse-
+quently influences the human’s decision process. A flexible way of modeling human and
+robot independent decision-making is with a POMDP (Boutilier et al., 1999; Hauskrecht,
+2000; Kaelbling et al., 1998; Monahan, 1982). The POMDP models decision-making for a
+single-agent acting in an environment. The agent can perform actions that affect the state of
+the environment, and has the goal of maximizing the expected future rewards that depend
+on the environment states resulting from its own future actions. The agent cannot observe
+the true underlying state of the environment, but can make observations that depend on the
+state (i.e., sensor readings). The agent uses its observations to establish a belief about the
+true state of the environment that it is in. This belief is based on the history of observa-
+tions and is expressed as a probability distribution over states. Determining how to best act
+in a POMDP is learning a policy that prescribes how an agent should act to maximize its
+expects rewards under the beliefs about the environment. Since the human and robot make
+decisions about their own actions separately, we model the human and robot as each oper-
+ating under their own POMDP. In order to inform how it should adapt, the robot, which
+does not know the human’s true decision process model, additionally estimates the human’s
+decision process. In the dyadic collaboration, the human decides on actions according to
+independent process M, the robot decides on actions according to its own decision pro-
+cess MR, which relies on an estimate MHR that it maintains of the human’s decision model
+(Fig.1).
+The human’s true decision process is modeled as a single-agent POMDP defined by tuple
+M = (cid:2)S,A,T,O,(cid:2),R(cid:3). M is the human’s actual decision process, which is unknown to
+the robot. S is the set of states in the environment. The task objective and actions taken by
+the robot at a given time are encoded in the state representation. The action space of A is
+the set of actions available to the human partner. The transition function T : S ×A → S
+representshowthehumanbelievestheteamwilltransitionbetweenstatesoftheworld.Since
+the robot actions too influence how the environment state changes, the function T encodes
+howthehumanpredictshowtherobotwillact.R : S → Risthehuman’srewardfunction.(cid:2)
+isthesetofobservations.ThePOMDPmodelgeneralizestoenvironmentswherethehuman
+may not observe the full state. O is the set of conditional observation probabilities where
+O(o|s ,a ) is the probability of the agent receiving observation o given state s and action
+t t t
+a .Thehumanmaintainsabeliefstateb,whereb(s) = p(s)isaprobabilitydistributionover
+t
+environmentstatesandlearnsapolicyπ : b→ AgiventheirtruePOMDPM.SeeTable1,
+SectionTrueHumanDecisionProcessforanotationreference.
+1Image source https://www.visualpharm.com/free-icons/person-595b40b85ba036ed117da7ec, https://www.
+creativefabrica.com/product/robot-icon-9/
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+298 M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025)
+Table1
+NotationforPOMDPmodelcomponents
+Symbol Description
+M Truehumandecisionprocess(POMDP
+internaltohuman,unknowntorobot)
+MR Robotdecisionprocess(POMDPinternalto
+robot,unknowntohuman)
+MHR Robot’sestimateofhumandecisionprocess
+(robot’sestimateofthePOMDPinternalto
+thehuman)
+TrueHumanDecisionProcess,M
+S setofstatesinM
+A setofactionsinM
+T :S×A→S transitionfunctioninM
+(cid:2) setofobservationsinM
+R truehumanrewardfunctioninM
+O conditionalobservationprobabilitiesgiven
+state,updatesmadebythehuman
+b beliefdistributionoverstates,updatesmadeby
+thehuman
+RobotDecisionProcess,MR
+SR setofstatesinMR
+AR setofactionsinMR
+TR :SR×AR →SR transitionfunctioninMR
+(cid:2)R setofobservationsinMR
+RR internalrobotrewardfunctioninMR
+OR conditionalobservationprobabilitiesgiven
+state,updatesmadebytherobot
+bR beliefdistributionoverstates,updatesmadeby
+therobot
+Robot’sEstimateofHumanDecisionProcess,MHR
+SHR inferredsetofstatesavailabletohumanin
+MHR
+AHR inferredsetofactionsavailabletohumanin
+MHR
+THR :SHR ×AHR →SHR inferredtransitionfunctioninMHR
+(cid:2)HR inferredsetofobservationspresenttohuman
+inMHR
+RHR inferredhumanrewardfunctioninMHR
+OHR inferredconditionalobservationprobabilities
+ofthehuman,estimatedbytherobot
+bHR inferredbeliefdistributionoverstatesofthe
+human,estimatedbytherobot
+Note.Thisframeworkforrobot-to-humanadaptationreliesonthreeprimarydecisionprocesses,modeledas
+POMDPs:thehuman’sinternaldecisionprocess(M),therobot’sinternalprocess(MR),andtherobot’sestimate
+of the human’s decision process (MHR). These decision processes may be modeled explicitly or implicitly, in
+designoftheadaptiveinteraction.
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025) 299
+Fig.1.Inahuman–robotjointactivity,thehumanandrobotselectactionsbasedonindependentdecisionpro-
+cesses,MandMR,respectively.Thehumanandrobotselectactions,whichaffecttheenvironment.Inthecase
+wheretherobotisadaptingtosomeadaptationcuerelevanttothehuman,therobotmaintainsanestimateofthe
+human’sdecisionprocessMHR toinformitsadaptation1.
+3.2. Robot’sestimateofhumandecisionprocess
+M = (cid:2)S,A,T,O,(cid:2),R(cid:3) (as defined in Section 3.1) represents the true human POMDP,
+under which the human partner selects actions according to policy π trained on M. The
+robot takes actions according to its own POMDP MR, which may differ and is indepen-
+dent from M. The key observation driving this framework is that learning a human fea-
+ture for adaptation, implicitly or explicitly, models human behavior from the robot’s esti-
+mateofthehuman’sdecision-makingprocess.Adaptingtoaselectedhumanfeatureassumes
+that the feature influences human behavior in a way relevant to the collaboration, and that
+adapting robot actions in response can improve the collaboration. The adaptation parame-
+ter effectively influences human behavior, and the effects can be predicted with an estimate
+of the human’s decision process. We draw upon insight from human teaming literature that
+recognizing which particular cues are deemed relevant for adaptation relies on one’s long-
+term memory, contextual priors, and existing mental models (Burke et al., 2006; Endsley,
+2017). In the context of robot adaptation to human partners, the selection of a salient adap-
+tation parameter applies a contextual prior provided by the experimenter. For example, in
+our case study (Section 5), a robot adapts navigation instruction complexity to the inferred
+knowledge of the human partner. Our implicit assumption is that the human’s knowledge
+willaffecttheirabilitytoperformthetaskoffollowinginstructions.Ourformalismexplicitly
+posestherobot’smentalmodelofthehumanasanestimateofthehumanpartner’sdecision
+process.
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of
+use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+300 M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025)
+Fig.2.Therobotestimatesthehuman’sPOMDPmodelasasingle-playerPOMDP,MHR.SHR isthesetofstates
+therobotestimatesthatthehumanobserves.Whattherobotdoesisencodedinstatess∈SHR fromthehuman’s
+perspective.Underpartialobservability,thehumanmaynotknowwhichstates∈SHRtheyarein,butwillobserve
+o∈(cid:2)HR.Basedontheobservations,thehumanformsbeliefsoverwhichstatetheyarein,bHR(s).Theactionspace
+ofAHR istheactionsettherobotbelievesisavailabletothehuman.THR :SHR ×AHR →SHR istheestimated
+transitionfunction,ortherobot’sestimateofhowthehumanmodelstheworld.RHR :SHR →RHR istheestimated
+human reward function. The reward function guides the human’s policy πHR :S →A given the full POMDP
+MHR2.
+Although the robot does not access the human’s true POMDP, the robot esti-
+mates the human’s POMDP model also as a single-player POMDP MHR =
+(cid:2)SHR ,AHR ,THR ,RHR ,(cid:2)HR ,OHR ,bHR (cid:3). The superscript H
+R
+indicates this is the robot’s
+modelofthehuman,whichmayrelyonpriorsandmaynotbeequivalenttothetruedecision
+processofthehuman.SHR isthesetofstatestherobotestimatesthatthehumanobserves.The
+robot’sbehaviorisencodedinthatsetofstates.TheactionspaceofAHR istheactionsetthe
+robotbelievesisavailabletothehuman.THR : SHR ×AHR → SHR istheestimatedtransition
+function, or the robot’s estimate of how the human models the world. RHR : SHR → RHR is
+theestimatedhumanrewardfunction.(cid:2)HR isthesetofobservations.OHR aretheobservation
+probabilities. The estimated human belief state is bHR, where bHR(s) = p(s) is a probability
+distribution over environment states. The human learns a policy πHR : S → A given the
+POMDP MHR. Based on this estimated human POMDP, the robot estimates that the human
+partnerlearnsandoperatesunderpolicyπHR.Importantly,POMDPMHR istherobot’smodel
+of the human’s decision process (Fig. 2). See Table 1, Section Robot’s Estimate of Human
+DecisionProcessforanotationreference.
+3.3. CognitiveparametersasPOMDPcomponents
+While representing humans as POMDP decision makers is common in robotics lit-
+erature (Taha, Miró & Dissanayake, 2011), we additionally observe that learning the
+2Imagesourcehttps://www.visualpharm.com/free-icons/person-595b40b85ba036ed117da7ec
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of
+use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025) 301
+adaptation parameter represents learning a component of the estimated human’s POMDP
+MHR = (cid:2)SHR ,AHR ,THR ,RHR ,(cid:2)HR ,OHR ,bHR (cid:3). In an adaptive interaction, the robot begins
+with a prior estimate on MHR = (cid:2)SHR ,AHR ,THR ,RHR ,(cid:2)HR ,OHR ,bHR (cid:3). The adaptation
+parameterisdenotedbyαandisanelementwithinthepowersetofPOMDPcomponentsα ∈
+P{SHR ,AHR ,THR ,RHR ,(cid:2)HR ,OHR ,bHR }.Uponobtain(cid:2)inganupdatedestimateofα(cid:6) ,therobot’s
+new estimate of the human becomes MHR (cid:6) = α(cid:6) MHR \{α}. Learning the adaptation
+parameterimprovestheestimateofacomponentoftherobot’smodelofthehumanPOMDP.
+WeprovideseveralexamplesofPOMDPcomponentrepresentationsofadaptationparam-
+eters. Examples of adaptation parameters include goals (Baker et al., 2006, 2009; Monfort
+et al., 2015; Ng & Russell, 2000), intentions (Huang et al., 2015; Koert et al., 2019; Levine
+& Williams, 2018), or policies (Barrett et al., 2017; Li et al., 2021; Zanchettin et al., 2018).
+Robot systems also adapt based on cognitive or internal features, such as capabilities (Li
+etal.,2015a;Peterneletal.,2018;Zhangetal.,2020)oradaptability(Nikolaidisetal.,2017).
+Learningthegoalsandintentionsofhumanpartnersrepresentslearningbetterestimatesofthe
+human’s reward function α = RHR. Improving the estimated reward function RHR (cid:6) to update
+MHR (cid:6) provides a better estimate πHR (cid:6) of the human partner’s behavior during the collabora-
+tion. The human’s world model includes answering questions, such as THR: how does the
+world work?, AHR: what actions can I take?, SHR: what are the different states of the envi-
+ronment?.Whentherobotlearnssomeaspectofthehuman’sworldmodel,theyarelearning
+some component(s) in the set {SHR ,AHR ,THR ,}. For example, learning the physical fatigue
+ofthehumanpartnerinaphysicalhuman–robotcollaborationcanbeconsideredaslearning
+α = AHR, the action set of the human’s POMDP. If a partner cannot exert great force due
+to fatigue, their ability to exert force is capped, and their action set is essentially reduced to
+low-forceactions.ImprovingtheestimateofAHR (cid:6) betterinformstherobotoftheactionsthat
+willbeselectedbythepartnerunderpolicyπHR.Iftherobotisupdatingamodelofhowthe
+humandecidesactionstotakeinthecurrentenvironment,therobotisestimatingthehuman’s
+policyitself;thus,theadaptationparameterinthiscasewouldbeπHR (cid:6) .
+Importantly,modelingofthehuman’soperationalPOMDPmaynotbeexplicitinthealgo-
+rithmsdefiningrobotbehavior.Forexample,Vignoloetal.(2021)developsadaptivebehavior
+inahumanoidrobotwheretherobotslowsthespeedatwhichitpresentsinstructionsforper-
+formingaphysicalskillwhenthehumanasksforclarification.Whilenotexplicitlymodeled
+as a POMDP, the robot’s implicit intuition is that asking for clarification indicates that the
+human is uncertain about the required actions and did not understand the instructions at the
+initialspeed.ViewingobservationsOHR asinstructions,andstatesSHR astherequiredactions
+for the physical skill, the robot aims to learn the belief distribution bHR (cid:6) : whether the human
+understandsthecorrectsequenceofrequiredactionsgiventheinstructions.Thehuman’sask-
+ingforclarificationgivesacoarseestimateforbHR (cid:6) ,thehuman’sunderstandingoftherequired
+actions.Our interpretationof thisexampleisone of the variousways the robot’s estimateof
+thehuman’sPOMDPcanbemodeled.
+We offer this framework as a way of formalizing robot adaptation to different human
+parameters. The benefit of thinking about where in the human’s decision model the adap-
+tation parameter lies allows designers of an adaptive interaction to reason more explic-
+itly about assumed common knowledge between robot and human partner as priors on the
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of
+use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+302 M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025)
+components of the human’s POMDP. In Section 5, we examine a case study in which an AI
+agent adapts to a cognitive feature–human knowledge, and demonstrate how this POMDP
+modelofthehumancanbeappliedtoformalizetheinteraction.
+4. Adaptivecycle
+Adaptation occurs through repeated adaptive cycles, during which adaptive agents assess
+thesalientadaptationparameterrelatedtohumanpartners,andreasonabouttheirownbehav-
+ioraccordingly.Wesimplifythefour-componentadaptivecycleforhumanteaminginBurke
+et al. (2006) for robot-to-human adaptation into a two-process model: (1) a learning pro-
+cess and (2) an influence process. The learning process involves situation assessment. The
+influence process combines plan formulation and execution. Knowledge from collaboration
+history informs both processes. Adaptation comprises of assessing a human feature adapta-
+tionparameter,whosevalueforaparticularhumanpartnerisnotknowntotherobotapriori
+totheinteraction,whichinturnallowstherobottorespondbychangingitsbehaviorinhope
+of improving the collaboration. The (1) Learning Process represents how the updates to the
+robot’s adaptation parameter estimate are performed. The way in which the robot estimates
+thesetofsalienthumanfeatures(AP)dependsonwhatthefeaturesare,requiringtherobotto
+assessthesituationforinformationorobservationsthatwillhelptoapproximatetheadapta-
+tion parameter. Utilizing collaboration history to develop a better partner understanding can
+contributetoimprovedestimatesoftheadaptationparameter.The(2)InfluenceProcessrep-
+resentshowtherobotplansandexecutesactionsbasedonitsassessmentofthehumanpartner
+in order to effect a functional outcome. Here, the robot must reason about how its change in
+response to estimating the adaptation parameter will influence the collaboration and/or the
+human partner. Collaboration history can inform the robot’s predictions of the effects of its
+actions. These are two algorithmic processes that must be determined when establishing an
+adaptiveinteraction.ThePOMDPhumanmodelinparticularassistswithreasoningaboutthe
+(2)InfluenceProcess.
+4.1. Learningprocess
+The robot’s estimate of the human POMDP, MHR , represents how the robot predicts the
+human will act in the environment. Given the POMDP components: state belief bHR update
+function, rewards RHR, and environment model THR ,AHR ,SHR, the robot can predict the
+human policy πHR, which determines which actions the human will take. For example, in
+adaptationtohumanintentions,whererewardα = RHR (cid:6) isupdatedfromobservation,therobot
+isabletosolveunderconstantenvironmentmodelTHR ,AHR ,SHR andstatebeliefupdatebHR
+an updated prediction of human behavior. Thus, the updated POMDP, MHR (cid:6) , consisting of
+the updated adaptation parameter POMDP component while holding the rest of the compo-
+nentsconstant,providesapredictionofhumanbehaviorthroughthepolicyπHR (cid:6) obtainedby
+solvingMHR (cid:6) .Thelearningprocessisthemechanismbywhichtheadaptationparameterαis
+learnedandupdated.
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of use;
+OA
+articles
+are governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025) 303
+Learning the adaptation parameter entails updating the estimate of a component of the
+human’s POMDP, MHR. The learning process defines how the robot updates its estimate of
+the human feature adaptation parameter based on information received or observed during
+the interaction. Learning the adaptation parameter can be modeled as a regression problem,
+in which the robot aims to learn a mapping from one random variable, such as environment
+state, to another random variable: the adaptation parameter estimate. Supervised learning
+techniques are applied toward learning functions which map relevant state features to the
+human adaptation parameter estimate, where updates to the estimate based on new observa-
+tionsarelearnedthroughgradientdescent(Barry&Love,2021;Kim&Lee,2020).Bayesian
+frameworks are another common parameter estimate mechanism, and are especially com-
+moningoalinference(Bakeretal.,2006,2009).TheBayesianframeworkformulatesaprior
+distribution, which incorporates information about the adaptation parameter external to the
+human partner-specific observations. Bayes theorem obtains a posterior distribution for the
+parameter given the prior information and observed data relevant to the adaptation param-
+eter from the interaction. Priors on the adaptation parameter can also be leveraged through
+threshold-based learning of the parameter. For example, (Zhang et al., 2020) updates esti-
+mates of human capability by measuring changes in some performance index, where drastic
+changes that exceed certain thresholds indicate increased or decreased capability. Our case
+studyemploysathreshold-basedlearningprocessformodelinghumantaskknowledgeasthe
+adaptionparameter.
+4.2. Influenceprocess
+Once the robot has learned an estimate of the human adaptation parameter, the second
+component of adaptation is changing the robot’s behavior based on the learned feature(s).
+Designing adaptive robot behavior to individual human partners assumes that changing the
+robot’s behavior based on relevant learned features of the human may improve an aspect of
+thecollaboration.Weconsidertheprocessbywhichtherobotchangesitsbehaviorinorderto
+influencethecollaborationbasedontheestimatedadaptationparameterastheinfluencepro-
+cess.Thisprocessinvolvesreasoningabouthowtherobot’sactionsmayaffecteitherthecol-
+laborationitselforthehumanpartnerdirectly.Thisreasoningreliesontherobot’sobjectives
+when adapting its actions, which can vary from task performance to coordination fluency.
+During this process, the robot might optionally reason about mutual adaptation (Nikolaidis
+etal.,2017),wherethehumanmightbesimultaneouslyadaptingtotherobotaswell.
+Optimizing adaptation for certain goals requires evaluating those objectives and reason-
+ing about how the robot’s actions may affect those measures. An adaptation objective, for
+example, is improving task performance. Task performance is a measure of how efficiently
+theteamcompletedthetaskathand(Burke,Murphy,Riddle,&Fincannon,2004).Ininterac-
+tionswhererobotsalsoseektobecomemorecollaborativebyadapting,CFmetricsmeasure
+how effective an agent is at coordinating its behavior with its human partner. CF (Hoffman,
+2019) is defined as the coordination of joint activities by members in a team. Adaptation of
+AI to their human teammates may improve the trust between teammates. In prior analyses
+ofhuman–robotinteractions,trustismosthighlyinfluencedbyrobotperformance(Hancock
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of
+use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+304 M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025)
+et al., 2011). Human trust in AI may be promoted by confidence in the ability of the AI to
+meetexpectations(Kwonetal.,2016).Engagement(Sidner,Lee,Kidd,Lesh,&Rich,2005)
+is another key process that underlies how effectively robots and AI agents can interact with
+human partners (Holroyd, Rich, Sidner, & Ponsler, 2011; Sidner & Lee, 2003). In our case
+study (Section 5), one of our outcome measures to evaluate the human–agent interaction is
+humanengagement.
+Examplesofadaptivebehaviorsincludechangingtherobot’spolicythroughselectionfrom
+apolicylibrary(Barrettetal.,2017;Lietal.,2021),orswitchingtasksbasedontheinferred
+goals of a human partner (Huang et al., 2015; Khoramshahi & Billard, 2019). The robot’s
+abilitytoperformeffectiveadaptationis,however,constrainedbythemechanismsbywhich
+itcaninteractwiththehumanpartner(Koppol,Admoni,&Simmons,2021).Forexample,an
+agentinapeer-to-peercollaboration,whereitcancontributeequallytoatask,mayhaveadif-
+ferentsetofactionsavailablethanitwouldinacoachingcollaboration,wheretheagentmay
+onlybeabletointervenebutnotperformthetaskitself.Actionsperformedbytherobotaffect
+the world states s ∈ S experienced by the human. These states may also subsequently affect
+other components of the human’s true POMDP M. The influence process is the mechanism
+by which the robot selects its actions based on learned understanding of the human partner
+MHR,whichwecanrepresentassomefunction f MR,MHR,α : SR → AR parameterizedbythe
+robot’s decision process MR, its estimate of the human MHR, and the learned adaptation
+parameter,mappingrobotstatesSR tosuitablerobotactionsinAR.
+5. Casestudy:Adaptingnavigationinstructionstohumanknowledge
+WepresentacasestudyinwhichanAIteammateadaptstoitshumanpartnerviaalearning
+anadaptationparameter:humanknowledgeoftask-relevantinformation.Theagentadaptsby
+changing its presentation of navigation instructions to the human partner. The collaboration
+is one in which the AI partner serves as a coach to the human partner on a navigation task,
+situatedinasearch-and-rescue(SAR)environment.Whenguidingsomeonetoperformatask,
+humans naturally simplify their instructional language if their partner appears confused or
+fails to understand the information. For instance, teachers systematically move instructional
+conversation up and down the hierarchy of cognitive difficulty, based on the proficiency of
+studentresponses(Kawanaka&Stigler,1999;Nathan&Kim,2009).Itfollowsthateffective
+instructionshouldbesuitedtoaperson’spreparednessandexpertise.
+A hierarchy of instruction complexity naturally emerges as one repeatedly simplifies task
+instructions (Fig. 3). Specifically, complexity is defined by abstraction level. We situate this
+work in the context of an AI-guided SAR task, which serves as a fitting task domain. An
+AI guide, equipped with greater familiarity of the environment, would provide instructions
+to help the human rescuer navigate to all victims as quickly as possible. Importantly, navi-
+gation instructions have a natural decomposition into varying levels (modes) of complexity.
+Highcomplexitydirections,like“GotoOfficeA,”arepresentedatahighlevelofabstraction
+andrequiresignificantprerequisiteknowledgeinordertobeabletocomprehendandfollow.
+Inversely, low complexity instructions, such as “Turn right. Walk 4 steps forward.,” require
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of
+use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025) 305
+Fig.3.Theabstractionhierarchyofinstructioncomplexityrepresentsatradeoffbetweenabstractionandlength.
+Directionsusinggreaterabstractionaremorecomplexinthattheyrequiresignificantprerequisiteknowledgein
+ordertobeabletocomprehendandfollow.Forexample,thereceiveroftheinstruction“GotoOfficeA”must
+knowwhereOfficeAislocatedspatially.Inversely,lowcomplexityinstructions,suchas“Turnright.Walk4steps
+forward.,”requirelittletonoprerequisiteknowledge,butaremoreverbose.
+little to no prerequisite knowledge, but are more verbose. Thus, there may exist a tradeoff
+between instruction complexity and length, and providing someone unsuitable instructions
+may incur a cost in length. In order to measure suitability of different modes of instruc-
+tion complexity, we introduce the concept of alignment between instruction complexity and
+humanknowledge.Alignmentoccurswhenpeoplehavesufficientprerequisiteknowledgeto
+follow instructions at the provided level of complexity. Misalignment occurs when people
+are provided instructions that are too complex or too simple for their expertise. In this case
+study, we answer two cardinal questions: For navigation instruction-following tasks, should
+the complexity of AI assistance be adapted to the knowledge of humans? If so, how can we
+operationalizethistypeofadaptation?
+5.1. Preliminaries
+5.1.1. Taskscenario
+AnAI-instructormustguideasinglehumanrescuertovictimsinadamagedofficebuilding
+(2Dgridworldenvironment).Thereare20injuredvictimsinsideofthebuildingwhoneedto
+befoundandrescued.Ofthese,sevenvictimsareseverelyinjured(denotedinred),andwill
+expireifnottreatedintime.Therestaremoderatelyinjured(denotedinblue),andwillpersist
+the duration of the 4-min game. The AI guide will provide onscreen navigation instructions
+throughoutthegametohelptheplayernavigatetoallvictimsintime.Thetaskofthehuman
+playeristofollowthecoach’sinstructionstosaveallvictims(Fig.4).
+5.1.2. Instructioncomplexitylevels
+Instruction complexity is stratified into three complexity levels: Level 1 (C ): low-
+1
+abstraction, Level 2 (C ): medium-abstraction, and Level 3 (C ): high-abstraction. The AI 2 3
+instructor controls a single-parameter model of the rescuer. The rescuer is parameterized by
+β, which represents the complexity level of text-based navigation instructions at which the
+coachwillinteractwiththerescuer.EachcomplexitylevelC isdefinedbyavocabularycor-
+i
+pus V, where each corpus is comprised of a set of actions and objects, V = (A,O ). An
+i i i i
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of
+use;
+OA
+articles
+are governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+306 M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025)
+Fig.4.Participantsareprovideda2Dgridworldviewofsearchandrescuetask,withseveralonscreentools.The
+sevenseverelyinjuredvictimsaredenotedbyredcircles,andthenoncriticalvictimsareinblue.Thegamescreen
+includesamini-mapinthecornerfornavigationease.Theinstructionsfromthenavigationassistantaredisplayed
+atthetopofthescreeninyellow.
+instruction is an (action, object) tuple. ROOMS is the set of room names in the building map.
+VICTIMS is the set of victims in the building map. Each instruction level can be generated
+fromatransformationofaneighboringlevelthateitherapplieshigherorlowercomplexity.
+A = {Goto,Triage}
+3
+O = ROOMS∪{RedVictim,BlueVictim}
+3
+A = {Turn,Proceed,Enter,Exit,ApproachandSave}
+2
+O = N×{Room,Hallway,Intersection,left,right,redvictim
+2
+A = {Walkforward,Turn,Stop,Utilize}
+1
+O = N×{Steps,Left,Right,MedicalEquipment]}
+1
+5.1.3. POMDPestimateformulation
+Thecoachingagentestimatesthehuman’sPOMDPmodelalsoasasingle-playerPOMDP
+MHR = (cid:2)SHR ,AHR ,THR ,RHR ,(cid:2)HR ,OHR ,bHR (cid:3).SHR isthesetofstatesobservedbythehuman
+rescuer. The human’s state information at timet is combination of the building environment
+state, denoted s , and the content and complexity level of the instructions at t, denoted si t t
+for instruction state. The map state s includes the position of the human rescuer {xp,yp},
+t t t
+the (x,y) location and state z ∈ {triaged,nottriaged} of all victims in VICTIMS, the (x,y)
+centroid locations of all rooms in ROOMS. The instruction state is the content and complex-
+ity level of instructions on screen given the state of the building environment C (s ). C is
+t t t
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of
+use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025) 307
+the instruction complexity level at time t, selected from {C ,C ,C }. C (s ) is the content 1 2 3 t t
+of instructions when applying level C
+t
+to the current environment state at t, s t(cid:2). Combin-
+ing thes(cid:2)e, states in the robot’s(cid:2)estimated human(cid:2)POMDP MHR are s ∈ SHR = s
+t
+C
+t
+(s
+t
+) =
+{x p ,y p } {x i ,y i ,z i } ∀i∈VICTIMS {x j ,y j } ∀j∈ROOMS C t (s t ).Sincetherobot’sactionspaceisthe
+set of three levels of instruction complexity, the robot’s behavior is encoded in human’s
+POMDPstate.
+(cid:2)HR is the set of observations and OHR are the observation probabilities. OHR(o|s
+t
+,a
+t
+)
+is the probability of the agent receiving observation o given state s and action
+t
+a t , which is a deterministic function of the state s t+1 . The observation given s t ,a t
+is the radius-5 field-of-view (FOV) the human has at their current position in s t+1
+within the building. The observation given map state s is denoted o = FOV(s ) and
+t t t
+consists of only the parts of the environment visible in the human’s F(cid:2)OV com-
+bined w(cid:2)ith the onscreen instructi(cid:2)ons which are always(cid:2)visible o
+t
+= FOV(s
+t
+) C
+t
+(s
+t
+) =
+{x p ,y p } {x i ,y i ,z i } ∀i∈FOV(VICTIMS) {x j ,y j } ∀j∈FOV(ROOMS) C t (s t ). The action space of AHR
+is the action set available to the human, which in this navigation setting is {move North,
+moveSouth,moveEast,moveWest,triage}.RHR : SHR → RHR istheestimatedhumanreward
+function. Under the assumption of compliance with the agent’s onscreen navigation instruc-
+tions, the reward function is assumed to be positive reward for taking actions following the
+directionsgivenbyC (s ).
+t t
+The human’s state belief, bHR(s), represents where the human believes all rooms and
+victims are located in the full building given their partial observations. Formally, bHR(s)
+is the p(cid:3)robability that the human believes they are in state s ∈ SHR. The belief update is
+b(cid:6) (s) =
+s(cid:6)∈SHR
+THR(s|a,s(cid:6) )bHR(s(cid:6) ). Put simply, the human’s state belief is where they think
+roomsandotherobjectsintheenvironmentarelocatedbasedontheirFOV-restrictedobser-
+vations. Under MHR, the human is only being rewarded for following the directions of the
+robot instructor. Thus, the robot estimates that the human partner’s policy πHR is to simply
+follow the instructions of C
+t
+(s
+t
+) given their state belief bHR. πHR(C
+t
+(s
+t
+),bHR) → a
+t
+∈ AHR.
+The robot utilizes priors on abstraction complexity and the amount of knowledge needed
+forunderstandinginstructionsatdifferentlevelsofabstraction.Itsprioristhatasinstruction
+complexity decreases, the reliance of the human policy on map knowledge decreases. For
+lowcomplexityinstructionsatC ,theactionrequiredtofollowinstructionsistheinstruction
+1
+itself, and does not rely on beliefs about locations of rooms in the environment. This means
+πHR(C
+1
+(s
+t
+),bHR(·)) = πHR(C
+1
+(s
+t
+)).
+5.2. Adaptationframework
+In this section, we present a two-step, EVALUATE-and-ADAPT interaction framework
+forinstruction-generationbasedondynamic,automaticcomplexitymodeadaptation(Fig.5).
+Thehumanrescuer’ssoleobjectiveistofollowtheAIguide’snavigationinstructions,which
+ensures human compliance to the provided instructions. First, at time t = 0, the AI guide
+gives the rescuer an instruction at a default complexity mode, β , to direct the rescuer to the
+0
+firstvictim.
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of
+use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+308 M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025)
+Fig.5.TheAIevaluatesunderstanding,andadapts,generatingthenextinstructionattheappropriatelevel.Inthe
+EVALUATEstep,theinstructorlearnstheadaptationparameter(knowledgeofthebuildingmap)byobserving
+theactionsoftherescuerandpredictswhethertheyareheadedtothecorrectvictim.IntheADAPTstep,theAI
+dynamicallychangesitsactionsbasedontheadaptationparameter,presentinginstructionsatanewcomplexity
+levelsuitablefortheknowledgeofthehumanpartner.
+5.2.1. Learningprocess
+In the EVALUATE step, the instructor learns the adaptation parameter: knowledge of the
+buildingmap.Theinstructorobservestheactionsoftherescuerandpredictswhethertheyare
+headedtothecorrectvictim(goal).Assumingthehumancomplieswithallinstructions,goal
+prediction serves as a proxy for comprehension at the current complexity level β , because
+0
+failingtoreachagoalmustthusbeattributedtoinability.Theinstructorcomputestheproba-
+bilityP(g∗|ξ)thattherescuerisheadedtotheintendedvictimg∗
+giventheircurrenttrajectory
+ξ.ThesetofgoalsisthesetofvictimsG = {g ,...,g }.WeaimtocomputeP(g∗|ξ ):the
+1 20 0:t
+probabilitythattherescuerisheadedtotheinstructedvictimg∗
+giventheircurrenttrajectory
+ξ = {x ,...,x }.x isthepositionattimet:
+0:t 1 t t
+P(x ,...,x |g∗ )P(g∗ )
+P(g ∗|ξ ) = P(g ∗|x ,...,x ) = 0 t . (1)
+0:t 0 t P(x ,...,x )
+0 t
+Under the POMDP Human Model Framework, the adaptation parameter in this inter-
+action is the human’s knowledge of the building environment and understanding of
+navigation instructions at the current complexity level. The probability that the human
+rescuer is headed toward the intended goal serves as a proxy for their comprehen-
+sion. Thus, the component of the human’s POMDP α the robot aims to learn is bHR.
+The set(cid:2)of possible states in(cid:2)the robot’s esti(cid:2)mate of the human POMDP is s ∈ SHR =
+{x p ,y p } {x i ,y i ,z i } ∀i∈VICTIMS {x j ,y j } ∀j∈ROOMS C t (s t e). which is the space of all possible
+combinations of player position, victim positions, room positions, and instructions at the
+three complexity levels. At state s t , if bHR(s t ) is small and close to 0, then the human does
+nothavethecorrectbeliefoftheroomandvictimlocations,andthuscannotcomprehendthe
+instructions.IfP(g∗|ξ) ≈ 0,thenbHR(s
+t
+)issmall.IfP(g∗|ξ) ≈ 1,thenbHR(s
+t
+) ≈ 1.Byusing
+goalpredictiontoproxyknowledgeoftheenvironment,theagentmakesacrudeestimateof
+bHR.
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of use;
+OA articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025) 309
+5.2.2. Influenceprocess
+IntheADAPTstep,theAIdynamicallychangesitsactions,presentinginstructionsatanew
+complexity level suitable for the knowledge of the human partner. The AI reasons that high
+complexity instructions can only be understood if the human knowledge of the room names
+is sufficient. The AI reasons that instructions at complexity levels requiring map knowledge
+exceeding the knowledge of the human partner will negatively influence the human’s abil-
+ity to perform the task of following the navigation directions. Thus, the instructor makes a
+threshold-based decision on whether or not the level of instruction must change in order to
+betterfitthehumanrescuer’scomprehensionandknowledge.LowvaluesofP(g∗|ξ)indicate
+the rescuer is unable to understand directions at the current complexity, and requires sim-
+plerinstructionsinthenextinteraction.HighP(g∗|ξ)valuesindicatetherescuerunderstands
+instructionatthecurrentcomplexitymodeandisheadedtothecorrectvictim.Wedefinetwo
+hyperparameters:athresholdτ for complexitymode-increaseandathresholdτ for mode-
+G B
+decrease. If P(g∗|ξ ) > τ , the instructor increments the level of instruction complexity. If
+0:t G
+P(g∗|ξ ) < τ ,thendecrementtheinstructionmode.Otherwise,therescuerlevelremainsas
+0:t B
+is (Fig. 4). Algorithm 1 defines the interaction loop algorithm for adaptive navigation assis-
+tance(ANA).Basedonsampletrials,thethresholdsaretunedtoτ = 0.3,τ = 0.8.
+B G
+This EVALUATE-and-ADAPT process occurs for as many interactions as necessary to
+guide the rescuer throughout the episode. In this interaction, the agent does not aim to solve
+the human’s estimated POMDP and cannot actually change bHR: the human’s knowledge
+of the environment. The agent changes its instruction complexity, which is included in the
+human’s observations OHR, such that the human’s belief of the environment layout will not
+affect their ability to perform the task of following instructions. For example, the agent pro-
+vides low complexity instructions at C when the human’s comprehension P(g∗|ξ) is low,
+1
+making their state belief incorrect (bHR(s
+t
+) is small). The human does not have a correct
+understanding of what the state of the environment is. Now, when given C level instruc-
+1
+tions,thehumanpolicydoesnotrelyonbHR sinceπHR(C
+1
+(s
+t
+e),bHR(·)) ≈ πHR(C
+1
+(s
+t
+e)),allow-
+ingthehumantofollowinstructionstoreachthevictimwithouthavingcompleteknowledge
+oftheenvironment.
+5.3. Userstudydesign
+Weranamixed-designuserstudytomeasurehowprerequisiteknowledgeandinformation
+complexityaffecthumaninstruction-followingandhowadaptivity(ANA)affectsparticipant
+performanceandmentalstate.Weinvestigatedthreedependenteffects:(1)taskperformance,
+(2) mental state, and (3) preference. Task performance was measured by the number of vic-
+timsrescuedbytheteam.Mentalstateconveysaperson’ssentimentstowardtheirexperience
+and sense of self-proficiency in the task at hand. Given that the instructions of the task were
+to follow the onscreen guidance in order to save victims as quickly as possible, the number
+ofvictimsisameasureofhowquicklytheparticipantwasabletoperformthetaskoffollow-
+ing the navigation instructions. If a participant did not manage to follow instructions accu-
+rately,theywouldbeinstructedtocorrecttheirmissteps,asdoingsoisnecessaryinorderto
+reachtheintendednextvictim.Ourmeasuresoftask-orientedmentalstatewereengagement,
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of
+use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+310 M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025)
+Algorithm1 AdaptiveNavigationAssistance(ANA)
+2 1 : : τ ξ 0: , t , τ g∗ t , ← C g∗ I t , n C p t u ← t:L I e n v p e u l- t D : e tr c a r j e e m ct e o n ry t , th c r u e r s r h en o t ld g , o L a e l, v fl el o - o In d c fi r l e l m va e l n u t e t s hr o e f s c h u o r l r d entgoal,currentlevel
+B G
+3: Levels={C ,C ,C }
+1 2 3
+4: ComputeP(g∗|ξ )
+t 0:t
+5: ifP(g∗|ξ )<τ then
+t 0:t B
+6: C t+1 ←max(1,C t −1)
+7: elseifP(g∗|ξ )>τ then
+t 0:t G
+8: C t+1 ←min(3,C t +1)
+9: else
+10: C t+1 ←C t
+11: endif
+12: return{C t+1 }
+confidence, frustration, and confusion. Emotional and mental states can be self-reported on
+a numerical scale (Marcus, Neuman, & MacKuen, 2017) via a slider (Betella & Verschure,
+2016), which we use in our study, or dial (Ruef & Levenson, 2007). Following a similar
+numerical range of self-reported emotion state as in (Eadeh et al., 2021b, 2021a), we mea-
+sured participant mental state on a subjective 1–100 interval scale questionnaire, where 100
+representsmaximalexpression,and1representstheleastexpression.Preference(3)measures
+whetherapersonexplicitlyprefersinstructionatagivenmodeofcomplexity.Participantpref-
+erence was measured by the sum of four Likert-scale questions with responses measured on
+a5-pointLikertscale(Joshi,Kale,Chandel,&Pal,2015),usingChronbach’salpha(Tavakol
+&Dennick,2011)totestinternalconsistencyofthequestions(α = 0.855).ThefourLikert-
+scalequestionsaskedtheparticipantstoratehowtheyagreedwiththefollowingstatements:
+(1) I found the navigation instructions easy to understand. (2) I found the assistant helpful
+innavigatingtheenvironment.(3)Ifeltthattheinstructionswereprovidedatanappropriate
+difficultylevel.(4)Ienjoyedperformingthesearch-and-rescuetaskwiththenavigationassis-
+tance. The sum of the Likert scale items calculates a composite “Preference” score, which
+weanalyzeattheintervalmeasurementscale(Carifio&Perla,2007;Jr&Boone,2012).The
+study simultaneously tests the proposed ANA algorithm against a baseline in which instruc-
+tioncomplexitydoesnotchange.Staticinstructionprovidesdirectionsatonlyone,immutable
+mode of complexity, selected from {C ,C ,C }. Adaptive instruction refers to Algorithm 1.
+1 2 3
+The mixed-design study answers the following questions: Q1 How does prerequisite knowl-
+edge for a task affect human performance, mental state, and preference when instructed at
+different modes of complexity?, and Q2 What effect does adaptive versus static instruction
+haveonhumanperformance,mentalstate,andpreference?
+Participantsplayeda2DgridworldSARgamefortworounds.Oneofthetrialswasguided
+by a static instructor, and the other with the adaptive (ANA) instructor. The static instructor
+can only provide instruction at a fixed complexity mode, selected randomly from the three
+modes{C ,C ,C }.Eachtrialisdividedintothreephases:train,pretest,andtest(Fig.6).The
+1 2 3
+between-subjects independent variables are IV : knowledge level and IV : instruction com-
+1 2
+plexitymode.TherearethreelevelsofIV :{LOW-knowledge,MED-knowledge,andHIGH-
+1
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of
+use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025) 311
+Fig.6.Inthemixed-designuserstudy,participantsplayeda2Dgridworldsearch-and-rescuegamefortworounds.
+One of the trials was guided by a static instructor, and the other with the adaptive instructor, presented in ran-
+dom order. The human participant was provided a limited time period to memorize the map and room names,
+thedurationwasdrawnfromtheset{1min,3min},inordertoensureawide,near-uniformspreadofparticipant
+preparedness.Thebluearrowsillustratethatparticipantswerefirstrandomlyassignedtooneofthetwomemoriza-
+tiontimesandoneofthetwoinstructortypeorderings.Theamountoftimeparticipantshadtomemorizethemap
+washeldconstantoverbothtrials.Aftermemorizing,inthepretestphase,theparticipantwasquizzedonlabeling
+theroomnames.Theirscoreonthisroom-labelingpretestdefinedtheirdomain-knowledgescore.Followingthe
+knowledgeassessment,participantsperformoneofthemissionswitheitherthestaticoradaptiveinstructor.
+knowledge} and three levels of IV : {C ,C ,C }. The within-subjects independent variable,
+2 1 2 3
+IV ,isadaptivityofinstruction,ofwhichtherearetwoconditions:{static,adaptive(ANA)}.
+3
+Inthetrainingphase,thehumanparticipantwasprovidedalimitedtimeperiodtomemo-
+rize the map and room names. Their memorization time window was drawn from the set {1
+min,3min},inordertoensureawide,near-uniformspreadofparticipantpreparedness.The
+amountoftimeparticipantshadtomemorizethemapwasheldconstantoverbothtrials.After
+memorizing, in the pretest phase, the participant was quizzed on labeling the room names.
+Theirscoreonthisroom-labelingpretestdefinedtheirdomain-knowledgescore.Next,partic-
+ipantswereclusteredbasedontheirknowledgescoresfromthepretest,andcategorizedinto
+oneofthreegroupsrepresentingtheirlevelofparticipantknowledge(LOW,MED,orHIGH).
+Defininggroupsonthememorizationtimeconditionisnotrepresentativeofactualknowledge
+becausememorizationabilityvariessignificantly.Clusteringontheactualpretestknowledge
+score to define knowledge levels is a more accurate approach and makes use of the natural
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of
+use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+312 M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025)
+clusteringthatoccursintheknowledgeoftheparticipantpool.Theknowledgegrouptowhich
+a participant was assigned was based on their results on the pretest score from the round in
+which they were partnered with the static instructor. The pretest knowledge score does not
+factorintothedecision-makingoftheadaptiveinstructor,sincetheadaptiveinstructorinfers
+knowledge based on the likelihood of the participant heading to intended goals. Since we
+areprimarilyinterestedintherelationshipbetweenparticipantknowledgeandlevelofstatic
+instruction, and how this relationship affects reception and efficacy of adaptive instruction,
+weholdtheassignedknowledgegroupconstantfromthestaticinstructorround.
+In the test phase, the participant played the 4-min SAR game to rescue as many victims
+as possible while following the directions of an AI instructor. In order to mitigate potential
+orderingeffects,participantswerecounterbalancedbetweentheorderingofthetwoinstructor
+types. To mitigate memorization effects, two different environments were designed for each
+mission,andassignedinrandomorder.Participantswereaskedaseriesofquestionsregarding
+eachofthementalstatemeasures(engagement,confidence,frustration,andconfusion)after
+the first mission, either with the static or adaptive instructor. They answered the same set of
+questions after the mission with the other agent. After participants have worked with both
+instructors,theywereaskedwhichinstructortheypreferred.
+5.4. Userstudyresults
+We collected data from 108 participants over the age of 18, recruited through Prolific
+(Palan & Schitter, 2017). Fifty-four participants performed the first mission with the ANA
+adaptive instructor, followed by the static instructor, and 54 participants performed with the
+staticinstructorbeforetheANAadaptiveinstructor.Eachstaticinstructioncomplexitymode
+was played by 36 participants in total. We discarded data from participants who disobeyed
+the instruction more than five times, which indicated noncompliance with the instruction-
+following navigation procedure. This left us with 48 participants who experienced adaptive
+instructionbeforestatic,and52whoexperiencedstaticinstructionfirst.
+We find that participants with low knowledge levels expressed higher engagement and
+confidence when their instruction complexity aligned with their knowledge (Fig. 7). LOW-
+knowledge participants felt significantly more engaged with C than with C instructions
+1 3
+(p= .019)andweresignificantlymoreengagedwithC thanwithC instructions(p= .028).
+2 3
+HIGH-knowledge participants were significantly more engaged with C instructions than C
+2 1
+instructions (p= .045). LOW-knowledge participants felt significantly more confident with
+C thanwithC instructions(p= .039).MED-knowledgeparticipantsfeltsignificantlymore
+1 2
+confident with C instructions than with C instructions (p= .014). HIGH-knowledge par-
+1 3
+ticipants did not express significant differences in confidence at different modes of instruc-
+tioncomplexity.
+The results also show that misalignment for participants with LOW-knowledge levels
+causes higher confusion and frustration. But effects of misalignment are not significant for
+participantswithMED-orHIGH-knowledge.LOW-knowledgeparticipantsfeltsignificantly
+more frustrated with C than with C instructions (p< .001), and were even more frustrated
+2 1
+with C instructions than with C (p= .003). There were no significant post-hoc mean dif-
+2 3
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025) 313
+Fig.7.Participantswithalignedcomplexitymodeandknowledgeexpressedhigherengagementandconfidence,
+andlowerconfusionandfrustration.PeopleintheLOW-knowledgeconditionwereparticularlyaffectedbymis-
+alignment.Errorbarsrepresentstandarderror.p-Valuesareshownforsignificantpost-hocpairwisedifferences.
+The results also show that misalignment for participants with LOW-knowledge levels causes higher confusion
+and frustration. But effects of misalignment are not significant for participants with MED- or HIGH- knowl-
+edge.LOW-knowledgeparticipantsfeltsignificantlymoreconfusedwithC instructionsthanwithC instructions.
+2 1
+MED-knowledgeparticipantsfeltsignificantlymoreconfusedandlessengagedwithC instructionsthanwithC
+3 1
+instructions.
+ferences in the frustration of MED-knowledge nor HIGH-knowledge participants. LOW-
+knowledge participants felt significantly more confused with C instructions than with C
+2 1
+instructions (p= .001). MED-knowledge participants felt significantly more confused with
+C instructions than with C instructions (p= .011). HIGH-knowledge participants did not
+3 1
+express significant differences in confusion at different modes of instruction complexity
+(Fig.7).
+We conducted a mixed, repeated-measures ANOVA to evaluate the ANA algorithm for
+adaptive instruction. We did not find significant effects of the adaptivity of instruction on
+performance (λ = 1.00,F(1,91) = 0.009,p= .923), measured by the number of vic-
+Wilks
+tims saved during the round (Fig. 8). The results of the mixed, repeated-measures ANOVA
+showed that there was not a significant effect of the adaptivity of instructor type on engage-
+ment (λ = 0.992,F(1,91) = 0.771,p= .382), nor was there a significant effect of
+Wilks
+the adaptivity of instructor type on confidence (λ = 1.00,F(1,91) = 0.012,p= .912)
+Wilks
+(Fig. 9). However, we found a significant interaction effect between instructor adaptivity,
+static complexity mode, and knowledge level with the static instruction on engagement
+(λ = 836,F(4,91) = 4.461,p= .002,η2 = 0.164). Post-hoc tests show that (HIGH- Wilks p
+knowledge,C ) participants experienced an increase in engagement when instructed adap-
+1
+tively significantly greater (p= .021) than that of (LOW-knowledge, C ) participants, by a
+1
+26.44-point increase on average (Fig. 9). Thus, we find that participants with high knowl-
+edge misaligned with their static instruction complexity mode, will have a greater increase
+inengagementwiththeadaptiveinstruction,overpeoplewhocomparedadaptiveinstruction
+againststaticinstructionalignedwiththeirknowledge.
+In order to better understand how the instruction was provided by the adaptive naviga-
+tion assistant, we dive into different trial instances where participants of varying knowledge
+collaborated with the adaptive assistant (Fig. 10). We illustrate the switching between levels
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+314 M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025)
+Fig. 8. Performance on the task was measured by the number of victims saved in a 4-min guided search-and-
+rescuemission.Thenumberofvictimssavedbyparticipantswhencoachedwithadaptiveinstructionwashigher
+whenparticipantshadhigherknowledge(left).Thenumberofvictimssavedwithstaticinstructionswassimilarly
+higherwhenparticipantshadhigherknowledge(right).However,wedidnotfindsignificantdifferencesbetween
+thenumberofvictimssavedwiththeadaptiveinstructorandnumberofvictimssavedwiththestaticinstructor
+(λ =1.00,F(1,91)=0.009,p=.923).Thisindicatesthatouradaptiveinstructionmechanismdidnotaffect
+Wilks
+theperformanceofparticipantsonthetask.
+Fig. 9. The adaptive ANA algorithm did not improve engagement of participants across the board. The ANA
+algorithm improves the engagement of participants whose knowledge with the static instructor was misaligned
+withthestaticinstructioncomplexity.They-axisrepresentsthedifferencebetweenparticipantengagementwith
+the adaptive instructor and engagement with the static instructor. Differences below 0, denoted in red, indicate
+thatparticipantengagementwashigherwithstaticinstruction.Differencesabove0,denotedinblue,indicatethat
+participantsweremoreengagedwithadaptiveinstruction.Errorbarsrepresentstandarderror,andpointsrepresent
+means.Theleftmostplotshowsthat(HIGH-knowledge,C )participantsexperiencedanincreaseinengagement
+1
+wheninstructedadaptivelysignificantlygreater(p=.021)thanthatof(LOW-knowledge,C )participants,bya
+1
+26.44-pointincreaseonaverage.Participantswithhighknowledge,whoweregivenverybasicstaticinstructions,
+foundadaptiveinstructiontobesignificantlymoreengaging.Butparticipantswhoseknowledgewiththestatic
+instructorwascorrectlyalignedwiththestaticinstructioncomplexityfoundtheadaptivealgorithmlessengaging.
+of instruction that the adaptive assistance performs to the human rescuer, plotting the com-
+plexitylevelofinstructionprovidedovertime.Wedemonstratehowtheinstructioncomplex-
+ity changes for a participant in the LOW (blue), MED (red), and HIGH (green) knowledge
+conditions. During the majority of the mission, the LOW-knowledge participant received
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of
+use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025) 315
+Fig.10.Wedemonstratethelevelsofnavigationinstructioncomplexityprovidedbytheadaptiveassistancetothe
+humanpartnerinthreeinstances.Thethreeinstancesweshowarefordifferentparticipantsassignedtoeachof
+theknowledgelevels.OneparticipantisLOW-knowledge(blue),anotherisMED-knowledge(red),andthelastis
+HIGH-knowledge(green).Duringthemajorityofthemission,theLOW-knowledgeparticipantreceivedmostly
+simplelevelC instructions,andreceivedfewofthemorecomplexC orC instructions.TheMED-knowledgeand
+1 2 3
+HIGH-knowledge participants received mostly level C instructions; however, the HIGH-knowledge participant 2
+receivedmorehigh-complexityC instructionsthantheMED-knowledgeparticipant.
+3
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of
+use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+316 M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025)
+mostly level C instructions, which are fairly simple and do not require prerequisite knowl- 1
+edge. This is an expected behavior of the adaptive algorithm, as it should be able to rec-
+ognize that the participant requires very basic instructions, as a result of their having little
+knowledge of the map. The LOW-knowledge participant received some of the more com-
+plex C instructions, but very few C instructions, which require prerequisite knowledge.
+2 3
+The MED-knowledge and HIGH-knowledge participants received mostly level C instruc-
+2
+tions. However, the HIGH-knowledge participant received fewer basic C instructions than
+1
+the MED-knowledge participant and more high-complexity C instructions than the MED-
+3
+knowledgeparticipant.Thisisexpectedbehaviorfromtheadaptivealgorithm,inthatHIGH-
+knowledge participants would be better equipped to understand C instructions than MED-
+3
+knowledgeparticipants,becauseC instructionsrequirepeopletodrawupontheirmemoriza-
+3
+tionofthemap.
+5.5. Casestudytakeaways
+Theresultsofouruserstudydemonstratedthatthealignmentofcomplexitymodetoknowl-
+edge of human instruction-followers significantly affects their expression of positive mental
+states. People guided by navigation instructions at an abstraction mode that they are able to
+sufficientlyunderstandgiventheir domain knowledgeare more engaged and more confident
+thanpeopleguidedbyinstructionsmisalignedtotheirknowledge.Inparticular,peopleinthe
+extremesofthelevelsofprerequisiteknowledge(assignedintheLOW-knowledgeorHIGH-
+knowledge groups) are highly affected by complexity-knowledge alignment. Providing sim-
+ple C instructions disengages players with high knowledge, likely because the instructions
+1
+aretoosimpleandverbose.ComplexC instructiondisengagesplayerswithlowknowledge,
+3
+likely because the unprepared players lack sufficient understanding and find C instructions
+3
+toodifficulttocomprehend.Furthermore,alignmentofcomplexitymodetoknowledgeoffol-
+lowerssignificantlydecreasestheexpressionofnegativementalstates:frustrationandconfu-
+sion. Participantswith LOW-knowledge felt significantlymore frustrated and confused with
+C instructions than with C instructions. They were also more frustrated and confused with
+2 1
+C instructionsthanwithC instructions.Thisilluminatesapotentialshortcominginourgen-
+2 3
+erationofC instructions.AlthoughC instructionsoccuratalowerlevelofabstractionthan
+2 2
+C , in that C instructions do not operate at room-level abstraction, C instructions require
+3 2 2
+a different sort of knowledge from the participant: the mapping from object names to their
+interfacerenderings.C includesinstructions,suchas“turnleftatthethirddooronyourright” 2
+and “proceed to the end of the hallway and turn left.” These instructions do not require the
+persontoremembertheroomnamesandlocations,buttheyrequirethepersontoknowwhat
+the doors and hallways look like, and potentially count the doors as they pass them. This
+may have been additional complexity associated with C instructions that LOW-knowledge
+2
+participants found difficult, frustrating, and confusing. This represents a significant short-
+coming of our instruction complexity manipulation, in that instruction complexity was not
+increased along the dimension of abstraction only. The C instructions introduce complex-
+2
+ity along a dimension of interface understanding, which may have impacted our findings on
+mentalstates,performance,andpreferences,sinceC instructionsmaynotnecessarilybeless
+2
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of
+use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025) 317
+complex than C instructions. Overall, our analyses suggest that people with high prerequi- 3
+siteknowledgearelesssusceptiblethanthosewithinsufficientknowledgetonegativemental
+state changes as a result of instruction complexity. The suitability of abstraction modalities
+dependsonthepreparednessofthehuman.
+Thestudydemonstratedthattheadaptivemechanismmayimprovetheengagementofpar-
+ticipants whose knowledge is misaligned with static instruction complexity. In particular,
+highly knowledgeable participants who were provided low complexity C instructions felt
+1
+more engaged with the adaptive instructions. Engagement was the only mental state signif-
+icantly affected by the new adaptive algorithm. The improvement in engagement may also
+be due to participants being shown aligned instructions at various times during the mission,
+as a result of the adaptive mechanism switching between the three levels of complexity, not
+the algorithm for electing to change levels itself. These results demonstrate that our adap-
+tivealgorithmwasnotparticularlyeffectiveinassistingthesubject.Themethodalsodidnot
+offer significant improvements to performance of the SAR task, nor did participants express
+significantpreferencefortheadaptiveinstructions.
+One possibility is that fixed thresholds for determining when to switch abstraction mode
+limited the adaptive benefit. User input to perform complexity changes are a way to tune
+custom thresholds in future work. Fig. 10 visualizes how the complexity level of adaptive
+instruction changed over the course of the trial for participants in each knowledge condi-
+tion. For the HIGH-knowledge and MED-knowledge participants, the switching occurred
+frequently. This frequent switching of instruction style may have caused the participants to
+become distracted or ignore instructions. Another possibility is that the navigation task was
+too simple and thus unsuitable for the different complexity levels to impact comprehension
+significantly. While our proposed method does not significantly improve performance in the
+SARtaskdomain,themethodbooststheengagementofpeoplewhoexperiencecomplexity-
+knowledgemisalignment.Overall,ourevaluationdemonstratesthatthelevelofabstractionin
+navigation instructions matters to human users, and that matching abstraction complexity to
+humanknowledgeinfluenceshumanmentalstates.
+ThiscasestudydemonstratesanexampleofhowthePOMDPhumanestimateframework
+can be applied to formalizing the agent’s assumptions about human decision-making. While
+adaptinginstructioncomplexitytohumanknowledgeappearsnaturalandintuitive,usingonly
+human knowledge as a salient feature for adaptation involves priors in the robot’s mental
+model of the human. An important motivator for the adaptive Algorithm 1 was that lower
+complexityinstructionscanbeunderstoodwithlesscompleteknowledgeofthefullenviron-
+ment. The POMDP framework illuminates this more explicitly, and translates to the agent
+having an estimate of the human policy πHR, which relies less on the human’s state beliefs
+whengiveninstructionsatC .
+1
+6. Discussion
+In this work, we present a framework for consideringrobot adaptationto human partners.
+Adaptationinhuman–AIteamingisaninteractioninwhichanAIchangesitsbehavior,based
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+318 M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025)
+onunderstandingofhumanteammatesthatisnotknownapriori.Performingadaptationcon-
+sistsoflearningsomesetofrelevanthumanfeaturesandchangingrobotbehaviorinresponse
+in order to influence the collaboration. Our framework is feature-agnostic, in that it can be
+applied to various adaptation parameters, including human policies, cognitive features (such
+as knowledge and intentions), as well as other internal factors, such as fatigue and physi-
+cal capabilities. Under the feature-agnostic framework, learning designated human features
+reducestoestimationofacomponentofthehuman’sdecisionprocess.
+Underthisconstraint,theformalismalsoallowsformoreexplicitreasoningaboutthepriors
+the robot has on the human’s decision-making process. Designers of adaptive human–robot
+interactionsselectfeaturesofthehumanpartnerthatshouldbeadaptedtobasedontheneeds
+ofthecollaboration.Componentsofthehuman’sPOMDPthatarenottheadaptationparame-
+terareimplicitlyorexplicitlydeterminedbytheinteractiondesign.Forexample,adaptingto
+ahumanpartner’sgoalslearnsarewardfunction,whiletherobotmustusethetaskspecifica-
+tions to determine the actions, states, and observations of the human POMDP as priors. The
+fullhumanPOMDPisnotalwaysexplicitlyestimatedinadaptivehuman–robotinteractions;
+however, viewing the learning and adaptation process under this formalism helps illuminate
+knowledgeaboutthehumanpartnerassumedbytherobotandhowrelevantadaptationparam-
+etersinfluencethehuman’sdecisionprocess.
+The framework assumes that the human decision-making can be modeled as a POMDP,
+and consequently, human feature adaptation parameter can be modeled as a component of
+the human’s POMDP. There may be cases in which the salient human feature for adapta-
+tioncannot be representedas a component of the human’s POMDP, such as when reasoning
+aboutcollaborationisnon-Markovian.Insuchcases,aPOMDPmodelmaynotbeappropriate
+for representing the human partner and a different decision process model may be required.
+The model also assumes that the human and robot partners are both operating at the same
+timescale.Whendesigninghuman–robotinteractionstofacilitateadaptation,thecomponents
+ofthehumanmodelwhicharenotlearnedbytherobotareoftenpredefinedbasedoninterac-
+tion context, which often relies on the design and assumptions of the designer. Assumptions
+onhowtheestimatedhumanPOMDPisparameterizedmaynotbecompletelyrepresentative
+of the human’s experience or decisions, which is an existing challenge in modeling human
+behavior. Modeling humans as POMDP decision makers and updating the parameters based
+onsalientcueshelpstoilluminatemoreclearlytheassumptionsused.
+7. Conclusion
+TheabilityforAIteammatestoadapttohumanpartnersiscriticalforeffectiveandfluent
+teamcollaboration.Tobettercollaborateandunderstandtheirteammates,robotandAIteam-
+mates must adapt to features related to the human teammates. Modeling human partners is
+an effective way for robots to build an understanding of how their partners will operate. We
+exploreaframeworkformodelingthesalientfeaturesofhumanpartnerstowhichrobotsadapt
+as components of the robot’s estimate of the human’s decision process (POMDP). Through
+a case study, we demonstrate how this framework can be applied to adapting to a human
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of
+use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025) 319
+partner’s knowledge in a coached navigation task. Although the results of the case study do
+not show significant task performance benefits of an adaptive algorithm, the results suggest
+thatwhencommunicatingwithapartner,anAIshouldconsidertheexpertiseoftheirpartner
+inordertodeterminewhethertheirpartnercanunderstandtheinformationtheyarereceiving.
+Forgoingsuchindividualconsiderationsmayadverselyimpactthepartner’smentalstateand
+proficiency. We view this work as a candidate perspective on defining adaptive interactions
+between humans and AI. Teaming is dynamic in nature, and developing the mechanisms by
+which AI build an understanding of and adapt to human partners is an ongoing technical
+challengeforcollaborativeAIsystems.
+Acknowledgments
+This research is based upon work supported by the Defense Advanced Research Projects
+Agency,awardnumber:FP00002636.Anyopinions,findings,andconclusionsorrecommen-
+dations expressed in this paper are those of the author(s) and do not necessarily reflect the
+viewsofDARPA.
+References
+Aggarwal,I.,Woolley,A.W.,Chabris,C.F.,&Malone,T.W.(2019).Theimpactofcognitivestylediversityon
+implicitlearninginteams.FrontiersinPsychology,10.
+Ahmad,M.I.,Mubin,O.,&Orlando,J.(2017).Asystematicreviewofadaptivityinhuman–robotinteraction.
+MultimodalTechnologiesandInteraction,1(3),14.
+Baker,C.L.,Saxe,R.,&Tenenbaum,J.B.(2009).Actionunderstandingasinverseplanning.Cognition,113(3),
+329–349.
+Baker,C.L.,Tenenbaum,J.B.,&Saxe,R.(2006).Bayesianmodelsofhumanactionunderstanding.Advancesin
+NeuralInformationProcessingSystems,18,99.
+Barrett,S.,Rosenfeld,A.,Kraus,S.,&Stone,P.(2017).Makingfriendsonthefly:Cooperatingwithnewteam-
+mates.ArtificialIntelligence,242,132–171.
+Barrett,S.,&Stone,P.(2015).Cooperatingwithunknownteammatesincomplexdomains:Arobotsoccercase
+studyofadhocteamwork.InTwenty-NinthAAAIConferenceonArtificialIntelligence.
+Barry,D.N.,&Love,B.C.(2021).Humanlearningfollowsthedynamicsofgradientdescent.
+Betella,A.,&Verschure,P.(2016).Theaffectiveslider:Adigitalself-assessmentscaleforthemeasurementof
+humanemotions.PLoSONE,11,e0148037.
+Boutilier, C., Dean, T., & Hanks, S. (1999). Decision-theoretic planning: Structural assumptions and computa-
+tionalleverage.JournalofArtificialIntelligenceResearch,11(1),1–94.
+Brown,N.G.,&Tellex,S.(2010).Modelingandsolvinghuman–robotcollaborativetasksusingPOMDPS.
+Burke,C.S.,Stagl,K.C.,Salas,E.,Pierce,L.,&Kendall,D.(2006).Understandingteamadaptation:Aconceptual
+analysisandmodel.JournalofAppliedPsychology,91(6),1189.
+Burke,J.L.,Murphy,R.R.,Riddle,D.R.,&Fincannon,T.(2004).Taskperformancemetricsinhuman–robot
+interaction:Takingasystemsapproach.Technicalreport.UniversityofSouthFlorida,TampaCenterforRobot-
+AssistedSearchandRescue.
+Carifio,J.,&Perla,R.(2007).Tencommonmisunderstandings,misconceptions,persistentmythsandurbanleg-
+endsaboutLikertscalesandLikertresponseformatsandtheirantidotes.JournalofSocialSciences,3.
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of
+use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+320 M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025)
+Chilton,M.A.,Hardgrave,B.C.,&Armstrong,D.J.(2010).Performanceandstrainlevelsofitworkersengaged
+inrapidlychangingenvironments:Aperson-jobfitperspective.ACMSIGMISDatabase:theDATABASEfor
+AdvancesinInformationSystems,41(1),8–35.
+Clark,H.H.,&Wilkes-Gibbs,D.(1986).Referringasacollaborativeprocess.Cognition,22(1),1–39.
+Dafoe,A.,Hughes,E.,Bachrach,Y.,Collins,T.,McKee,K.R.,Leibo,J.Z.,Larson,K.,&Graepel,T.(2020).
+OpenproblemsincooperativeAI.
+Dunnette,M.(2014).Criticalconceptsintheassessmentofhumancapabilities.Humanperformanceandproduc-
+tivity:Volumes1,2,and3.
+Eadeh,F.,Zhao,M.,Nguyen,T.N.,Gupta,P.,Gonzalez,C.,Admoni,H.,&Woolley,A.W.(2021a).Can’tget
+youoffofmymind:Thedetrimentaleffectsofangerandruminationforteamperformance.In16thAnnual
+ConferenceforInterdisciplinaryNetworkforGroupResearch(INGRoup).
+Eadeh,F.,Zhao,M.,Nguyen,T.N.,Gupta,P.,Gonzalez,C.,Admoni,H.,&Woolley,A.W.(2021b).Doesanger
+helporhurtindividualandteamperformance?InACMCollectiveIntelligenceConference.
+Endsley,M.R.(2017).Towardatheoryofsituationawarenessindynamicsystems.InSituationalawareness(pp.
+9–42).Routledge.
+Gobet,F.,Richman,H.,Staszewski,J.,&Simon,H.A.(1997).Goals,representations,andstrategiesinaconcept
+attainmenttask:TheEPAMmodel.
+Gombolay,M.C.,Huang,C.,&Shah,J.(2015).Coordinationofhuman–robotteamingwithhumantaskprefer-
+ences.In2015AAAIFallSymposiumSeries.
+Görür, O. C., Rosman, B., Sivrikaya, F., & Albayrak, S. (2018). Social cobots: Anticipatory decision-making
+for collaborative robots incorporating unexpected human behaviors. In Proceedings of the 2018 ACM/IEEE
+InternationalConferenceonHuman–RobotInteraction(pp.398–406).
+Hancock,P.A.,Billings,D.R.,Schaefer,K.E.,Chen,J.Y.,deVisser,E.,&Parasuraman,R.(2011).Ameta-
+analysisoffactorsaffectingtrustinhuman–robotinteraction.HumanFactors:TheJournalofHumanFactors
+andErgonomicsSociety,53,517–527.
+Hauskrecht,M.(2000).Value-functionapproximationsforpartiallyobservableMarkovdecisionprocesses.Jour-
+nalofArtificialIntelligenceResearch,13,33–94.
+Hawkins,R.,Kwon,M.,Sadigh,D.,&Goodman,N.(2020).Continualadaptationforefficientmachinecommu-
+nication.InProceedingsofthe24thConferenceonComputationalNaturalLanguageLearning(pp.408–419).
+Hawkins, R. X., Frank, M., & Goodman, N. D. (2017). Convention-formation in iterated reference games. In
+CogSci.
+Hoffman,G.(2019).Evaluatingfluencyinhuman–robotcollaboration.IEEETransactionsonHuman–Machine
+Systems,49(3),209–218.
+Holroyd,A.,Rich,C.,Sidner,C.L.,&Ponsler,B.(2011).Generatingconnectioneventsforhuman–robotcollab-
+oration.In2011RO-MAN(pp.241–246).IEEE.
+Huang,C.-M.,Cakmak,M.,&Mutlu,B.(2015).Adaptivecoordinationstrategiesforhuman–robothandovers.In
+Robotics:Scienceandsystems(volume11,pp.1–10).Rome,Italy.
+Joshi,A.,Kale,S.,Chandel,S.,&Pal,D.(2015).Likertscale:Exploredandexplained.BritishJournalofApplied
+ScienceandTechnology,7,396–403.
+Jr,H.,&Boone,D.(2012).AnalyzingLikertdata.JournalofExtension,50.
+Kaelbling,L.P.,Littman,M.L.,&Cassandra,A.R.(1998).Planningandactinginpartiallyobservablestochastic
+domains.ArtificialIntelligence,101(1),99–134.
+Kawanaka,T.,&Stigler,J.(1999).Teachers’useofquestionsineighth-grademathematicsclassroomsinGer-
+many,Japan,andtheUnitedStates.MathematicalThinkingandLearning,1,255–278.
+Khani,F.,Goodman,N.D.,&Liang,P.(2018).Planning,inferenceandpragmaticsinsequentiallanguagegames.
+TransactionsoftheAssociationforComputationalLinguistics,6,543–555.
+Khoramshahi,M.,&Billard,A.(2019).Adynamicalsystemapproachtotask-adaptationinphysicalhuman–robot
+interaction.AutonomousRobots,43(4),927–946.
+Kim, J., & Lee, H. (2020). Adaptive human–machine evaluation framework using stochastic gradient descent-
+basedreinforcementlearningfordynamiccompetingnetwork.AppliedSciences,10(7),2558.
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of
+use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025) 321
+Koay,K.L.,Syrdal,D.S.,Walters,M.L.,&Dautenhahn,K.(2007).Livingwithrobots:Investigatingthehabit-
+uation effect in participants’ preferences during a longitudinal human–robot interaction study. In RO-MAN
+2007-The 16th IEEE International Symposium on Robot and Human Interactive Communication (pp. 564–
+569).IEEE.
+Koert,D.,Pajarinen,J.,Schotschneider,A.,Trick,S.,Rothkopf,C.,&Peters,J.(2019).Learningintentionaware
+onlineadaptationofmovementprimitives.IEEERoboticsandAutomationLetters,4(4),3719–3726.
+Koppol,P.,Admoni,H.,&Simmons,R.G.(2021).Interactionconsiderationsinlearningfromhumans.InIJCAI
+(pp.283–291).
+Koppula,H.S.,Jain,A.,&Saxena,A.(2016).Anticipatoryplanningforhuman–robotteams.InExperimental
+robotics(pp.453–470).Springer.
+Kwon, M., Biyik, E., Talati, A., Bhasin, K., Losey, D. P., & Sadigh, D. (2020). When humans aren’t optimal:
+Robotsthatcollaboratewithrisk-awarehumans.In202015thACM/IEEEInternationalConferenceonHuman–
+RobotInteraction(HRI)(pp.43–52).IEEE.
+Kwon,M.,Jung,M.F.,&Knepper,R.A.(2016).Humanexpectationsofsocialrobots.In201611thACM/IEEE
+InternationalConferenceonHuman–RobotInteraction(HRI)(pp.463–464).
+Lam,C.-P.,&Sastry,S.S.(2014).APOMDPframeworkforhuman-in-the-loopsystem.In53rdIEEEConference
+onDecisionandControl(pp.6031–6036).
+Levine,S.J.,&Williams,B.C.(2018).Watchingandactingtogether:Concurrentplanrecognitionandadaptation
+forhuman–robotteams.JournalofArtificialIntelligenceResearch,63,281–359.
+Lewis,M.,Sycara,K.,&Walker,P.(2018).Theroleoftrustinhuman–robotinteraction(pp.135–159).
+Li,H.,Ni,T.,Agrawal,S.,Jia,F.,Raja,S.,Gui,Y.,Hughes,D.,Lewis,M.,&Sycara,K.(2021).Individualized
+mutualadaptationinhuman–agentteams.IEEETransactionsonHuman–MachineSystems,51(6),706–714.
+Li,Y.,Tee,K.P.,Chan,W.L.,Yan,R.,Chua,Y.,&Limbu,D.K.(2015a).Continuousroleadaptationforhuman–
+robotsharedcontrol.IEEETransactionsonRobotics,31(3),672–681.
+Li,Y.,Tee,K.P.,Chan,W.L.,Yan,R.,Chua,Y.,&Limbu,D.K.(2015b).Roleadaptationofhumanandrobot
+incollaborativetasks.In2015IEEEInternationalConferenceonRoboticsandAutomation(ICRA)(pp.5602–
+5607).IEEE.
+Li,Y.,Yang,C.,&He,W.(2016).Towardscoordinationinhuman–robotinteractionbyadaptationofrobot’scost
+function.In2016InternationalConferenceonAdvancedRoboticsandMechatronics(ICARM)(pp.254–259).
+IEEE.
+Madni,A.M.,&Madni,C.C.(2018).Architecturalframeworkforexploringadaptivehuman–machineteaming
+optionsinsimulateddynamicenvironments.Systems,6(4).
+Marcus,G.E.,Neuman,W.R.,&MacKuen,M.B.(2017).Measuringemotionalresponse:Comparingalternative
+approachestomeasurement.PoliticalScienceResearchandMethods,5(4),733–754.
+Mertens,A.,Reiser,U.,Brenken,B.,Lüdtke,M.,Hägele,M.,Verl,A.,Brandl,C.,&Schlick,C.(2011).Assistive
+robots in eldercare and daily living: Automation of individual services for senior citizens. In International
+ConferenceonIntelligentRoboticsandApplications(pp.542–552).Springer.
+Monahan,G.E.(1982).AsurveyofpartiallyobservableMarkovdecisionprocesses:Theory,models,andalgo-
+rithms.ManagementScience,28(1),1–16.
+Monfort,M.,Liu,A.,&Ziebart,B.D.(2015).Intentpredictionandtrajectoryforecastingviapredictiveinverse
+linear-quadraticregulation.InProceedingsofthe29thAAAIConferenceonArtificialIntelligence,AAAI’15
+(pp.3672–3678).AAAIPress.
+Motowildo,S.J.,Borman,W.C.,&Schmit,M.J.(1997).Atheoryofindividualdifferencesintaskandcontextual
+performance.HumanPerformance,10(2),71–83.
+Nathan,M.,&Kim,S.(2009).Regulationofteacherelicitationsinthemathematicsclassroom.Cognitionand
+Instruction,27,91–120.
+Nemec,B.,Likar,N.,Gams,A.,&Ude,A.(2018).Humanrobotcooperationwithcomplianceadaptationalong
+themotiontrajectory.AutonomousRobots,42(5),1023–1035.
+Ng,A.Y.,&Russell,S.(2000).Algorithmsforinversereinforcementlearning.InProceedingsofthe17thInter-
+nationalConferenceonMachineLearning(pp.663–670).MorganKaufmann.
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of
+use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+322 M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025)
+Nguyen,T.-H.D.,Hsu,D.,Lee,W.-S.,Leong,T.-Y.,Kaelbling,L.P.,Lozano-Perez,T.,&Grant,A.H.(2011).
+CAPIR:Collaborativeactionplanningwithintentionrecognition.InSeventhArtificialIntelligenceandInter-
+activeDigitalEntertainmentConference.
+Nicholls,J.G.,Cheung,P.C.,Lauer,J.,&Patashnick,M.(1989).Individualdifferencesinacademicmotivation:
+Perceivedability,goals,beliefs,andvalues.LearningandIndividualDifferences,1(1),63–84.
+Nikolaidis,S.,Hsu,D.,&Srinivasa,S.(2017).Human–robotmutualadaptationincollaborativetasks:Models
+andexperiments.InternationalJournalofRoboticsResearch,36(5–7),618–634.
+Nikolaidis,S.,Nath,S.,Procaccia,A.D.,&Srinivasa,S.(2017).Game-theoreticmodelingofhumanadaptationin
+human–robotcollaboration.InProceedingsofthe2017ACM/IEEEInternationalConferenceonHuman–Robot
+Interaction(pp.323–331).
+Nikolaidis,S.,&Shah,J.(2013).Human–robotcross-training:Computationalformulation,modelingandevalu-
+ationofahumanteamtrainingstrategy.In20138thACM/IEEEInternationalConferenceonHuman–Robot
+Interaction(HRI)(pp.33–40).IEEE.
+Palan, S., & Schitter, C. (2017). Prolific.ac-A subject pool for online experiments. Journal of Behavioral and
+ExperimentalFinance,17.
+Patel,M.,Roberts,R.E.,Riyaz,M.U.,Ahmed,M.,Buckwell,D.,Bunday,K.,Ahmad,H.,Kaski,D.,Arshad,Q.,
+&Bronstein,A.M.(2015).Locomotoradaptationismodulatedbyobservingtheactionsofothers.Journalof
+Neurophysiology,114(3),1538–1544.
+Peternel,L.,Tsagarakis,N.,Caldwell,D.,&Ajoudani,A.(2018).Robotadaptationtohumanphysicalfatiguein
+human–robotco-manipulation.AutonomousRobots,42(5),1011–1021.
+Rookhuiszen,R.,Obbink,M.,&Theune,M.(2009).Twoapproachestogive:Dynamicleveladaptationversus
+playfulness.
+Rosenthal,S.,&Veloso,M.(2011).ModelinghumansasobservationprovidersusingPOMDPS.In2011RO-MAN
+(pp.53–58).
+Ruef,A.M.,&Levenson,R.W.(2007).Continuousmeasurementofemotion:Theaffectratingdial.InJ.A.Coan
+& J. J. B. Allen (Eds.), Handbook of emotion elicitation and assessment (pp. 286–297). Oxford University
+Press.
+Shih,A.,Sawhney,A.,Kondic,J.,Ermon,S.,&Sadigh,D.(2021).Onthecriticalroleofconventionsinadaptive
+human–AIcollaboration.InternationalConferenceonLearningRepresentations(ICLR)2021.
+Sidner,C.L.,&Lee,C.(2003).Engagementrulesforhuman–robotcollaborativeinteractions.InSMC’03Confer-
+enceProceedings.2003IEEEInternationalConferenceonSystems,ManandCybernetics.ConferenceTheme-
+SystemSecurityandAssurance(Cat.No.03CH37483)(volume4,pp.3957–3962).IEEE.
+Sidner, C. L., Lee, C., Kidd, C. D., Lesh, N., & Rich, C. (2005). Explorations in engagement for humans and
+robots.ArtificialIntelligence,166(1),140–164.
+Sonnentag,S.,&Frese,M.(2012).Dynamicperformance.
+Sutton,R.S.,&Barto,A.G.(2018).Reinforcementlearning:Anintroduction(2nded.).MITPress.
+Taha, T., Miró, J. V., & Dissanayake, G. (2011). A POMDP framework for modelling human interaction with
+assistiverobots.In2011IEEEInternationalConferenceonRoboticsandAutomation(pp.544–549).IEEE.
+Tavakol,M.,&Dennick,R.(2011).MakingsenseofCronbach’salpha.InternationalJournalofMedicalEduca-
+tion,2,53–55.
+Torrey,C.,Fussell,S.R.,&Kiesler,S.(2013).Howarobotshouldgiveadvice.In20138thACM/IEEEInterna-
+tionalConferenceonHuman–RobotInteraction(HRI)(pp.275–282).IEEE.
+Vignolo, A., Powell, H., Rea, F., Sciutti, A., Mcellin, L., & Michael, J. (2021). A humanoid robot’s effortful
+adaptationboostspartners’commitmenttoaninteractiveteachingtask.ACMTransactionsonHuman–Robot
+Interaction,11(1),1–17.
+Walker,M.(1997).ReviewofusinglanguagebyHerbertH.Clark.CambridgeUniversityPress1996.Computa-
+tionalLinguistics,23,625–628.
+Woodward,M.P.,&Wood,R.J.(2012).LearningfromhumansasanI-POMDP.ComputingResearchRepository
+(CoRR),abs/1204.0274.
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of
+use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License
+
+M.Zhao,R.Simmons,H.Admoni/TopicsinCognitiveScience 17(2025) 323
+Zanchettin,A.M.,Casalino,A.,Piroddi,L.,&Rocco,P.(2018).Predictionofhumanactivitypatternsforhuman–
+robotcollaborativeassemblytasks.IEEETransactionsonIndustrialInformatics,15(7),3934–3942.
+Zhang,S.,Chen,Y.,Zhang,J.,&Jia,Y.(2020).Real-timeadaptiveassemblyschedulinginhuman-multi-robot
+collaborationaccordingtohumancapability.In2020IEEEInternationalConferenceonRoboticsandAutoma-
+tion(ICRA)(pp.3860–3866).IEEE.
+Ziebart,B.,Ratliff,N.,Gallagher,G.,Mertz,C.,Peterson,K.,Bagnell,J.,Hebert,M.,Dey,A.,&Srinivasa,S.
+(2009).Planning-basedpredictionforpedestrians(pp.3931–3936).
+17568765,
+2025,
+2,
+Downloaded
+from
+https://onlinelibrary.wiley.com/doi/10.1111/tops.12633,
+Wiley
+Online
+Library
+on
+[07/06/2026].
+See
+the
+Terms
+and
+Conditions
+(https://onlinelibrary.wiley.com/terms-and-conditions)
+on
+Wiley
+Online
+Library
+for
+rules
+of
+use;
+OA
+articles
+are
+governed
+by
+the
+applicable
+Creative
+Commons
+License

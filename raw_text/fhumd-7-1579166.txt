@@ -1,0 +1,903 @@
+TYPE OriginalResearch
+PUBLISHED 09May2025
+DOI 10.3389/fhumd.2025.1579166
+Human-artificial interaction in
+the age of agentic AI: a
+OPENACCESS
+EDITEDBY system-theoretical approach
+RanilsonOscarAraújoPaiva,
+FederalUniversityofAlagoas,Brazil
+REVIEWEDBY
+DenisaReshefKera, UweM.Borghoff1*,PaoloBottoni2 andRemoPareschi3
+TelAvivUniversity,Israel
+StephanieNess, 1DepartmentofComputerScience,UniversityoftheBundeswehrMunich,Neubiberg,Germany,
+UniversityofVienna,Austria 2DepartmentofComputerScience,SapienzaUniversityofRome,Rome,Italy,3StakeLab,Università
+degliStudidelMolise,Campobasso,Italy
+*CORRESPONDENCE
+UweM.Borghoff
+uwe.borghoff@unibw.de
+This paper presents a novel perspective on human-computer interaction
+RECEIVED18February2025
+ACCEPTED18April2025 (HCI), framing it as a dynamic interplay between human and computational
+PUBLISHED09May2025 agents within a networked system. Going beyond traditional interface-
+CITATION based approaches, we emphasize the importance of coordination and
+BorghoffUM,BottoniPandPareschiR(2025)
+communication among heterogeneous agents with different capabilities,
+Human-artificialinteractionintheageof
+agenticAI:asystem-theoreticalapproach. roles, and goals. The paper distinguishes between Multi-Agent Systems
+Front.Hum.Dyn.7:1579166. (MAS)—where agents maintain autonomy through structured cooperation—
+doi:10.3389/fhumd.2025.1579166
+and Centaurian systems, which integrate human and AI capabilities for
+COPYRIGHT unified decision making. To formalize these interactions, we introduce a
+©2025 Borghoff,BottoniandPareschi.Thisis
+framework for communication spaces, structured into surface, observation,
+anopen-accessarticledistributedunderthe
+termsoftheCreativeCommonsAttribution and computation layers, ensuring seamless integration between MAS and
+License(CCBY).Theuse,distributionor Centaurian architectures, where colored Petri nets effectively represent
+reproductioninotherforumsispermitted,
+structuredCentauriansystemsandhigh-levelreconfigurablenetworksaddress
+providedtheoriginalauthor(s)andthe
+copyrightowner(s)arecreditedandthatthe the dynamic nature of MAS. We recognize that elements such as task
+originalpublicationinthisjournaliscited,in recommendation,feedbackloops,andnaturallanguageinterfacesarecommon
+accordancewithacceptedacademicpractice.
+in contemporary adaptive HCI. What distinguishes our framework is not the
+Nouse,distributionorreproductionis
+permittedwhichdoesnotcomplywiththese introduction of these elements per se, but the synthesis of architectural
+terms. principles that systematically accommodate both autonomy-preserving and
+integration-seeking configurations within a shared formal foundation. Our
+research has practical applications in autonomous robotics, human-in-the-
+loop decision making, and AI-driven cognitive architectures, and provides
+a foundation for next-generation hybrid intelligence systems that balance
+structuredcoordinationwithemergentbehavior.
+KEYWORDS
+multi-agentsystems,Centauriansystems,communicationspaces,satelliteandswarm
+robots,largeactionmodels(LAMs)
+1 Introduction
+AgenticAIsystems—capableofiterativeplanning,autonomoustaskdecomposition,
+and continuous learning—are rapidly reshaping the landscape of human-computer
+interaction (HCI). Recent advances in Large Language Models (LLMs) and advanced
+conversational agents have revitalized the field of multi-agent systems, whose roots in
+ArtificialIntelligencepredatethecurrentriseofgenerativeAI.Historically,multi-agent
+systemshavereliedonagentswithrelativelylimitedcapabilities;however,theemergence
+of powerful, conversational LLMs greatly expands the range of possible multi-agent
+interactions. In this new paradigm, humans themselves can participate as full-fledged
+agents,thankstotheirinnateconversationalanddecision-makingabilities.Theresultis
+acomplex,interconnectedecosystem(Hopfetal.,2024).
+FrontiersinHumanDynamics 01 frontiersin.org
+
+Borghoffetal. 10.3389/fhumd.2025.1579166
+Simultaneously, novel and more direct forms of human- (Wooldridge, 2002; Weiss, 2013), which prioritize topological
+AI integration are emerging (Pareschi, 2024; Saghafian and relationships but struggle with dynamic concurrency, Petri nets
+Idan, 2024), in which advanced AI cognition is harnessed to offernativesupportforparallelprocessesandstatetransitionsvia
+create“Centaurian”intelligence—aseamlessfusionofhumanand token semantics, critical for hybrid human-AI systems. Colored
+machine-drivencapabilities. Petri nets (Jensen, 1995), in particular, allow us to encode
+These developments push beyond traditional HCI in two heterogeneous data, agent roles, and interaction semantics—
+distinct directions that mirror fundamental patterns found in key to modeling learning, adaptation, and reasoning in hybrid
+biological systems (Borghoff et al., 1995; von Bertalanffy, 1968; agentconfigurations.
+Miller, 1978). Multi-agent systems, like biological ecosystems, Our approach, grounded in rigorous process modeling,
+emphasizehowcollectionsofautonomousentitiescancoordinate provides a unified way to specify how heterogeneous agents—
+effectively while preserving distinct boundaries and roles. In human and artificial—can coordinate their activities while either
+contrast, “Centaurian” systems pursue deeper integration— maintainingautonomyorachievingdeeperintegrationasneeded.
+analogoustothesymbioticrelationshipsinnature—fusinghuman The remainder of this paper is organized as follows.
+and artificial competencies in tightly knit partnerships that Section2analyzestwofundamentalparadigmsinhuman-machine
+often blur the lines between human decision making and AI- collaboration—themulti-agentapproachandtheCentaurianone—
+driven processes. Living systems theory (Maturana and Varela, inlightoftherecentresurgenceofagenticAI.Section3provides
+1980) helps us understand how both approaches must address foundational background on Petri nets and their extensions.
+a core challenge: maintaining system identity through regulated Section 4 introduces the concept of communication spaces as
+boundariesandfeedbackloops(Wiener,1948),whetherinloosely a unifying framework for these paradigms, grounded in formal
+coupledcollectivesortightlyintegratedhybridintelligences. architectures and coordination mechanisms. Sections 5 and 6
+From an ethical and regulatory perspective, the blurring of illustrate these ideas with two use cases, demonstrating how
+boundaries between human and artificial agents raises critical communicationspacescanbeappliedinpracticalHCIscenarios.
+issues of accountability and transparency. As hybrid systems Section 7 discusses related work, and Section 8 concludes with
+increasinglysharedecision-makingauthoritybetweenhumanand implicationsandfuturedirections.
+AIcomponents,especiallyindomainssuchashealthcare,defense,
+or finance, it becomes essential to ensure traceable paths of
+action and define clear loci of control. By preserving observable 2 Paradigms in human-AI integration
+communication layers and explicit transitions, our architectural
+model supports auditability and human oversight even in deeply
+AgenticAIsystemshavereinvigoratedtwodistinctapproaches
+integratedCentaurianconfigurations.Whileourgoalisprimarily
+to human-AI collaboration: multi-agent architectures and
+analyticalratherthannormative,werecognizethatformalclarity
+Centaurianintegration.Thissectionexaminestheseparadigmsin
+inmodelingisaprerequisiteforethicaldeployment.
+detail,highlightingthedistinctchallengeseachpresentsforsystem
+Herbert Simon’s influential work on cognitive architectures
+designandcoordination.
+(Simon,1996)providesadditionalinsightintohowsuchhuman-AI
+Indeed,althoughbothparadigmsinvolveinteractionsbetween
+integrationmightbestructured.Histripartitemodel—comprising
+intelligent entities, they represent fundamentally different
+an external interface, a coding mechanism, and an internal
+approaches to human-artificial collaboration (Pareschi, 2024).
+processing system—was originally conceived to explain human
+Multi-agent systems maintain distinct boundaries between
+problem-solving but extends naturally to hybrid systems. When
+components while enabling complex interactions, much like
+human abilities merge with artificial intelligence, the resulting
+natural ecosystems. In contrast, Centaurian systems mirror
+configuration can evolve from traditional tool use (Homo Faber)
+the tight integration seen in biological organisms, where
+to a more profound integration (Centaurus Faber) where each
+components merge functionally to create new capabilities
+componentmaybeinstantiatedbyeitherhumancognitionorAI
+(SaghafianandIdan,2024).
+subsystems(Pareschi,2024).Thisperspectivesuggestshowsystem
+boundaries might be organized to support both autonomous
+operationanddeepintegration.
+Theframeworkproposedinthispaperservesadualpurpose: 2.1 Architectural differences
+first, as a design methodology for structuring hybrid human-
+AI systems, and second, as an analytical lens for understanding Theprimaryarchitecturaldistinctionliesinhowthesesystems
+theircoordinationdynamics.Whilenotprescriptiveinaregulatory organizeandmaintaintheiridentity(Pareschi,2024).
+sense,itoffersanormativefoundationforevaluatingthedegreeand Multi-agent systems (MAS) emphasize functional
+quality of integration between agents. Its modular structure also independence, where agents—human or artificial—operate as
+allowsittobeadaptedforformalverificationandimplementation distinct entities with decision-making capabilities and dynamic
+inreal-worldsystems. collaboration. This design has allowed MAS implementations
+Toaddressthesearchitecturalchallenges,weintroduceaformal to thrive even with relatively simple AI agents, focusing on
+framework based on Petri nets (Petri, 1962; Murata, 1989) that coordinationratherthandeepintegration.
+can model both multi-agent and Centaurian paradigms while Centaurian systems, by contrast, create unified composite
+supportingthekeyrequirementssuggestedbylivingsystemstheory entities where human and artificial components become
+andSimon’sarchitecture:clearboundaries,regulatedinteractions, functionally interdependent. Theoretical foundations for such
+andadaptivefeedbackloops.Unlikegraph-basedagentframeworks systems trace back to Licklider (1960) and Engelbart (1962), but
+FrontiersinHumanDynamics 02 frontiersin.org
+
+Borghoffetal. 10.3389/fhumd.2025.1579166
+theirpracticalfeasibilityhasemergedonlyrecentlywithgenerative loose coupling of MAS and the tight integration of Centaurian
+AIsystemscapableofcomplementinghumancognitivefunctions. systemswhilepreservingtheircoreattributes.
+A key concept in both systems is that of communication
+spaces—regions of interaction where information exchange and
+coordination occur. In biological systems, these are signaling 2.4 Situating human-machine
+pathways or neural networks; in human-machine systems, they
+collaboration in the context of agentic AI
+manifest as protocols, interfaces, and shared representational
+spaces (Bradshaw et al., 2011). These spaces enable “joint
+AdvancesinagenticAIheightentherelevanceofmulti-agent
+activity”, characterized by inter-predictability, common ground,
+andCentauriansystems.UnliketraditionalAIchatbots,agenticAI
+anddirectability.
+systemsengageinsophisticatedreasoninganditerativeplanningto
+solvecomplex,multi-stepproblemsautonomously.Thesesystems
+follow a four-step cycle of perception, reasoning, action, and
+2.2 Integration paradigms, operational
+learning,continuouslyimprovingovertime.
+dynamics, and convergence points
+Our framework provides a theoretical foundation for
+integrating agentic AI into human-machine collaboration. It
+Each paradigm embodies different principles from living is intended to be used primarily for system design, analytical
+systems theory: In MAS, collaboration occurs through well- modeling, and normative assessment. The multi-agent paradigm
+definedprotocolsbetweenautonomousagents,resemblingdistinct aligns with contexts where agentic AI must maintain autonomy
+organismsinanecosystem.Effectivenessemergesfromcollective while coordinating with human and artificial agents via defined
+behavior while maintaining individual identities. In Centaurian protocols—suchasindistributedcustomerserviceorcollaborative
+systems, integration blurs the boundaries between human and softwaredevelopment.
+artificialcomponents,formingfunctionallyunifiedentitiessimilar Conversely, the Centaurian paradigm is critical for cases that
+tobiologicalorganisms. requiredeepintegrationwithhumanoperators,suchashealthcare
+The ecosystem versus organism analogy extends to or video analytics, where AI seamlessly blends with human
+operationaldynamics: expertise and decision making. The tight coupling characteristic
+ofCentauriansystemsenablesfluidinteractionsforcomplextasks
+• Identitymaintenance:MASpreservedistinctagentidentities thatrequirehumanjudgmentalongsideAI-drivenanalysis.
+while allowing interaction while, Centaurian systems create AsagenticAIsystemsgrowmoresophisticated,theinterplay
+newcompositeidentitiesthroughintegration. between these paradigms becomes more dynamic. For instance,
+• Adaptation mechanisms: MAS adapt via reconfiguration of anenterpriseAIsystemmightoperateindependently(multi-agent
+agentrelationships,whileCentauriansystemsevolvethrough mode) for routine tasks while tightly integrating with human
+internaltransformationofintegratedcomponents. experts(Centaurianmode)forcomplexdecisions.Ourframework
+• System boundaries: MAS maintain clear boundaries with supportstheunderstandinganddesignofsuchinteractions.
+well-defined interfaces, while Centaurian systems develop Additionally, the “data flywheel” effect—continuous learning
+permeableboundariesfordeepfunctionalintegration. and adaptation—aligns with our model’s emphasis on system
+evolution. Learning occurs both in the improvement of
+Despitethesedistinctions,somescenariosblurtheboundaries independentagents(multi-agentparadigm)andintherefinement
+between paradigms, especially in adaptive complex systems. of human-AI integration patterns (Centaurian paradigm),
+Consider large action models (LAMs), where human operators demonstratinghowourframeworkaccommodatesvariousaspects
+provide training feedback to artificial systems. Depending on ofagenticAIdevelopment.
+the context, these interactions can manifest as multi-agent
+collaborationorCentaurianintegration.Suchconvergencepoints
+suggestthatwhiletheparadigmsareconceptuallydistinct,theycan 3 Technical background: Petri nets
+complementeachotherinpractice.
+To provide a rigorous foundation for modeling the complex
+interactions in both multi-agent and Centaurian systems, we
+2.3 Implications for system design employ Petri nets as our core formal framework. Petri nets
+present several advantages for our purpose: they offer a
+Viewing these paradigms through the lens of living systems clear graphical representation while maintaining mathematical
+theory has key design implications: The MAS design focus precision, they naturally capture concurrent processes and
+is on preserving agent autonomy, developing protocols for synchronizationrequirements,andtheycanbeextendedtohandle
+effective coordination, and ensuring system resilience through sophisticated data types and conditions through their colored
+independentagents.Centauriansystems,ontheotherhand,have variants. These properties make them especially well-suited for
+adesignfocusonemphasizingfunctionalintegrationmechanisms, modeling interactions among heterogeneous agents, whether in
+developing shared representational spaces, and encouraging loosely coupled multi-agent configurations or tightly integrated
+emergentcapabilities. Centaurian systems. This section introduces the key concepts of
+Section 4 will introduce communication spaces as a unifying Petrinetsandtheirextensions,whichwillserveastheformalbasis
+framework supporting both paradigms, thus enabling both the forourcommunicationspacesframework.
+FrontiersinHumanDynamics 03 frontiersin.org
+
+Borghoffetal. 10.3389/fhumd.2025.1579166
+Petrinetsareawell-establishedformalismfordescribingand
+analyzing the flow of information and control in concurrent
+systems.OriginallyintroducedbyPetri(1962),theyhaveevolved
+intoafamilyofmodelswidelyappliedincomputerscience,systems
+engineering, and workflow management. A Petri net consists of
+places, transitions, and arcs connecting places to transitions (or
+vice versa), with the system’s state captured by tokens that reside
+in places. As transitions fire, tokens move among places, thus
+FIGURE1
+modeling the progress of a process or distributed computation AsimplePetrinetexampleshowingtwoplacesandonetransition.
+(Murata,1989).
+• Stateandcontexttracking:Colorsetscancapturetheinternal
+3.1 Basic concepts and advantages
+stateofagentsorsystemcontexts,allowingtransitionstofire
+onlywhencertainconditions(guards)onthosestatesaremet.
+• Graphical clarity: One of the key strengths of Petri nets • Protocol definition and enforcement: Complex interaction
+is their visual nature. Processes, resource constraints, and sequences,includingthedynamiccreationanddistributionof
+synchronizationpointsarerepresentedinadiagram,offering tasks,canbesuccinctlyspecifiedandanalyzed.
+anintuitiveviewofconcurrentinteractions.ThismakesPetri • Integration with communication spaces: As we will see in
+nets well-suited for communicating system designs to both Section 4, communication spaces—surface, observation, and
+technicalandnon-technicalstakeholders. computation—canbemappedontodistinctpartsofacolored
+• Explicit concurrency: Petri nets explicitly capture Petrinet,leveragingtypestoseparateorcoordinatedifferent
+concurrency by allowing multiple transitions to fire communicationandprocessingdomains.
+independently if they have sufficient tokens in their input
+places. This feature provides a natural way to represent
+multi-agentormulti-componentsystemswhereactionsmay 3.3 Illustrative example
+proceedinparallel.
+• Formalanalysistools:Arichecosystemofanalysistechniques Figure1 presents a simplified Petri net modeling a small
+(e.g., reachability, liveness, boundedness) and software tools concurrent process. Places are shown as circles, transitions as
+(e.g.,coloredPetrinetsTools1)existsforverifyingproperties rectangles,andarcsindicatetheflowoftokens.
+ofPetrinetmodels(Jensen,1995).Thisisparticularlyuseful InacoloredPetrinetversion(Figure2),tokenscarryadditional
+for systems requiring rigorous guarantees, such as safety- datatypesthatreflecttherolesortasksassignedtodifferentagents.
+criticalapplicationsorcomplexhuman-AIworkflows.
+• Modularity and extensibility: Petri nets provide a modular
+frameworkthatcanbeextendedtovariousspecializedforms 3.4 Relevance to hybrid agent systems
+(e.g., timed, stochastic, colored), allowing the designer to
+incorporate specific features such as timing constraints, Petri nets, and particularly their colored variants, are
+probabilisticbehavior,ortypedtokens. ideally suited to represent the parallel and event-driven nature
+of interactions among humans and AI components. Their
+token-based semantics naturally handles concurrency, while the
+3.2 Colored Petri nets and typed tokens ability to extend tokens with data types makes them powerful
+enough to capture the complexities of heterogeneous, hybrid
+agentsystems.
+While classical Petri nets use indistinguishable tokens to
+As we will see in the next section, Petri nets’ properties—
+mark places, colored Petri nets extend this model by assigning
+particularly their ability to model concurrent processes,
+types or colors to tokens. Places become typed containers, and
+handle heterogeneous data types, and support both loose
+transitions can incorporate guard functions that enable more
+and tight coupling—make them ideal for implementing
+complexbehaviors(Jensen,1995).Thisextensionallowsdesigners
+the communication spaces framework, which addresses the
+to encode complex data structures and interaction protocols
+coordinationchallengesidentifiedinourdiscussionofmulti-agent
+directly in the net, significantly increasing expressiveness. In the
+andCentaurianparadigms.
+context of hybrid agent systems, colored Petri nets are especially
+advantageousfor:
+4 Communication spaces and agent
+• Heterogeneousagents:Differenttypesoftokenscanrepresent
+architectures
+messages, tasks, or capabilities unique to human and
+syntheticagents.
+The contrasting requirements of multi-agent and Centaurian
+paradigms—maintaining clear boundaries in one case while
+1 https://cpnide.org/ enablingdeepintegrationintheother—callforaunifiedframework
+FrontiersinHumanDynamics 04 frontiersin.org
+
+Borghoffetal. 10.3389/fhumd.2025.1579166
+FIGURE2
+AcoloredPetrinetwheretokenscarrytypesordata,allowingconditionaltransitions.
+thatcansupportbothapproaches.WhilePetrinetsprovideastrong Centaurian system, each space encapsulates a coherent set
+formal foundation for modeling processes and synchronization, of interaction rules and constraints. The formation of these
+weneedtoextendtheircapabilitiestocapturethecomplexitiesof spaces typically involves either point-to-point or broadcast
+human-AIcollaborationfully.Weintroducecommunicationspaces communication2, or communication through the environment3.
+as this unifying framework, building on Petri nets while adding Several examples illustrate this multi-agent organization of
+specialized structures for handling varied communication styles, communicationspaces:
+heterogeneouscapabilities,andadaptiveprotocols.
+• In Mobile Ad-hoc NETworks (MANETs), mobile devices
+communicate with one another via wireless links without
+4.1 Foundations and rationale relying on an underlying infrastructure: each device acts
+as both an endpoint and a router forwarding messages to
+Petri nets excel at modeling token flows among well-defined devices within radio range. Software support for MANETs
+places, but in hybrid human-AI systems, we face additional typically presents a coordination layer that sends specific
+challenges. Agents differ widely in perceiving, processing, and messages to individual agents to guarantee the execution
+sharing information: humans communicate through natural of cooperative processes while considering the need for
+language,AIsystemsthroughstructureddata,andphysicaldevices connectivity continuance. In Bottoni et al. (2006), a formal
+through sensor signals. Moreover, these communication patterns modelofthecoordinationmechanismswasgivenintermsof
+mustadaptdynamicallyasthesystemshiftsbetweenloosecoupling High-LevelPetrinets.
+(characteristic of multi-agent systems) and tight integration • Managementoftransportationnetworksrequiresmaintaining
+(needed in Centaurian configurations). These requirements call complete information on the whereabouts of vehicles and
+for a framework that can accommodate asymmetric interaction the state of roads to be mapped on the topology of the
+capabilitieswhilesupportingbothautonomousoperationanddeep transportationnetwork(seeCianciaetal.(2018)foraconcrete
+cognitivefusion. example).Then,theoverallstateofthetransportationsystem
+is given by the information of which vehicle is at which
+nodeofthenetwork,informationwhichhastobemaintained
+Amini-exampleofheterogeneousagents consistentlyforeachvehicle.
+ConsiderateamasshowninFigure3withahumanoperator,
+anLLM-basedconversationalagent,andaswarmofsimplerobotic
+drones. The human and LLM exchange strategic decisions via
+2 Point-to-pointorbroadcastcommunicationoftenusesmessagepassing
+text-basedconversation,whilethedronescommunicatereal-time
+asacrucialconceptinmanysysteminteractions,especiallyindistributed
+state updates in a lightweight sensor-data format. Additionally,
+systems,concurrentprogramming,orevent-drivenarchitectureslikeours.
+the human observes a video feed of drone activity. Each of these
+It allows different components (agents, large action models, etc.) to
+“channels” imposes different synchronization rules, data formats, communicatewithoutinternalknowledgeoftheothersystem(decoupling),
+and reliability guarantees—precisely the nuances communication makingiteasytoaddmorecomponentstoamessaging-coupledsystem
+spaceshelpformalize. (scalability).Evendifferentmessagingprotocolscanbeeasilyimplemented
+and exchanged spontaneously (flexibility), with some protocols allowing
+asynchronous interaction in which the sender and receiver do not
+4.2 Core ideas of communication spaces
+have to work simultaneously (asynchrony). Xiao et al. (2020) presents a
+comprehensive overview and analysis of the most advanced blockchain
+Communication spaces group interactions into three consensusprotocolsbasedonmessagepassing.
+conceptual layers (Borghoff et al., 2024a): surface, observation, 3 Sharedmemoryarchitecturescanformsuchanenvironmentalcommon
+and computation. Whether in a multi-agent (MAS) or a groundintheBradshawetal.(2011)sense.
+FrontiersinHumanDynamics 05 frontiersin.org
+
+Borghoffetal. 10.3389/fhumd.2025.1579166
+FIGURE3
+Conceptualillustrationofahumanoperator,anLLMagent,andaswarmofdrones,eachusingdistinctcommunicationchannels(text-based,
+structureddata,andvideofeed).
+FIGURE4
+AlayeredarchitectureforHCI.
+• IntheclassicalworkbyDorigoetal.(2006),acomputational formatteddataandthepresentationlayout,andprovidingsupport
+modelwasderivedfromhowantscommunicateinformation forcapturinguserinteractions.
+on trails to reach food sources by marking them through Note that in this architecture, the actions performed by the
+pheromones recognized by other ants. The computational executive agents, and not just their results, can be subject to
+model was, therefore, based on associating weights to paths observation. Vertical structuring is also shown, relating surface
+to a result and strengthening those associated with a agents and executive agents through an observation space (see
+successfulone. Figure5).
+Figure4 shows a layered architecture similar to the Model-
+View-Controller (MVC) paradigm, where executive agents
+Surfacespace
+implement the actual computations, observer agents realize
+a bridge between the computations, thereby managing the Thisspacemediatesallcontactwiththeoutsideenvironment—
+formattingofdataforpresentationanddecodinguserinteractive userinterfaces,sensors,andexternalAPIs.InMAS,surfacespace
+commands and data entry, and surface agents (or mediators) typicallyinvolvesmessage-passingprotocolsoreventlisteners.In
+are responsible for maintaining the presentation of the overall Centaurian systems, it can reflect a direct blending of human
+state to the users, thereby managing the materialization of the sensoryinputandAI-drivendatacapture.
+FrontiersinHumanDynamics 06 frontiersin.org
+
+Borghoffetal. 10.3389/fhumd.2025.1579166
+FIGURE5
+Schematizationofcommunicationspacesintheproposedarchitecture.
+Observationspace Feedbackloopsenableadaptivebehavior,suchasrefiningprotocols
+Bridging the surface interface with internal processing, orredistributingtasksinrealtimebasedonperformance.
+observation space handles message transformations, routing, Eachofthesespacescanbeseenasmanagedbyanassociated
+and light coordination. In MAS, protocols here ensure agents group-agent, facilitating distributed problem-solving among a
+remain autonomous yet cooperative. In Centaurian systems, group of users within a networked system or application. The
+observation may feature continuous feedback loops that unify structure of a group-agent is schematized in Figure6, where the
+humanperceptionwithAIanalysis. ID and ST compartment are common to all agents. Then, the
+COMPOSITION compartment is specific to a group-agent, while
+other agents have specific additional members for defining their
+Computationspace state,andareendowedwithasetofbehaviors.
+Serving as the “core” of the system, the computational space Group-agents are relevant in collaborative systems where
+makes decisions, allocates resources, and generates final outputs. multipleusersandagentsworktogethertosolvecomplexproblems
+MASsolutionsofteninvolvemultipleautonomousmodules,each or tasks and proper delivery of messages is crucial to ensure
+coordinatingaportionofthecomputation.Incontrast,Centaurian thateachparticipantiscorrectlyinformedoftheoverallprogress
+architectures could fuse human insight with AI algorithms in a toward task achievement. A group-agent can be created at any
+shareddecision-makingenvironment. timewithrespecttoatopicanditsregisterbehaviorregulates
+composition modification through a protocol which respects the
+localization constraints. The following pseudo-code provides an
+abstract specification of the construction of group-agents for
+Flowsandfeedback
+communicationspaces.
+Informationtravelsverticallythroughthesespaces—fromraw
+inputatthesurfacetointernalprocessingandback.Theremayalso register(self, agent) {
+behorizontalflowswhereagentscollaboratewithinagivenspace. if agent is concerned with self.topic then
+FrontiersinHumanDynamics 07 frontiersin.org
+
+Borghoffetal. 10.3389/fhumd.2025.1579166
+FIGURE6
+Aschematizationofthebasicstructureofagroupagent.
+if agent.ST = ON then 4.3 Implementing communication spaces
+self.CMP[active].Add(agent)
+else self.CMP[nonActive].Add(agent) EachofthethreespacescanbemappedontosubsetsofPetri
+} netplaces(orsubnets)withtypedtokensindicatingrelevantdata,
+} tasks,orevents.Thisapproachpartitionsanetintoself-contained
+“zones”,eachgovernedbyspecificinteractionrulesandconstraints.
+Oncecreated,agroup-agenthastoguaranteethatanymessage
+from a member of the group can be read by all other (active)
+members. In particular, a message sent by an agent registered Multi-agentarchitecture
+to a group and concerning the group’s topic is delivered to all In a multi-agent system, surface agents manage user
+activeagentsregisteredtothatgroup,asforthegroup’sdeliver interactions and detect events from the environment, acting
+behavior,tobeinvokedonmessagegeneration. as the system’s interface with external inputs. Observer agents
+ensure smooth communication by transforming and routing
+deliver(m){
+messages, enabling coherent collaboration among autonomous
+ifself.ST==ONandself.isConcernedWith(m.topic)then
+components. Meanwhile, executive agents operate within the
+foreachagentinself.CMP[active]
+computationalspace,executingspecializedtasksandmaintaining
+agent.addToBuffer(m)
+apartialsystemstatetosupportoverallfunctionality.
+A key benefit is clear boundary maintenance and scalability:
+}
+eachagenttypecanbeaddedorremovedwithminimalimpacton
+theothers,providedcommunicationprotocolsremainconsistent.
+Similarly, deregistration can occur, when a component is no
+longer relevant to a group topic, or due to an explicit decision
+bythecoordinationmechanism.Deregistrationcanonlyoccurfor
+Centaurianarchitecture
+activeagents.
+InCentauriansystems,aunifiedinterfacelayermergeshuman
+deregister(self, agent) { and AI sensory input within the surface space, creating a
+if agent ∈ self.CMP[active] then seamless interaction point. A shared observation layer acts as a
+self.CMP[active].Remove(agent) bridgebetweenhumanandAIrepresentations,facilitatingsmooth
+} cognitive fusion. Meanwhile, a hybrid processing layer integrates
+humanreasoningwithalgorithmicmethods,allowingforemergent
+Theinformationabouttheactivitystatusofanagentregistered collectiveproblem-solving.
+toagroupisupdatedthroughtheswitchbehavior Such architectures thrive on adaptability, where boundaries
+are permeable and agents can fluidly exchange roles or data to
+switchCMP(self, agent) {
+optimizeperformance.
+if agent.ST == OFF and agent ∈ self.CMP[active]
+then
+self.CMP[active].Remove(agent)
+4.4 Formal representation with colored
+self.CMP[nonactive].Add(agent)
+if agent.ST == ON and agent ∈ self. Petri nets: communication space Petri net
+CMP[nonactive] then
+self.CMP[nonactive].Remove(agent) WeextendcoloredPetrinetstocreateaCommunicationSpace
+self.CMP[active].Add(agent) Petri net, where places are partitioned into surface, observation,
+} and computation categories. Tokens carry types or “colors”
+FrontiersinHumanDynamics 08 frontiersin.org
+
+Borghoffetal. 10.3389/fhumd.2025.1579166
+FIGURE7
+AschematiccoloredPetrinetsnippetillustratinghowatransitionfiresonlyifbothanLLMplanningtokenandahumanapprovaltokenarepresent,
+capturingCentauriansynergy.
+corresponding to data formats or message semantics relevant to AsystemmayoperatepredominantlyinMASmodeforroutine
+eachspace.Transitionguardsincorporaterulesforagent-specific tasks, yet temporarily shift to a more Centaurian-like strategy
+capabilities(e.g.,acolorsetmaydenote“humantextcommand”vs. whenitencountersnovelorambiguousconditions.Thiscapacity
+“dronesensordata”). to blend paradigms on demand underscores the flexibility of
+Thisenrichedformalismpreservesthetractabilityofstandard communicationspaces.
+Petri nets while accommodating the specialized interactions of The benefits can be summarized as follows: By demarcating
+heterogeneousagents.Forexample,transitionsintheobservation surface, observation, and computation spaces within a
+space can fire only when tokens of type “parsed command” are unified Petri net model, designers gain a clear blueprint
+present, ensuring that raw data never bypasses the necessary for structuring agent interactions. This approach enables
+transformationsteps. them to capitalize on the strengths of both multi-agent and
+Centaurian paradigms—maintaining well-defined boundaries
+when necessary, but also allowing for deep integration and
+Examplesnippet emergent capabilities where advantageous. The next sections
+ImagineatransitionasshowninFigure7inthecomputation illustrate how communication spaces operate in real-world
+space labeled Assign Task, which fires only when it receives both scenarios, further emphasizing their role in building robust
+a“planningtoken”fromtheLLMagentandan“approvaltoken” human-AIsystems.
+from the human. Such a rule encapsulates the synergy sought in
+aCentauriandesign,formalizinghowhumansign-offtriggersan
+AI-basedplanningprocess.
+5 Use case 1: multi-agent interaction
+with satellite and swarm robots
+4.5 Implementation considerations
+This use case demonstrates how our theoretical framework
+Implementingcommunicationspacesrequirescarefulattention accommodatesbothmulti-agentandCentaurianparadigmswithin
+to the following aspects: State management ensures consistent a complex system. While predominantly exhibiting multi-agent
+updates across distributed agents or fused human-AI modules, characteristicsthroughitsdistributedarchitecture,thesystemalso
+especiallyintime-sensitiveenvironments.Resourceallocationdeals incorporatesCentaurianelementsinspecifichuman-AIinteraction
+withbalancingcomputationalload,bandwidth,andpotentialreal- points. Figure8 illustrates the data flow in an experiment with a
+time constraints. Protocol adaptation supports switching between semi-centralizedcoordinatedswarmofrobots,usingboth“rigid”
+agentautonomy(MAS)anddeeperintegration(Centaurian)based optimizationalgorithmsand“flexible”interventionthroughalarge
+onchangingsystemgoalsorunexpectedconditions. languagemodel(LLM).Thissetupencapsulatesatruemulti-agent
+FrontiersinHumanDynamics 09 frontiersin.org
+
+Borghoffetal. 10.3389/fhumd.2025.1579166
+FIGURE8
+Interactionofhumanoperators,conversationalAI,satellite,andaroboticswarm.
+HCIinteraction,integratinghumanoperators,conversationalAI, LLM interacts with the blockchain and control algorithms as an
+thesatellitecontrolunit,andswarmrobots. independentagent,providingaflexibleintelligencelayer.However,
+This use case extends the application of a semi-centralized the interaction between human operators and the LLM exhibits
+control strategy, originally enhanced with blockchain technology Centauriancharacteristics,creatingatightlycoupleddecisionunit
+for security and transparency (Carovilla et al., 2023). The multi- wherehumanjudgmentandAIrecommendationsareseamlessly
+agent paradigm is evident in how distinct entities—the satellite integrated. This dual-nature system remains robust and adaptive
+controlunit,swarmrobots,LLM,andhumanoperators—maintain throughboththeindependentoperationofitscomponentsandthe
+their functional independence while collaborating through well- synergistichuman-AIintegrationpoints.
+defined protocols. However, the system also exhibits Centaurian
+characteristics at certain points of interaction, particularly at the
+human-LLMinterface.Theoverallinformationanddecisionflow, 5.3 Practical applications
+describedindetailinthefollowingsections,isshowninFigure9.
+The practical applications show how the two paradigms
+complement each other. For path optimization and adaptive
+5.1 System overview
+problem solving, the system primarily operates in a multi-agent
+mode,withtheLLMactingasanindependentadvisor.However,
+The system exemplifies the multi-agent paradigm through when human operators review and implement suggestions, the
+its composition of distinct, autonomous components: a satellite interaction temporarily shifts to a Centaurian mode, creating a
+control unit, a swarm of robotic agents, an LLM, and human tightly integrated human-AI decision unit. For example, in path
+operators. Each agent maintains its own decision-making planning,theLLMcansuggestchangestocurveparametersbased
+capabilities while participating in the collective process. The ondetectedobstaclesorchangesinterrain,maintainingitsagent
+satellite provides centralized coordination and processes the data independence, while human operators review these suggestions
+collected by the swarm, while the LLM offers strategic advice on throughaCentaurian-styledeepintegrationprocess.
+algorithm selection and parameter tuning. The human operators
+arenotjustsupervisors,butautonomousagentswhomonitorthese
+interactions and intervene to guide the system through complex 5.4 Human-agent collaboration
+decisionprocesses.
+Thecollaborationmodelinthissystemdemonstratesthevalue
+of supporting both paradigms. While the overall architecture
+5.2 Integration with LLM and human
+followsmulti-agentprinciples,withhumanoperatorsfunctioning
+operators asindependentagentswithinthesystem,theirinteractionwiththe
+LLMandcontrolsystemsoftenexhibitsCentauriancharacteristics.
+The integration layer demonstrates a hybrid approach that This flexible approach allows the system to leverage both the
+combinesbothparadigms.Followingthemulti-agentparadigm,the independence and coordination capabilities of the multi-agent
+FrontiersinHumanDynamics 10 frontiersin.org
+
+Borghoffetal. 10.3389/fhumd.2025.1579166
+FIGURE9
+Informationanddecisionflowsinthesemi-centralizedcontrolstrategy.
+paradigm and the deep integration benefits of the Centaurian a sophisticated feedback loop system where the boundaries
+approach. The result is a robust system that protects against the between human and artificial intelligence become increasingly
+risksofautomationwhileactivelyleveragingtheuniquestrengths fluid, reflecting the core principle of Centaurian systems where
+of both humans and machines, pushing the boundaries of what components form an integrated whole rather than remaining
+technologycanachievethroughthisdual-paradigmapproach. distinctentities.
+6 Use case 2: large action models 6.1 System overview
+(LAMs) through feedback loops on HCI
+interactions
+The LAM framework in the RABBIT API exemplifies the
+Centaurianparadigmthroughitscorecomponents:theLAMnode,
+human users, and the HCI system, along with representations
+Whileourfirstusecaseemphasizedthemulti-agentparadigm,
+of the challenges this integration addresses and the user
+this second use case demonstrates a stronger inclination toward
+experience. Rather than maintaining strict boundaries between
+the Centaurian approach, while still maintaining some multi-
+thesecomponents,theyevolvetogetherthroughtheirinteractions.
+agent characteristics. Figure10 shows the framework of RABBIT
+The LAM node, while functioning as a computational agent,
+TECH’s Large Action Model (LAM)4, which integrates advanced
+achieves a level of integration with human users that goes
+computational agents to effectively model and predict human
+beyondtraditionalmulti-agentrelationships,usingneuro-symbolic
+actions on computer applications. The system exemplifies the
+programmingtocreateaunifieddecision-makingentity.
+Centaurian paradigm’s emphasis on tight integration between
+humanandartificialcomponents,whileincorporatingmulti-agent
+elementsinitsdistributedarchitecture. 6.2 Neuro-symbolic integration
+ThisusecaseillustratesthetransformativepotentialofLAMsin
+creatinganewparadigmforhuman-computerinteraction.Unlike
+The neuro-symbolic approach of LAM represents a
+traditional multi-agent systems where components maintain
+key Centaurian characteristic: the seamless integration of
+clear boundaries, Rabbit LAM demonstrates the Centaurian
+different processing paradigms. By combining neural network
+ideal of deep functional integration, continuously learning from
+capabilities for pattern recognition with symbolic AI for rule-
+user input and refining its predictive capabilities. It embodies
+based processing, LAM demonstrates how apparently distinct
+computational approaches can be unified into a coherent whole,
+4 https://www.rabbit.tech/research much like the human-AI integration central to Centaurian
+FrontiersinHumanDynamics 11 frontiersin.org
+
+Borghoffetal. 10.3389/fhumd.2025.1579166
+FIGURE10
+Feedbackloopforimprovedagentinteractions.
+systems. This integration enables the execution of complex Centauriansystemswherecomponentsevolvetogetherratherthan
+tasks across multiple applications with high accuracy and merelycoordinatingtheiractions.
+minimallatency.
+For example, consider a LAM processing an ambiguous user
+command such as “Schedule a meeting with the team soon.” 6.4 Practical applications and challenges
+The LLM (stochastic) might probabilistically interpret “soon”
+as “within 2 days” based on training data, while the symbolic LAM’s approach to task management and problem solving
+scheduler (deterministic) enforces a rule that “soon” must map demonstratestheadvantagesofCentaurianintegrationovermere
+to a fixed 24-h window. To resolve this, the observation space multi-agentcoordination.Byanticipatinguserneedsandproviding
+(seeFigure5)mediatesbetweenthetwolayers:theLLM’sproposal proactivesolutions,itshowshowdeephuman-AIintegrationcan
+is marked as a “suggestion” token, which triggers a human- surpass the capabilities of systems in which components merely
+AI negotiation protocol in the computational space. Here, the coordinate their actions. However, this tight integration poses
+systemeitheracceptstheLLM’soutputwithaconfidencethreshold unique challenges, including ensuring the transparency of AI
+(>80%) or defaults to the symbolic rule, logging the conflict decisionsandpreservingprivacy—challengesthatarecharacteristic
+for later refinement. This ensures adaptability while maintaining ofCentauriansystems,wheretheboundariesbetweenhumanand
+traceability—a key requirement for Centaurian systems in high- artificialcomponentsbecomeblurred.
+stakesdomains.
+6.5 Key takeaways
+6.3 Human-agent interaction
+The feedback loops in LAM exemplify the evolutionary
+Thehuman-LAMinteractionepitomizestheCentaurianideal nature of Centaurian systems. Unlike multi-agent systems where
+of symbiotic integration. Through a natural language-based user components maintain fixed identities and interact through
+interface that processes spoken or typed commands, the system stable protocols, LAM’s feedback loops create a dynamic
+achieves a level of interaction where the boundaries between system where human and artificial components grow together,
+humanintentandmachineexecutionbecomeincreasinglyblurred. continuously refining their interaction patterns. This approach
+ThefeedbacksystemallowsLAMtolearnfromeachinteraction, to HCI demonstrates how Centaurian principles can create
+adaptingitsmodelstobettermatchuserpreferences—ahallmarkof more intuitive and responsive computing environments, while
+FrontiersinHumanDynamics 12 frontiersin.org
+
+Borghoffetal. 10.3389/fhumd.2025.1579166
+still benefiting from certain multi-agent characteristics in its With the ubiquity of AI applications, HCI research is
+distributedarchitecture. increasingly integrating these approaches, demonstrating that AI
+and HCI are mutually beneficial when they collaborate (Panda
+andRoy,2024).However,criticismandbadexperienceshavealso
+7 Related work
+been reported. For example, Choudhuri et al. (2024) state that
+there were no statistical differences in participants’ productivity
+The implementation of agent interactions has been explored or self-efficacy when using ChatGPT compared to traditional
+through various computational approaches. Basic interaction resources. Instead, they found significantly higher frustration
+protocols have been formalized for distributed computation levels, identifying five distinct errors resulting from violations of
+(Aspnes and Ruppert, 2009), while more complex patterns have human-AI interaction guidelines, leading to various (negative)
+beendevelopedforknowledgecombination(Andreolietal.,1994; consequencesfortheparticipants.
+Borghoff and Schlichter, 1996) and distributed problem-solving LLMsareincreasinglybeingusedinstudiestoinvestigatethe
+(Borghoff et al., 1998). Recent work has focused on higher-level interaction between humans and artificial agents. Borghoff et al.
+interactions,particularlyinintentionrecognition(deGreefetal., (2024b) explore human-artificial interaction with generative AIs
+2007;Ingaetal.,2023),whichisbecomingincreasinglyimportant in a software engineering project course. In the same domain,
+as artificial agents grow more sophisticated in their ability to Nascimentoetal.(2023)evaluatesChatGPT-generatedcodeagainst
+understandandrespondtohumangoals. developer-generated code to determine which tasks are better
+Guamán et al. (2021) presents an innovative unsupervised suited for engineers and which are better handled by AI. This
+clustering theory using self-organizing maps to classify MVC couldleadtomoreefficientinteraction(e.g.,AIasatutorforSE
+patterns based on software quality metrics in a continuous developers)andprovidenewinsightsintoinnovativeAIstrategies
+interaction process. Their goal is to identify quality features that that include the involvement of humans-in-the-loop to support
+determinethesimilarityofMVCapplicationswithoutarchitectural thetasksofsoftwareengineering.CapitanelliandMastrogiovanni
+bias. Lawless and Sofge (2021) use interdependence theory to (2024) demonstrate that LLMs can play an important role in
+determine whether convergence has a positive or negative effect planningactionsinhuman-robotinteractions.
+inacompetitionbetweenhumanandartificialagents,asinsystem Giudici et al. (2024) present and evaluate a method
+dynamicsmodels. for analyzing user reactions to AI using a live-streaming
+Mobile applications, as well as satellite and swarm robotics, platform where human streamers conduct interviews that
+have grown significantly in recent years, with architectural are transmitted to a specially developed GPT voice interface
+patterns playing a critical role in their success. To ensure using a crowd-based approach. Kim and Im (2023) study the
+the correct implementation of an MVC pattern, Dobrean and attributionofhumancharacteristicstoartificialintelligence.They
+Diosan(2022)proposeanautomatedtechniquethatanalyzesand developed a tool to measure how users form anthropomorphic
+detectsarchitecturalissuesusingdatafromSoftwareDevelopment reactions to interactions with AI chatbots in a banking service
+Kits (SDKs) specifically targeted at mobile code bases. To setting. For a survey of Artificial Emotional Intelligence
+enhance coordination and security in swarm robotic systems, (AEI) for cooperative social human-machine interactions see
+Carovilla et al. (2023) introduce a semi-centralized framework AhmadiandHammond(2023).
+that integrates blockchain technology, featuring a centralized Message Passing Neural Networks (MPNNs) (Papillon et al.,
+control unit that coordinates the swarm, while blockchain 2023) are a special class of neural networks that use the
+technology ensures secure and decentralized data storage and aforementionedmessage-passingparadigmtocaptureinteractions
+communication. Kumar and Choppella (2023) take the opposite between entities (often represented as nodes in a graph). In
+approach, extending pattern descriptions with a System of MPNNs, nodes in a graph communicate with their neighbors
+Systems (SoS) model to apply interactive dynamics to an throughaseriesofmessage-passingsteps.Thisinteractionallows
+MVCpattern. the network to learn representations by aggregating information
+Using the Internet of Things (IoT) paradigm as a complex fromneighboringnodes;seealsotheRABBITusecaseinSection6.
+distributed system that shares a 3-tier architecture consisting of A formal model of the global activity of a system of agents
+embedded nodes, gateways that connect an embedded network is provided by concurrent game structures, describing a situation
+to the wider internet, and data services in servers or the where agents act according to individual strategies by which to
+cloud, Riliskis et al. (2015) propose a novel approach for select individual actions based on knowledge of the global state
+programming applications across 3-tiers using a distributed of the system. Reasoning on the possible evolutions of such
+extension of the MVC architecture. Also in the IoT context, systems leads to the definition of some variations of Alternating-
+with a focus on the gaming/sports arena, Chen (2025) sees Time Temporal Logic (see e.g., Alur et al., 2002; Alechina
+potential for entertainment robots to recognize human posture et al., 2017; Mogavero et al., 2017). In contrast, a logic that
+throughartificialintelligence.Bydetectingandmonitoringusers’ incorporates spatial constraints on a par with temporal ones has
+movements in real time, these robots provide a personalized beenrecentlyproposedbyBottonietal.(2024).Ingeneral,these
+and interactive entertainment experience. Caci and Dhou (2020) modelsabstracttheactualmechanismsthroughwhichinformation
+also discuss the interplay between games with personality and about states can be exchanged among agents and assume that
+artificial intelligence. They use the term “virtual human” to all agents act rationally regarding their strategies. The level of
+describe a computer program that simulates a human in non-determinism inherent to considering human agents would,
+someaspects. therefore,requiresomeadaptationoftheselogicsinthedirection
+FrontiersinHumanDynamics 13 frontiersin.org
+
+Borghoffetal. 10.3389/fhumd.2025.1579166
+of identifying classes of agents that can follow several strategies token-based interaction traces, aligning with AI accountability
+atonce. guidelines (Floridi, 2019; EU, 2024). For high-stakes domains
+Although beyond the scope of this paper, there exists a such as healthcare or defense, this enables clear attribution of
+humanistic perspective (Knell and Rüther, 2024), as well as an decisionstohumanorAIagents,whilepreservingthefluidityof
+ethical dimension, to human-artificial interaction. For the latter, Centauriancollaboration.Futureworkwillfurtherformalizethese
+the reader is referred to Kumar and Choudhury (2023b), Karlan mechanisms to ensure compliance with emerging standards for
+(2023)andNieto(2024).Insomeways,“virtualsuperhuman”AI hybridintelligencesystems.
+technologies could undermine the value of human achievements Ultimately, our study enriches the understanding of HCI
+(Schaapetal.,2024)orevenmayposeanexistentialthreat(Kumar as a dynamic and evolving field characterized by the complex
+andChoudhury,2023a). yet symbiotic relationships between humans and machines.
+As we delve deeper into these interactions, the possibility of
+transforming human-computer interactions into more seamless
+8 Conclusion and future work
+and effective experiences becomes increasingly tangible. This
+promises a future in which the human and artificial dimensions
+We have outlined a framework that systematically considers are not merely aligned but fully integrated in a balanced
+how human and artificial agents interact within a networked and complementary manner. Such integration could pave the
+ecosystem. By articulating HCI not just as human-computer way for a new era of collective and hybrid intelligence—
+interactions but as dynamic interactions among different agents where humans and machines work closely together—potentially
+within a flexible, multi-agent system, we have highlighted the most significant and immediate outcome of current rapid
+the potential for more complex and effective interactions. technologicaladvances.
+The application of our multi-agent model to two different Future research will focus on improving the adaptability of
+use cases—satellite and swarm robotics, and Large Action MAS by addressing the challenge of dynamic team composition.
+Models (LAMs)—has not only validated our theoretical Standard Petri nets, with their static structure, have difficulty
+constructs, but also underscored the practical implications of accommodating scenarios where agents join or leave while
+suchinteractions. maintaining consensus, as illustrated by the register and
+In the first use case, we observed how a semi-centralized deregister (for active agents) pseudo-code in Section 4.
+system,enabledbyalargelanguagemodel,couldimprovedecision- Therefore, we plan to model agents as individual (colored) Petri
+making processes and adaptability through real-time data-driven nets with specialized input and output locations, allowing token-
+adjustments. This setup not only ensures efficiency, but also basedmessagepassingforseamlessregistrationandderegistration.
+preserveshumanoversight,whichiscriticalformanagingcomplex, However,smoothcoordinationrequireshigh-levelreconfiguration
+dynamicenvironments. mechanisms to dynamically manage agent lifecycles. While these
+The second use case involving LAMs further highlighted improvements enhance the adaptability of MAS, Centaurian
+the potential of integrating advanced computational agents to systems, with their stable human-AI integration, remain well-
+predict and shape human-computer interactions. Using neuro- suited to Petri net formalization due to their reliance on fixed
+symbolic programming, the LAM framework demonstrated its coordinationstructures.
+ability to refine its operations based on continuous feedback Another important future research direction is the
+from human interactions, promoting an adaptive and responsive development of a hybrid approach that bridges MAS and
+HCIsystem. Centauriansystems.WhilePetrinetseffectivelymodelstructured
+We have thus established a foundational framework for Centaurian intelligence, where human and AI components
+the design and analysis of HCI systems that views these collaboratethroughpredefinedcoordinationrules,theyfallshort
+interactions as a complex interplay among multiple agents. in dynamic MAS scenarios that require self-organization. Future
+This approach allows us to better understand and harness the researchwillthereforeintegratehigh-levelreconfigurablenetworks
+collective capabilities of different agents, thereby enhancing toenableagentfluidity,whileusingcommunicationspacesasan
+the system’s adaptability and resilience. Importantly, this intermediatelayerforseamlesscoordinationbetweenautonomous
+perspective aligns with emerging technology paradigms that andtightlycoupledagents.Thisthree-tieredapproachwillenable
+foster a deep understanding and integration of human agents. dynamic transitions between structured Centaurian intelligence
+Indeed, our contribution can be seen as a systemic evolution and decentralized MAS interactions. Given the increasing
+in design approaches, emphasizing the front-end to enhance importance of Centaurian AI in human-computer collaboration,
+usabilityandeffectiveness.Thiscontrastswith,butcomplements, this hybrid framework will improve efficiency, adaptability,
+systemicapproachesthatprioritizetheback-endforsecurityand andinteroperability.
+robustness,asillustratedbySalzanoetal.(2023).Together,these An alternative set-theoretic approach abstracts agent
+perspectives synergistically improve the overall architecture of relationships without rigid network structures, defining
+HCIsystems. interactions through set membership and relational mappings.
+Theintegrationofhumanandartificialagentsalsoraisescritical While this circumvents the limitations of Petri nets in dynamic
+ethical and regulatory considerations. Our framework’s layered scenarios, its implementation requires structured protocols
+communication spaces–surface, observation, and computation– for message flow and consistency. Our future research will
+provide inherent auditability through explicit transition logs and therefore explore how set-theoretic models can complement Petri
+FrontiersinHumanDynamics 14 frontiersin.org
+
+Borghoffetal. 10.3389/fhumd.2025.1579166
+nets to ensure both formal rigor and practical applicability in Acknowledgments
+human-AIcollaboration.
+A preprint of this article was published at arXiv
+(Borghoffetal.,2025).
+Data availability statement
+Theoriginalcontributionspresentedinthestudyareincluded Conflict of interest
+in the article/supplementary material, further inquiries can be
+directedtothecorrespondingauthor.
+The authors declare that the research was conducted in the
+absenceofanycommercialorfinancialrelationshipsthatcouldbe
+Author contributions construedasapotentialconflictofinterest.
+The author(s) declared that they were an editorial board
+memberofFrontiers,atthetimeofsubmission.Thishadnoimpact
+UB: Conceptualization, Data curation, Formal analysis,
+onthepeerreviewprocessandthefinaldecision.
+Investigation, Methodology, Software, Supervision, Validation,
+Visualization, Writing – original draft, Writing – review &
+editing. PB: Conceptualization, Data curation, Formal analysis,
+Generative AI statement
+Investigation, Methodology, Software, Supervision, Validation,
+Visualization,Writing–originaldraft,Writing–review&editing.
+Theauthor(s)declarethatGenAIwasusedinthecreationof
+RP: Conceptualization, Data curation, Formal analysis, Funding
+thismanuscript.Weusedthegratuitous(free)versionsofDeepL
+acquisition, Investigation, Methodology, Software, Supervision,
+TranslatorandDeepLWriteasof2025,andChatGPT4.0toverify
+Validation, Visualization, Writing – original draft, Writing –
+AmericanEnglishlanguage,syntaxandgrammar.
+review&editing.
+Funding Publisher’s note
+The author(s) declare that financial support was received for All claims expressed in this article are solely those of the
+the research and/or publication of this article. Remo Pareschi authors and do not necessarily represent those of their affiliated
+has been funded by the European Union–NextGenerationEU organizations, or those of the publisher, the editors and the
+under the Italian Ministry of University and Research (MUR) reviewers. Any product that may be evaluated in this article, or
+National Innovation Ecosystem grant ECS00000041-VITALITY– claimthatmaybemadebyitsmanufacturer,isnotguaranteedor
+CUPE13C22001060006. endorsedbythepublisher.
+References
+Ahmadi,N.,andHammond,T.(2023).“Recognizingandrespondingtohuman NotesinComputerScience,eds.A.Q.Arencibia,M.Affenzeller,andR.Moreno-Díaz
+emotions:asurveyofartificialemotionalintelligenceforcooperativesocialhuman- (Springer:NewYork),23–32.doi:10.1007/978-3-031-82949-9_3
+machineinteractions,”inIEEEFrontiersinEducationConference,FIE2023,College
+Borghoff,U.M.,Bottoni,P.,andPareschi,R.(2025).Human-artificialinteractionin
+Station,TX,USA,October18–21(IEEE),1–5.doi:10.1109/FIE58773.2023.10343328
+theageofagenticAI:asystem-theoreticalapproach.arXivPreprint,arXiv:2502.14000.
+Alechina,N.,Logan,B.,Nguyen,H.N.,andRaimondi,F.(2017).Model-checking doi:10.48550/arXiv.2502.14000
+forresource-boundedATLwithproductionandconsumptionofresources.J.Comput.
+Borghoff, U. M., Minas, M., and Mönch, K. (2024b). “Automatic program
+Syst.Sci.88,126–144.doi:10.1016/j.jcss.2017.03.008
+assessment, grading and code generation: possible AI-support in a software
+Alur,R.,Henzinger,T.,andKupferman,O.(2002).Alternating-timetemporallogic. developmentcourse,”inArtificialIntelligenceandSoftComputing-23rdInternational
+J.ACM49,672–713.doi:10.1145/585265.585270 Conference,ICAISC2024,Zakopane,Poland,June16–20,Proceedings,PartIII,number
+15166inLectureNotesinArtificialIntelligence,eds.L.Rutkowskietal.(Springer:New
+Andreoli,J.,Borghoff,U.M.,andPareschi,R.(1994).“Constraint-basedknowledge
+York),39–51.doi:10.1007/978-3-031-81596-6_4
+brokers,” in Proceedings of the First International Symposium on Parallel Symbolic
+Computation-PASCO’94, Hagenberg/Linz, Austria, September 26–28, volume 5 of Borghoff,U.M.,Pareschi,R.,Fontana,F.A.,andFormato,F.(1998).Constraint-
+Lecture Notes in Computing, eds. H. Hong (Singapore: World Scientific), 1–11. basedprotocolsfordistributedproblemsolving.Sci.Comput.Program.30,201–225.
+doi:10.1142/9789814533584 doi:10.1016/S0167-6423(97)00011-7
+Aspnes, J., and Ruppert, E. (2009). “An introduction to population Borghoff, U. M., and Schlichter, J. H. (1996). On combining the knowledge
+protocols,” in Middleware for Network Eccentric and Mobile Applications, eds. B. of heterogeneous information repositories. J. Univers. Comput. Sci. 2, 515–532.
+Garbinato, H. Miranda, and L. E. T. Rodrigues (Springer: New York), 97–120. doi:10.3217/jucs-002-07-0515
+doi:10.1007/978-3-540-89707-1_5
+Bottoni,P.,DeRosa,F.,Hoffmann,K.,andMecella,M.(2006).Applyingalgebraic
+Borghoff,U. M., Bottoni, P., Mussio, P., and Pareschi, R. (1995). “Multi-agent approachesformodelingworkflowsandtheirtransformationsinmobilenetworks.
+coordinationinlivingsystems,”inProceedingsofthe1995InternationalWorkshop Mob.Inf.Syst.2,51–76.doi:10.1155/2006/704187
+onBiologicallyInspiredEvolutionarySystems,BIES1995,SonyCorporationConference
+Bottoni, P., Labella, A., and Perelli, G. (2024). “Strategies in spatio-temporal
+Hall,Tokyo,Japan,May30–31,eds.C.Numaoka(Japan:SocietyforFuzzyTheoryand
+logics for multi-agent systems,” in Leveraging Applications of Formal Methods,
+Systems(SOFT)),93–100.
+Verification and Validation. REoCAS Colloquium in Honor of Rocco De Nicola
+Borghoff,U.M.,Bottoni,P.,andPareschi,R.(2024a).“Asystem-theoreticalmulti- - 12th International Symposium, ISoLA 2024, Crete, Greece, October 27–31,
+agentapproachtohuman-computerinteraction,”inComputerAidedSystemsTheory- Proceedings, Part I, volume 15219 of Lecture Notes in Computer Science, eds. T.
+EUROCAST2024-19thInternationalConference,LasPalmasdeGranCanaria,Spain, Margaria,andB.Steffen(Springer:NewYork),287–305.doi:10.1007/978-3-031-737
+February25-March1,RevisedSelectedPapers,PartI,number15172inLecture 09-1_18
+FrontiersinHumanDynamics 15 frontiersin.org
+
+Borghoffetal. 10.3389/fhumd.2025.1579166
+Bradshaw, J. M., Feltovich, P. J., and Johnson, M. (2011). “Human-agent Kumar,M.,andChoppella,V.(2023).“Modelingmodel-view-controller(MVC)
+interaction,”inTheHandbookofHuman-MachineInteraction:AHuman-Centered architecturepatternassystemofsystems(SOS)toaidcomprehensionandreasoning,”
+DesignApproach,eds.G.A.Boy(CRCPress),283–300.doi:10.1201/9781315557380-14 inProceedingsoftheACMConferenceonGlobalComputingEducationVol2,CompEd
+2023,Hyderabad,India,December5–9,eds.V.Choppella,D.B.Phatak,A.Luxton-
+Caci,B.,andDhou,K.(2020).“Theinterplaybetweenartificialintelligenceand
+Reilly,andM.Craig(Hyderabad:ACM),197.doi:10.1145/3617650.3624934
+users’personalities:anewscenarioforhuman-computerinteractioningaming,”inHCI
+International2020-LateBreakingPapers:Cognition,LearningandGames-22ndHCI Kumar, S., and Choudhury, S. (2023a). Humans, super humans, and super
+InternationalConference,HCII2020,Copenhagen,Denmark,July19-24,Proceedings, humanoids:debatingstephenhawking’sdoomsdayAIforecast.AIEthics3,975–984.
+volume12425ofLectureNotesinComputerScience,eds.C.Stephanidisetal.(Springer: doi:10.1007/s43681-022-00213-0
+NewYork),619–630.doi:10.1007/978-3-030-60128-7_45
+Kumar, S., and Choudhury, S. (2023b). Normative ethics, human rights, and
+Capitanelli,A.,andMastrogiovanni,F.(2024).Aframeworkforneurosymbolic artificialintelligence.AIEthics3,441–450.doi:10.1007/s43681-022-00170-8
+robotactionplanningusinglargelanguagemodels.Front.Neurorobotics.18:1342786.
+Lawless,W.F.,andSofge,D.A.(2021).“Interdependenceandvulnerabilityin
+doi:10.3389/fnbot.2024.1342786
+systems:areviewoftheoryforautonomoushuman-machineteams,”inEngineering
+Carovilla, A., Pareschi, R., and Salzano, F. (2023). “Integrating blockchain for ArtificiallyIntelligentSystems-ASystemsEngineeringApproachtoRealizingSynergistic
+enhancedcoordinationandsecurityinsemi-centralizedroboticswarms,”inProceeding Capabilities,volume13000ofLectureNotesinComputerScience,eds.W.F.Lawlessetal.
+IEEEInternationalWorkshoponTechnologiesforDefenseandSecurity(TechDefense) (Springer:NewYork),247–259.doi:10.1007/978-3-030-89385-9_15
+(Rome:IEEE),95–99.doi:10.1109/TechDefense59795.2023.10380842
+Licklider,J.(1960).Man-computersymbiosis.IRETrans.Hum.FactorsElectron1,
+Chen,X.(2025).Researchonentertainmentrobotsbasedonartificialintelligence 4–11.doi:10.1109/THFE2.1960.4503259
+interactionforhumanposturerecognitionandsportsactivitymonitoring.Entertain.
+Maturana,H.R.,andVarela,F.J.(1980).AutopoiesisandCognition:TheRealization
+Comput.52:100761.doi:10.1016/j.entcom.2024.100761
+of the Living, Volume 42 of Boston Studiesinthe Philosophy of Science.D.Reidel
+Choudhuri,R.,Liu,D.,Steinmacher,I.,Gerosa,M.,andSarma,A.(2024).“Howfar PublishingCompany,Dordrecht,Holland.
+arewe?thetriumphsandtrialsofgenerativeAIinlearningsoftwareengineering,”in
+Miller,J.G.(1978).LivingSystems.McGraw-Hill:NewYork.
+ProceedingsoftheIEEE/ACM46thInternationalConferenceonSoftwareEngineering,1–
+13.doi:10.1145/3597503.3639201 Mogavero, F., Murano, A., Perelli, G., and Vardi, M. (2017). Reasoning
+about strategies: on the satisfiability problem. Log. Meth. Comp. Sci. 13, 1–37.
+Ciancia,V.,Gilmore,S.,Grilletti,G.,Latella,D.,Loreti,M.,andMassink,M.(2018).
+doi:10.23638/LMCS-13(1:9)2017
+Spatio-temporalmodelcheckingofvehicularmovementinpublictransportsystems.
+Int.Jour.onSoft.ToolsforTech.Transfer29,289–311.doi:10.1007/s10009-018-0483-8 Murata,T.(1989).Petrinets:properties,analysisandapplications.Proc.IEEE77,
+541–580.doi:10.1109/5.24143
+deGreef,T.,vanDongen,K.,Grootjen,M.,andLindenberg,J.(2007).“Augmenting
+cognition:reviewingthesymbioticrelationbetweenmanandmachine,”inFoundations Nascimento, N., Alencar, P., and Cowan, D. (2023). Comparing software
+of Augmented Cognition, Third International Conference, FAC 2007, Held as Part developers with ChatGPT: an empirical investigation. CoRR abs/2305.11837.
+of HCI International 2007, Beijing, China, July 22-27, Proceedings, volume 4565 doi:10.48550/arXiv.2305.11837
+of LNCS, eds. D. Schmorrow, and L. Reeves (Springer: New York), 439–448.
+Nieto,B.F.(2024).“Towardahuman-centeredframeworkfortrustworthy,safeand
+doi:10.1007/978-3-540-73216-7_51
+ethicalgenerativeartificialintelligence:amulti-levelanalysisoflargelanguagemodels
+Dobrean,D.,andDiosan,L.(2022).Pathwaysforstaticallyminingthemodel-view- socialimpact,”inProceedingsofthe28thInternationalConferenceonEvaluationand
+controllersoftwarearchitectureonmobileapplications.SoftComput.26,10493–10511. AssessmentinSoftwareEngineering,EASE2024,Salerno,Italy,June18–21(ACM),
+doi:10.1007/s00500-022-06908-0 505–509.doi:10.1145/3661167.3661177
+Dorigo,M.,Birattari,M.,andStutzle,T.(2006).Antcolonyoptimization.IEEE Panda,S.,andRoy,S.T.(2024).ReflectionsonemergingHCI-AIresearch.AISoc.
+Comput.Intell.Mag.1,28–39.doi:10.1109/CI-M.2006.248054 39,407–409.doi:10.1007/s00146-022-01409-y
+Engelbart,D.C.(1962).AugmentingHumanIntellect:AConceptualFramework. Papillon, M., Sanborn, S., Hajij, M., and Miolane, N. (2023). Architectures of
+Technical Report AFOSR-3223, Stanford Research Institute, Menlo Park, CA. topologicaldeeplearning:Asurveyofmessage-passingtopologicalneuralnetworks.
+doi:10.21236/AD0289565 arXivpreprintarXiv:2304.10031.doi:10.48550/arXiv.2304.10031
+EU. (2024). Regulation (EU) 2024/... of the European Parliament and of the Pareschi,R.(2024).Beyondhumanandmachine:anarchitectureandmethodology
+CouncilonHarmonisedRulesonArtificialIntelligence(ArtificialIntelligenceAct).OJ guidelineforcentauriandesign.Science6:71.doi:10.3390/sci6040071
+L,2024.FinaltextpendingpublicationintheOfficialJournaloftheEuropeanUnion.
+Petri,C.A.(1962).KommunikationmitAutomaten.Dissertation,SchriftendesIIM
+Availableonlineat:https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng(accessedMay
+2,Rheinisch-WestfälischesInstitutfürInstrumentelleMathematikanderUniversität
+1,2025).
+Bonn,Bonn.
+Floridi, L. (2019). Translating principles into practices of digital ethics. Philos.
+Riliskis,L.,Hong,J.,andLevis,P.A.(2015).“Ravel:programmingiotapplications
+Technol.32,185–193.doi:10.1007/s13347-019-00354-x
+asdistributedmodels,views,andcontrollers,”inProceedingsofthe2015International
+Giudici,M.,Liguori,F.,Tocchetti,A.,andBrambilla,M.(2024).“Unveilinghuman- Workshop on Internet of Things towards Applications, IoT-App 2015, Seoul, South
+AIinteractionandsubjectiveperceptionsaboutartificialintelligentagents,”inWeb Korea, November 1, eds. C. Xu, P. Zhang, and S. Sigg (Seoul: ACM), 1–6.
+Engineering-24thInternationalConference,ICWE2024,Tampere,Finland,June17– doi:10.1145/2820975.2820977
+20,2024,Proceedings,volume14629ofLectureNotesinComputerScience,eds.K.
+Saghafian,S.,andIdan,L.(2024).EffectivegenerativeAI:thehuman-algorithm
+Stefanidisetal.(Springer:NewYork),414–418.doi:10.1007/978-3-031-62362-2_36
+centaur.arXivpreprintarXiv:2406.10942.doi:10.2139/ssrn.4594780
+Guamán,D.,Delgado,S.,andPérez,J.(2021).Classifyingmodel-view-controller
+Salzano,F.,Pareschi,R.,Marchesi,L.,andTonelli,R.(2023).“Blockchain-based
+software applications using self-organizing maps. IEEE Access 9, 45201–45229.
+informationecosystems,”inProceedingsof the FifthDistributedLedger Technology
+doi:10.1109/ACCESS.2021.3066348
+Workshop(DLT2023),Bologna,Italy,May25–26,volume3460ofCEURWorkshop
+Hopf,K.,Nahr,N.,Staake,T.,andLehner,F.(2024).Thegroupmindofhybrid Proceedings,eds.P.Mori,I.Visconti,andS.Bistarelli.Availableonlineat:CEUR-
+teamswithhumansandintelligentagentsinknowledge-intensework.J.Inf.Technol. WS.org
+40,9–34.doi:10.1177/02683962241296883
+Schaap,G.,vandeSande,Y.,andSchraffenberger,H.(2024).“OutperformedbyAI:
+Inga, J., Ruess, M., Robens, J. H., Nelius, T., Rothfuß, S., Kille, S., et al. interactingwithsuperhumanAIchangesthewayweperceiveourselves,”inExtended
+(2023). Human-machine symbiosis: a multivariate perspective for physically AbstractsoftheCHIConferenceonHumanFactorsinComputingSystems,CHIEA2024,
+coupled human-machine systems. Int. J. Hum. Comput. Stud. 170:102926. Honolulu,HI,USA,May11–16,(ACM),1–7.doi:10.1145/3613905.3650961
+doi:10.1016/j.ijhcs.2022.102926
+Simon,H.A.(1996).TheSciencesoftheArtificial.MITPress,Cambridge,MA,3
+Jensen, K. (1995). Coloured Petri Nets: Basic Concepts, Analysis Methods and edition.
+PracticalUse,Volume2ofMonographsinTheoreticalComputerScience.Springer-
+von Bertalanffy, L. (1968). General System Theory: Foundations, Development,
+Verlag,Berlin,Heidelberg.
+Applications.GeorgeBraziller,NewYork.
+Karlan,B.(2023).Humanachievementandartificialintelligence.EthicsInf.Technol.
+Weiss,G.ed.(2013).MultiagentSystems.MITPress,2ndedition.
+25:40.doi:10.1007/s10676-023-09713-x
+Wiener,N.(1948).Cybernetics:OrControlandCommunicationintheAnimaland
+Kim,J.,andIm,I.(2023).Anthropomorphicresponse:understandinginteractions
+theMachine.MITPress,Cambridge,MA.
+betweenhumansandartificialintelligenceagents.Comput.Hum.Behav.139:107512.
+doi:10.1016/j.chb.2022.107512 Wooldridge,M.J.(2002).IntroductiontoMultiagentSystems.Wiley.
+Knell, S., and Rüther, M. (2024). Artificial intelligence, superefficiency and the Xiao, Y., Zhang, N., Lou, W., and Hou, Y. T. (2020). A survey of distributed
+end of work: a humanistic perspective on meaning in life. AI Ethics 4, 363–373. consensusprotocolsforblockchainnetworks.IEEECommun.Surv.Tutor.22,1432–
+doi:10.1007/s43681-023-00273-w 1465.doi:10.1109/COMST.2020.2969706
+FrontiersinHumanDynamics 16 frontiersin.org

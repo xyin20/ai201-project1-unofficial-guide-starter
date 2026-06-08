@@ -1,0 +1,1127 @@
+Zeda Xu1
+DepartmentofMechanicalEngineering,
+CarnegieMellonUniversity,
+Pittsburgh,PA15213
+e-mail:zedaxu@cmu.edu
+Chloe Soohwa Hong1
+SchoolofArchitecture,
+CarnegieMellonUniversity, Adaptation Through
+Pittsburgh,PA15213
+e-mail:soohwah@andrew.cmu.edu
+Communication: Assessing
+́
+Nicolas F. Soria Zurita
+–
+SchoolofEngineeringDesignandInnovation, Human Artificial Intelligence
+PennsylvaniaStateUniversity,
+UniversityPark,PA16802;
+ColegiodeCienciaseIngenierıá, Partnership for the Design of
+UniversidadSanFranciscodeQuito,
+CampusCumbaya,́ QuitoEC170901,Ecuador
+Complex Engineering Systems
+e-mail:nicosoria@psu.edu
+Joshua T. Gyory
+DepartmentofMechanicalEngineering, Exploring the opportunities for incorporating Artificial Intelligence (AI) to support team
+CarnegieMellonUniversity, problem-solving has been the focus of intensive ongoing research. However, while the
+Pittsburgh,PA15213 incorporationofsuchAItoolsintohumanteamproblem-solvingcanimproveteamperfor-
+e-mail:jgyory@alumni.cmu.edu
+mance,itisstillunclearwhatmodalityofAIintegrationwillleadtoagenuinehuman–AI
+partnership capable of mimicking the dynamic adaptability of humans. This work unites
+Gary Stump human designers with AI Partners as fellow team members who can both reactively and
+AppliedResearchLaboratory, proactively collaborate in real-time toward solving a complex and evolving engineering
+PennsylvaniaStateUniversity, problem. Team performance and problem-solving behaviors are examined using the
+UniversityPark,PA16802 HyFormcollaborativeresearchplatform,whichusesanonlinecollaborativedesignenvi-
+e-mail:gms158@psu.edu ronment that simulates a complex interdisciplinary design problem. The problem con-
+straints are unexpectedly changed midway through problem-solving to simulate the
+Hannah Nolte natureofdynamicallyevolvingengineeringproblems.Thisworkshowsthataftertheunex-
+pecteddesignconstraintschange,orshock,isintroduced,human–AIhybridteamsperform
+AdvancedSoftwareInnovation,
+similarly to human teams, demonstrating the capability of AI Partners to adapt to unex-
+TheMITRECorporation,
+pectedevents.Nonetheless,hybridteamsdostrugglemorewithcoordinationandcommu-
+Bedford,MA01730
+nicationaftertheshockisintroduced.Overall,thisworkdemonstratesthattheseAIdesign
+e-mail:hnolte@mitre.org
+partners can participate as active partners within human teams during a large, complex
+Jonathan Cagan task,showingpromiseforfutureintegrationinpractice.[DOI:10.1115/1.4064490]
+DepartmentofMechanicalEngineering, Keywords: artificialintelligence,designteams
+CarnegieMellonUniversity,
+Pittsburgh,PA15213
+e-mail:cagan@cmu.edu
+Christopher McComb2
+DepartmentofMechanicalEngineering,
+CarnegieMellonUniversity,
+Pittsburgh,PA15213
+e-mail:ccm@cmu.edu
+1Thesetwoauthorscontributedequallytothiswork.
+1 Introduction
+2Correspondingauthor.
+Contributed by the Design Theory and Methodology Committee of ASME for ArtificialIntelligence(AI)inresearch,academia,andindustryis
+p
+2
+u
+0
+b
+2
+l
+3
+i
+;
+ca
+fi
+ti
+n
+o
+a
+n
+lm
+in
+an
+th
+u
+e
+scr
+J
+i
+O
+p
+U
+t
+R
+r
+N
+e
+A
+c
+L
+eiv
+O
+e
+F
+d
+M
+D
+E
+e
+C
+c
+H
+e
+A
+m
+N
+b
+IC
+e
+A
+r
+L
+20
+D
+,
+E
+2
+SI
+0
+G
+2
+N
+3
+.
+;
+M
+pu
+a
+b
+n
+l
+u
+i
+s
+s
+c
+h
+r
+e
+i
+d
+pt
+o
+r
+n
+e
+l
+c
+in
+e
+e
+ive
+F
+d
+eb
+J
+r
+u
+u
+l
+a
+y
+ry
+20
+1
+,
+,
+becomingsignificantlymoreprevalent.AprojectionbyMcKinsey
+2024.Assoc.Editor:JiteshH.Panchal.
+andCompany[1]identifiedthatby2030,70%ofcompanieswithin
+JournalofMechanicalDesign Copyright©2024byASME AUGUST2024,Vol.146 / 081401-1
+Downloaded
+from
+http://asmedigitalcollection.asme.org/mechanicaldesign/article-pdf/146/8/081401/7236810/md_146_8_081401.pdf
+by
+guest
+on
+07
+June
+2026
+
+the United States will have adapted one form of AI within their work differs from prior studies that utilized the HyForm platform
+organizations.Furthermore,theypredictthatAIwillcontributean asitfocusesonAI-as-Partner,asmoredetaildefinedanddiscussed
+additional global economic activity of around $13 trillion within in prior work in the domain [44], and differs from a similar prior
+the same period [1]. It is clear that AI will become embedded work that focused on AI-as-Guide [27]. This study contributes to
+withinthefutureworkforce.Tohandlethistechnologicalandorga- thebodyofHATresearchbyinvestigatingnotonlytheimpactof
+nizational shift, fundamental research is needed to address key proactive behaviors of autonomous agents in human–AI teaming
+challenges related to how humans and AI can most effectively but also the influence of the adaptability of the autonomous
+interact,aswellastostudydifferentmodalitiesofhuman–AIcol- agentsandtheteamcompositioninanengineeringdesignsetting.
+laboration.Focusareasandchallengesincludeeffectivecommuni- The paper is organized as follows. Section 2 covers the
+cationstrategies,contextawareness,andtrust,amongothers[2,3]. backgroundofthestudy.Section3introducestheresearchmethod-
+Theseopenquestionsareleadingresearcherstodedicateeffortsto ology,includingtheexperimentaldesignandtheexperimentplat-
+thecreationofdifferenttaxonomiesandplatformsinordertoeffec- form. The experiment results are shown in Sec. 4. Section 5
+tivelystudythesecharacteristicsanddimensionswithinanexperi- presents our interpretation and discussion of the results. Lastly,
+mentalcontext[4–6],includinginengineeringdesignsettings. Sec.6concludesourfindings.
+Designing effective complexengineeringsystemsischallenging.
+Engineers regularly need to manage and optimize coupled design
+parameters with interrelated factors and evolving constraints,
+makingsuchdesigntasksbothdifficultandstressful[7–9].Further- 2 Background
+more, such tasks can often be time-constrained, exacerbating these Adaptation contributes to the overall agility of the team. Team
+complexities [10]. To facilitate solving such complex design prob- agilityistheabilityofadesignteamtoberobustinitscapabilities,
+lems,researchersarestudyingtheimplementationofArtificialIntel- even when experiencing unexpected changes [45]. This research
+ligence(AI)assistance.Forexample,researcheffortshaveexplored presents a novel setting that imposes the challenges of constantly
+theimplementationofAIwithinvariousphasesandrolesoftheengi- evolvingengineeringtaskstoahybridteamcomposedofmultiple
+neeringdesignprocess,includingconceptspaceexploration[11–13] highlyautonomousandproactiveAIagentsandhumanmembers.
+and generation [14–20], concept evaluation [21,22], optimization Incomparingandexaminingtheproblem-solvingbehaviortothat
+[23,24],prototyping[25],manufacturing[26],andprocessmanage- of human-only teams, this research reveals areas of improvement
+mentofteams[27,28].Further,researchinvolving1500companies forhuman–AIhybridteamstoberobustintheircapabilities,even
+found thathuman–AI collaboration resulted inconsiderableperfor- when experiencing unexpected changes, which is essential in the
+manceimprovements[29,30]. collaborativedesigningofengineeringsystems[9,45,46].
+Even withtheseimprovements,researchershaveidentifiedsce- Previous studies have examined behaviors within hybrid teams
+nariosduringdesigntaskswhereAIassistancehindersteamperfor- when met with challenges set by specific task characteristics such
+mance, especially bringing down the quality of high-performing as increasing human-autonomous agent outcome interdependence
+teams [31]. Consequently, to effectively integrate AI within [47–49] or task difficulty [34,50]. This research uniquely imposes
+designteamsandmitigatepotentialadverseeffects,thereisacriti- the challenge of an unexpected change in the task, namely constant
+calneedforabetterunderstandingofhowAIteammembersimpact shiftsinconstraintsandobjectives,whichiscommonincomplexengi-
+their human counterparts. The Human-Autonomy Teams (HAT) neeringdesigntasks[9,45,46].Bydoingso,itintroducesagilityasan
+research community has studied factors contributing to more essential factor in constructing effective hybrid teams and provides
+effective and enjoyable human–AI teaming. Factors like the level insightforhuman–AIteamstodesignengineeringsystemseffectively.
+of autonomy [32–34], reliability [35,36], and team composition The involvement of highly autonomous AI agents has been
+[37–39] have been shown to affect individual and team perfor- considered essential to building effective hybrid teams
+mance, problem-solving behaviors, member interactions, mental [33,34,40,51,52].Featuresidentifiedasautonomousincludeoccu-
+workload,andmemberexperiences[40].Itisessentialtodevelop pying a distinct role [53], a degree of interdependence with other
+a dynamic understanding not only of how these factors evolve team members’ activities and outcomes [49,54], and a degree of
+overthedesignprocessbutalsoofhowtheyvaryacrossscenarios agency involving independence of actions and proactivity among
+andproblem-solvingcontexts. autonomousagentmembers[55,56].Engineeringdesigntaskscan
+Oneparticularlyinfluentialfactoristhelevelofmachineauton- especiallybenefitfromAIagentswithaheightenedlevelofauton-
+omy within the team, with simple reactive autonomy agents that omybecausethetaskitselfrequireshighinterdependenceamongst
+pull information upon human requests believed to hinder perfor- memberswithdifferentroles[57,58].Inaddition,itisimportantthat
+mance[39,40].Previousresearchonhybridteamshasstudiedthe other members conceive AI partners as genuine team partners for
+positive effects of autonomy agents with self-initiated proactive the team to effectively perform [34,40,50]. This research seeks to
+actions, which is regarded as a trait of high levels of autonomy build an effective hybrid team by foremost developing novel,
+[32–34]. In addition, multiple studies suggest that team perfor- highlyautonomousAIagentsandinvolvingtheminamulti-agent,
+mancecouldbeimprovedbyallowingautonomousagentstoantic- multi-humanhybridengineeringteam.
+ipate and push information proactively [41–43]. To date, little IthasbeenshownthatanAIagent’sunderstandingoftheindivid-
+research in engineering design has studied this type of dynamic ualityoffellowhumanteammembersenhancesoverallperformance,
+AI team member or how this type of human–AI interaction trust,workload,andwillingnesstoworkwithagentsinthefuture[59],
+impacts team performance and problem-solving behaviors. To fill yetfewworkshaveintegratedAIagentswiththisability.Thisresearch
+thisextantresearchgap,thecurrentresearchexaminestheintegra- developsAIagentsthatcanaccountforeachhumanteammember’s
+tionof novelAI Partners withinhuman engineering teams. These preferenceandgofurtherbytrackingchangesintheirpreferencesat
+AIPartnersdynamicallyadapt,respondingbothreactivelyandpro- eachsteptoadapttheirdecisionsaccordingly.Itisexpectedthatthe
+actively to their human teammates in real-time. They not only enhanced and dynamic awareness of the AI agent facilitates the
+provide suggestions of their own volition but also provide design team’sabilitytorecoupaftertheabruptchangeinthetask.
+improvementsuggestionswhenrequestedbytheirhumancounter- Teamcompositionhasalsobeenconsideredanimportantinde-
+parts. TheseAIPartners also seekfeedback from their teammates pendentvariableinforminghybridteams[39,50,60].Themajority
+andupdatetheirbehavioraccordingly. of HAT studies involve single autonomous agents paired with
+Inpriorwork,theauthorscreatedtheHyFormresearchplatform singleormultiplehumanpartners[40].Whilesomeinvolvemulti-
+tostudyhuman–AIhybridteamingregardingteamagility[22]and ple AI agents and a single human team member [61], the hybrid
+AI process management [27]. The current study utilizes HyForm teampresentedinthisresearchisuniqueinthatitconsistsofmul-
+and updates it with proactive and adaptive autonomous agents tipleagentsandmultiplehumans.Indoingso,theresearchemulates
+that communicate with other teammates bi-directionally. This trulyhybridteams,wherehumanandAIagents,witheachoftheir
+081401-2 / Vol.146,AUGUST2024 TransactionsoftheASME
+Downloaded
+from
+http://asmedigitalcollection.asme.org/mechanicaldesign/article-pdf/146/8/081401/7236810/md_146_8_081401.pdf
+by
+guest
+on
+07
+June
+2026
+
+distinctroles,arehighlydependentoneachotherandrequireactive 3.2 ExperimentalDesign. Theexperimentisapprovedbythe
+coordination and communication to perform engineering design Institutional Review Board at CMU. Before the experiment, all
+taskseffectively. participantsreadandsignaconsentform.Afterthecompletionof
+the experiment, participants are compensated with a $20 Amazon
+giftcard.Forthisexperiment,105engineeringundergraduateand
+graduate students are recruited from both CMU and PSU. The
+3 Methodology
+experimentisrunvirtuallythroughtheHyFormplatform.
+This section first presents the HyForm platform and gives an Inthisexperiment,twoconditionsareusedattheteamcomposi-
+overview of the experimental design and conditions. It then pro- tionlevel:(A)ahuman teamand(B) ahybridteamcomposedof
+vides detailed information regarding the underlying frameworks bothhumanandAIPartners,asshowninFig.1.Theprincipaldif-
+of the AI Partners integrated within the design teams. The agents ferencebetweenthetwoteamsisthecompositionofthemembers.
+takeondifferentroles.Oneagentemulatesdronedesignspecialist
+Inthehumanteamcondition(Fig.1(a)),allfiveparticipantsinthe
+partners while another agent emulates an operations specialist teamarehumanparticipants.Conversely,inthehybridteamcondi-
+partner. These AI Partners act and react dynamically to their tion(Fig.1(b)),theteamconsistsofthreehumanparticipantsand
+humancounterpartsthroughouttheentireproblem-solvingprocess. two AI Partners. The team communication structure remains the
+sameforbothconditions.InFig.1,thesolidarrowsindicateopen
+lines of communication between team members, including the AI
+3.1 The HyForm Experimental Platform. Researchers at Partnersforthehybridteamcondition.Intheircommunication,par-
+ticipantsareawareofwhetherthecounterpartisahumanorAIteam
+Carnegie Mellon University (CMU) and Penn State University
+membertoemulateanauthenticteamworkenvironment,inwhich
+(PSU) jointly developed an open-source, experimental research
+platformcalledHyForm3[9,46,62].HyFormusesanonlinecollab- AI identity is unlikely to be blinded. Pilot testing also indicated
+that the participants were able to identify when they were
+orativedesignenvironmentthatsimulatesacomplexinterdisciplin-
+working with AI or human teammates. The Problem Manager
+ary design problem. The platform partners AI agents and human
+team members with specific design tasks to create and operate a handles the exchange of information between the disciplines, two
+fleetofdronestomakedeliveriestocustomers.Differenttypesof Design Specialists and two Operations Specialists. The Problem
+Manager was in charge of coordinating between these distinct
+deliveriesresultincertainrevenues,andthegoaloftheteamisto
+maximize overall profit. The HyForm platform captures some of roles,tradingoffcompetingoperationsplans,andultimatelyselect-
+ing a final solution for the team. For this experiment, participants
+the unique and essential features of the engineering design
+arerandomlyassignedtoaroleononeofthetwoteamconditions.
+process,includingheterogeneousteamconditionswithmultipledis-
+Randomassignmentavoidsselectionbiasandsolidifiestheinternal
+ciplines,largesolutionspace,keenresponsetocustomerneedsand
+validityoftheexperimentdesign.Participantsdidnothaveprevious
+demands, and coordination among disciplines facing complex
+experiencewiththisdesigntask,soitwasnotnecessarytoexplic-
+designconstraints[9].
+itlymatchtheir expertise.Completedata collection consistsof10
+The HyForm platform allows researchers to track each distinct
+humanteamsand14hybridteams.
+action and communication among team members [7,22,27]. Text-
+based communication channels allow team members within and
+across different team roles to exchange information. The team 3.3 Design Problem. Collectively, teams are tasked tobuild,
+rolesincludeProblemManager,DesignSpecialist,andOperations manage, and optimize a delivery drone fleet to maximize total
+Specialist; each team role operates usinga distinct modulewithin profit. Each team member’s role has specific responsibilities.
+the HyForm platform, allowing them to work independently on
+their sub-tasks. The Problem Manager uses the business plan
+module to pick customers, determine the operation specialists’
+market, and select the most profitable plan developed by the
+team. Additionally, for the particular team structure in this work,
+theProblemManagerdirectstheteamandfacilitatescommunica-
+tion between the Design Specialists and Operations Specialists.
+The Design Specialists use the drone design module to construct
+andevaluatedroneswithrespecttotheircost,range,velocity,and
+payload capabilities. Once a drone design is completed, it can be
+used by the Operations Specialists. The Operations Specialists
+usetheoperationsmoduletodevelopandevaluatedeliveryroutes
+for the customers, selected by the Problem Manager, using the
+dronescreatedbytheDesignSpecialists.Theoverallobjectiveof
+theteamwastomaximizeprofit,whichisexposeddirectlytothe
+Problem Manager and the Operations Specialists. However, the
+Design Specialists deal with a multi-objective problem involving
+payload, cost, range, and speed. Their individual-level objective
+istodesigndronesoptimizedforbothperformanceandcost.
+HyForm allows researchers to reconfigure the communication
+channels between roles, enabling experimenters to restrict or
+extend team communication to study different team structures.
+The HyForm platform introduces transformations to the problem
+context (changing the customer maps, package types, timeline,
+etc.) enabling the ability to handle changes inthe problem. Addi-
+tionally,HyFormintegratesAIdesignagentsenablingthecollabo-
+rationofhuman andAIagentsinteams.The latteris theprimary
+focus of this research, studying novel AI agents as active team
+partners.
+Fig. 1 Experiment conditions: (a) human team and (b) hybrid
+3https://github.com/hyform team
+JournalofMechanicalDesign AUGUST2024,Vol.146 / 081401-3
+Downloaded
+from
+http://asmedigitalcollection.asme.org/mechanicaldesign/article-pdf/146/8/081401/7236810/md_146_8_081401.pdf
+by
+guest
+on
+07
+June
+2026
+
+Fig.2 Problemshocksareintroducedduringthesecondproblem-solvingsession
+Team performance is measured by the highest profit generated Each role (Drone Specialist, Operations Specialist, and Problem
+within a business plan submitted by a teams Problem Manager. Manager)hasspecificresponsibilitiesandauniqueproblemstate-
+This work introduces a drastic, unexpected change or “shock” to ment.The pre-study questionnairecollects information onpartici-
+the design problem constraints for the second half of the experi- pants’ backgrounds with respect to pertinent aspects of the
+ment.Afterthisshockis introduced,additional designconstraints experiment, such as building drones, business planning, and
+areimplementedinthedesignandoperationsmodules,asillustrated computer-aideddesignproficiency.
+inFig.2.First,theDesignSpecialistsmustconsiderthegeometrical Duringthesecondstage,participantscompletea10-mintraining
+constraints of the hangar space. Two walls are merged into the tutorialintroducingthemtotheir respectiverolesandtherelevant
+designmodule(left),restrictingthedimensionsoffeasibledrones. toolsintheplatformbyguidingthemthroughthecompletionofa
+Second, Operation Specialists must consider a no-flight zone on role-specific task. For example, Design Specialists are guided
+the customer map. A large cylinder is included on the customer through building their first drone and evaluating its performance.
+map(right),obstructingtheflightofdronesthroughthisarea. The training session was designed through iterative rounds of
+It is important to note that the AI Partners in this work are not testingandaligns closely with thatusedinprior HyForm studies.
+designed to handle the unexpected shock. The AI Design Partner The third stage of the experiment is the first problem-solving
+doesnothaveknowledgeoftherestrictedsizingconstraints,since session. Teams have 20min to design drone fleets and delivery
+its knowledge is based on the objective to optimize drone perfor- plansthatmaximizetheirprofitforthefirstmarket.After20min,
+mance exclusive of size constraints. The human participants do participants complete a mid-questionnaire, followed by a 3-min
+havetheabilitytoguidetheAIDesignPartnerbyreferencingexist- break.
+ingdesignsandenteringcommandsbasedonperformancemetrics Next,participantsstartthesecondproblem-solvingsession.Like
+(moreonthislater).Also,resultingAIDesignPartnerdesignscan thefirstproblemsession,teamshave20mintodesigndronefleets
+bemodifiedbyhumanparticipantstosatisfygeometricconstraints. anddeliveryplansthatmaximizetheiroverallprofit.However,the
+Corresponding with the AI Design Partner, the AI Operations twoaforementionedshocksareintroducedduringthisstageinthe
+Partner does not have knowledge of the unexpected change. It design problem. Finally, after completing the second problem
+uses an underlying Linear Programming algorithm to calculate session,participantscompleteapost-studyquestionnaireconclud-
+deliveryplans,whichdonotaccountforno-flyzonesbetweencus- ing the experiment. The mid- and post-study questionnaires
+tomers.SimilartotheAIDesignerPartnerdesigns,AIOperations include the NASA task load index (NASA-RTLX) survey
+Partnerplanscanbemodifiedbyhumanparticipants. [51,52,63,64]toevaluateparticipants’mentalworkloadandcogni-
+tive experience during the task. A group of additional questions
+assesses teams’ performance and problem-solving behaviors.
+3.4 Design Study Timeline. The experiment has six stages, ThesequestionsutilizeaLikert-typescaletorateteamcharacteris-
+chronologically illustrated in Table 1. The experiment starts with tics,includingoverallteameffort,goals,qualityofwork,collabora-
+a pre-study session, where participants have 15min to read and tion,andcommunication[65–67].
+signaconsentform.
+Next,participantsreadtheproblemstatementandcompleteapre-
+study questionnaire. The problem statement details the design 3.5 Artificial Intelligence Partner Algorithm. In the hybrid
+problem, the participants assigned role, and the team structure.
+teams, two proactive and reactive AI Partner agents are created
+and integrated into the HyForm platform to replace one human
+DesignSpecialistandonehumanOperationsSpecialist.Thecom-
+Table1 Experimentoutline munication with these AI Partners is restricted to the same chat
+channels that human team members use, in which the human
+TeamCondition Human Hybrid team members can enter requests to their AI Partners in a valid
+syntax. The syntax is designed to achieve technical accuracy
+Pre-study(15min) Consentformandpre-study giventhelimitednaturallanguageprocessingcapabilityoftheAI
+questionnaire
+Partners. The communication grammar corresponds with the
+Training(10min) Guidedtutorialforeachteamrole
+human-humancommunications observedinprior HyFormstudies
+Session1(20min) Market1
+[7,22,27]. The syntax permits team members to communicate
+Break(5min) Mid-studyquestionnaire
+Session2(20min) Market2(Shock) drone/planmetrics (e.g.,speed,payload,distance),shareaprefer-
+Post-session(10min) Post-studyquestionnaire ence direction (e.g., minimize or maximize), reference existing
+designs/plans (baselining), and provide feedback on responses
+081401-4 / Vol.146,AUGUST2024 TransactionsoftheASME
+Downloaded
+from
+http://asmedigitalcollection.asme.org/mechanicaldesign/article-pdf/146/8/081401/7236810/md_146_8_081401.pdf
+by
+guest
+on
+07
+June
+2026
+
+Fig.3 CommunicationwithAIPartners.TheAIPartnersmonitorthechatchannelswhere
+teammemberscaneithertype(top)oruseawizard(bottom)toentervalidmessages.
+(satisfaction with suggested designs). More precisely, the text Table2 ListofvalidtextgrammarcommandstotheAIPartners
+grammarsupportsthefollowingtypesofrequests:
+AIDesignPartnerMessages AIOperationsPartnerMessages
+(cid:129) Wantmoreorlessofacertainmetric;
+(cid:129) Wantaspecificvalueofacertainmetric; wantmorerange wanthigherprofit
+(cid:129) Referenceanexistingdesignorplanasabaselinetochange wanthighercapacity wantlowercost
+metrics; wantlowercost wantmorecustomers
+(cid:129) QuerytheAIPartnerforanewdesignorplanbasedontheir
+wantrangeof“X” wantprofitof“X”
+wantmorerangethan“X” wantmoreprofitthan“X”
+currentdesignstate. @design1wantmorerange @plan1wantmoreprofit
+@design1wantmorerangethan“X” @plan1wantmoreprofitthan“X”
+AsshowninFig.3,teammemberscancommunicatewiththeir no @plan1wantmoreprofitthan“X”
+AI Partners in two ways: either through direct chat channels northwest
+no
+(Fig. 3, top) or through a wizard (Fig. 3, bottom) that assists in
+assembling commands to their AI Partners in the proper syntax.
+The wizard allows team members to generate string-based com-
+mandsthatautomaticallysatisfythetextgrammarforcommunica- canalsorespondwith“no”or“unsatisfied”whentheirAIPartners
+tionwiththeAIPartners.Table2providesmoredetailedexamples
+askforfeedback.
+ofvalid chatmessages for boththe AIDesign Partner andthe AI
+OperationsPartner.
+Figure4illustratesastep-by-stepexamplequerywiththewizard, 3.5.1 Artificial Intelligence Partner Algorithms. The AI Part-
+wherethe“exampleresults”showstheoutputofthegrammarinthe nersuse designsalready created byteam membersinconjunction
+proper syntax sent to the AI Partner. The wizard allows team withinformationfromchatmessagestoidentifyatargetandprefer-
+members to request new designs with preference parameters encedirectionforeachteammemberinordertohelpsuggestdesign
+(“want”), make updates to existing designs (“plan”), query the solutions.ThestateofAIagentsisupdatedbasedonuser events,
+status of a design request (“ping”), and ask for general help and the target and preference approach are based on previous
+(“help”). Once through the wizard, the query to the AI partner is visualsteeringmethodsintradespaceexploration[68].Morepre-
+sentthroughthechatwiththepropergrammar.Thehumanpartners cisely, the AI Partners use (1) targets to represent a team
+JournalofMechanicalDesign AUGUST2024,Vol.146 / 081401-5
+Downloaded
+from
+http://asmedigitalcollection.asme.org/mechanicaldesign/article-pdf/146/8/081401/7236810/md_146_8_081401.pdf
+by
+guest
+on
+07
+June
+2026
+
+Fig.4 AnexamplequeryofthewizardwiththeAIDesignSpecialistPartnershowingthe
+resultingoutputinthepropergrammar/syntax(“@r4_c0_$1590”referstoaspecificdrone
+designnamedbytheteam)
+member’sstatebasedonthecurrentdesignwithrespecttotheper-
+formancespace(eitheradronedesignforaDesignSpecialistora
+pathplanforanOperationsSpecialist,and(2)preferencedirections
+formulated from the chat messages from each team member by
+extracting pertinent keywords (ex. more, less, or referencing an
+existingdesign).TheAIPartnersstoreindividualtargetsandpref-
+erence states for each team member, and, when queried by the
+human team members, perform a neighborhood search located at
+the target and proceed to return a suggested solution following
+the preference direction of the team member. In this way, the AI
+Partners can continually update team member states and adapt
+their suggested design solutions over time. Figure 5 qualitatively
+illustratesthisprocess.
+To support this adaptive design approach, a distance limit is
+placedontheamountofchangefromthetargettoanewsuggested
+design/planintheconfigurationspace,basedonaLevenshteindis-
+Fig.5 TheAIPartnerssaveteammemberstateswithatarget
+tancemetric.Thismetricisusedsincebothdronesandpathplans
+andpreferencedirection
+arestoredasstringsandnotqualitativemetrics[69].Figure6pro-
+videsanexampleoftwodronedesignswithaLevenshteindistance
+of4,wheretheseconddroneconfigurationhasfouradditional“+’s, When a query is sent to an AI Partner, the AI Partner uses the
+representingscaled-upmotors.Thisdemonstratesthateventhough information from the query in combination with the previously
+thedistancemetricoperatesonanabstractstringrepresentation,the described preference directions to provide support to the human
+distance is still semantically meaningful. Prior work [9,22] teammates.Figure7showstheunderlyinglogicthattheAIPartners
+describes HyForm’s string representations for designs in more usetoaccomplishthisprocess.Alldesignsolutions(dronedesigns
+detail. or delivery plans) that the AI Partners return must satisfy the
+081401-6 / Vol.146,AUGUST2024 TransactionsoftheASME
+Downloaded
+from
+http://asmedigitalcollection.asme.org/mechanicaldesign/article-pdf/146/8/081401/7236810/md_146_8_081401.pdf
+by
+guest
+on
+07
+June
+2026
+
+designs. The pre-sampled database includes 1043 unique drone
+designs,withrange,capacity,cost,andvelocitymetrics,generated
+usingacharacterrecurrentneuralnetwork(char-RNN)retrainingof
+the drone design space [9,70]. The AI Design Partner algorithm
+then samples a subset of the pre-sampled database (M=400) and
+calculatestheLevenshteindistance[69],basedonthestringrepre-
+Fig. 6 Example of Levenshtein Distance Between Two Drone
+sentationofthedesignconfiguration,foreachsampleddesigncom-
+Configurations. Each string represents the corresponding pared to the current design. The AI Design Partner returns the
+dronedesign. design that minimizes the Levenshtein distance, while satisfying
+the tolerances for each metric based on the current team
+member’spreference(Table3).
+requested requirements. If the AI Partners cannot find a feasible The lower bound tolerances for “More/Higher” and “Less/
+design, they will return an “unsatisfied” chat message to their Lower”areappliedsothattheresultingdesignhasadifferencein
+human teammate. The AI Partners also undergo an initial startup metric performance comparedto the current state (i.e., sothat the
+phasewhereiniftheydonothavesufficientpreferenceinformation AIPartnersufficientlyaddressestherequest).Similarly,theupper
+foreachdesignmetricintheanalysis(e.g.,range,cost),theywill bound is applied to stay within a neighborhood region (i.e., so
+ask for it. Team members can then either respond using the thattheAIPartner doesnotsubstantially departfrom user prefer-
+propertextgrammarruleswiththeirpreferencesandrequirements ences). As previously mentioned, if the AI Design Partner is
+or with no preference. After the startup phase, each team unabletofindafeasibledesign,an“unsatisfied”messageisreturned
+member’s chat message that satisfies the text grammar initializes totheteamthroughthechat.
+theAIPartnerstoreturnasatisfieddesign(dronedesignordelivery
+plan)oran unsatisfied requestbasedontheAIPartner’sanalysis. 3.5.3 ArtificialIntelligenceOperationsPartner. TheAIOper-
+This process repeats with each human-initiated query to the AI ations Partner, designed to act as an Operations Specialist within
+agent,demonstratingthereactivenatureoftheAIPartner. the team, identifies target locations and preference directions
+Additionally, at the 9- and 18-min marks of each problem- within a plan metric trade space defined by the profit, cost, and
+solvingsession(recalleachsessionis20minlong),theAIPartners thenumberofcustomersservedbyeachsolution.Toreturnasug-
+proactivelyprovideadesignsolutiontoeachteam memberbased gestedplanbasedonateammember’srequest,theAIOperations
+on their individualized saved preference state at that moment. PartnerrunsseveralrapidLinearProgrammingdeliverypathanal-
+Every time an AI Partner suggests a design, they save the design yses, where each analysis has a different random combination of
+solution to their underlying team’s database. This is displayed to availabledronedesignsalreadycreatedbytheDesignSpecialists.
+other team members, and a notification chat message is sent to The resulting calculated plans are saved in string format and are
+the team to notify them that a new design has been submitted. evaluatedbycalculatingtheLevenshteindistancetotherequesting
+This demonstrates the proactive nature of the AI partner. In addi- teammember’scurrentplan.TheAIOperationsPartnerreturnsthe
+tion, please note that the AI partner algorithms are determined planthatminimizestheLevenshteindistance,whilesatisfyingthe
+before the experiment and are not tuned or altered during the tolerances for each metric based on the current team preference,
+experiment. as shown in Table 3. If the AI Operations Partner is unable to
+find a feasible plan, an “unsatisfied” message is returned to the
+3.5.2 Artificial Intelligence Design Partner. The AI Design human.
+Partner,designedtoactasaDesignSpecialistwithintheteam,iden-
+tifies target locations and preference directions within a drone
+metric trade space [68] defined by the velocity, range, capacity, 4 Results
+andcostofsolutions.ToenablerapidAIDesignPartnerresponses, The following section compares the hybrid and human teams in
+aprepopulatedtradespaceofdroneconfigurationsissampledand termsofoverallperformance(i.e.,teamprofit),teambehaviors,and
+used as a basis for the AI Design Partner to select and return team experiences. The former two are measured via data collected
+Fig.7 AIPartnerlogicfromqueryingestiontoresponse
+JournalofMechanicalDesign AUGUST2024,Vol.146 / 081401-7
+Downloaded
+from
+http://asmedigitalcollection.asme.org/mechanicaldesign/article-pdf/146/8/081401/7236810/md_146_8_081401.pdf
+by
+guest
+on
+07
+June
+2026
+
+Table3 AIPartner’sLevenshteindistance futureworkandfurtherinvestigationareneededtodrawadecisive
+conclusion,ascurrentdatafromthisstudyisinsufficient.
+AIDesignPartner AIOperationPartner
+Preference Metric:Range/Capacity/ Metric:Profit/Cost/ 4.2 Team Problem-Solving Behavior. Teams’ problem-
+Cost Customers solvingbehaviorsareanalyzedusingtwometrics,communication
+More/ min<AIPartner – min<AIPartner – count and action count. As mentioned in the previous section,
+metric metric
+Higher Current metric <max Current metric <max team members using HyForm can only communicate through a
+Less/Lower min<Current metric –AI min<Current metric –AI chat text tool and complete specific design actions relevant to
+Partner metric <max Partner metric <max their specific roles. HyForm tracks and collects the data for these
+Same |Current –AIPartner |Current –AIPartner metric metric metrics over time, allowing complete reconstruction of the team
+|<min |<min
+metric metric processestosolvetheproblem.Further,previousworkrevealedtra-
+deoffs between time allocated towards communication and taking
+action when designers experience an unexpected problem change
+[22].Inthiswork,ashockisintroducedhalfwaythroughtheexper-
+duringtheexperiment sessionsthroughHyForm,whilethelatteris
+iment,thedronedesignandoperationsdisciplinesreceivedifferent
+gatheredviaresponsesfromthemid-andpost-studyquestionnaires.
+constraintsbasedontheirsub-tasks(hangardimensionrestrictions
+R version 4.0.1 was used to complete these analyses, and unless
+andno-flightzone,respectively).Thecommunicationcountencom-
+statedotherwise,allassumptionsofthestatisticaltestsweremet.
+passesalltextualmessagessentfromoneteammembertoanother,
+and the action count encompasses all distinct actions taken by a
+4.1 Team Performance. Team performance is measured memberwithintheirdesignrole.TodetermineifAIPartnersinflu-
+usingtheoverallprofitachievedbyeachteamduringtheproblem encedteamcommunication,atwo-sampleWilcoxtestisused.
+sessions.Whileteamscansubmitmultipleplansthatresultinmul- Whencomparingtheoverallresultscombiningbothexperiment
+tipleprofits,onlytheplanwiththehighestprofitisconsideredfor sessions,thehumanteamscommunicatesignificantlymorethanthe
+the analysis. The maximum profit is tracked and averaged across hybrid teams (p-value=0.001, W=431). After introducing the
+all teams within a condition. Figure 8 shows the average problem shock between problem-solving sessions, human teams
+maximum profit for each type of team by experimental session. reacted significantly and increased their communication, as pre-
+TodetermineiftheAIPartnersinfluencedteamperformance,atwo- sented in Fig. 9. When observing the experiment sessions sepa-
+sample Wilcox test is used. Overall, the two team conditions rately, human teams show a significantly higher average
+achievesimilar levels of performance for both Session 1 (p-value communication count during Session 1 (p-value=0.005, W=
+=0.333,W=53)andSession2(p-value=0.883,W=73).Thedif- 117.5), while during Session 2, this trend is no longer the case
+ferenceisstatisticallyinsignificant.ThisshowsthattheAIPartners (p-value=0.095,W=99).
+areeffectiveinreplacingtheirhumanteamcounterpartsintermsof Figures9(b)–9(d)divedeeperintocommunicationbehaviorsby
+average performance. An interesting note, however, is that the comparing counts by team role during each experiment session.
+hybrid teams exhibit greater variance, particularly on the higher During the first problem-solving session, the Design Specialists
+end,asseeninFig.8.Thismayindicatethatinthisstudy,hybrid (p-value=0.025, W=108.5) and Problem Manager (p-value=
+teams have greater potential for better performance. However, 0.03, W=106.5) communicate significantly more in the human
+Fig.8 Averageteamprofitforeachteamstructure
+081401-8 / Vol.146,AUGUST2024 TransactionsoftheASME
+Downloaded
+from
+http://asmedigitalcollection.asme.org/mechanicaldesign/article-pdf/146/8/081401/7236810/md_146_8_081401.pdf
+by
+guest
+on
+07
+June
+2026
+
+Fig. 9 Average team communication count: (a) overall team communication count, (b) design Specialist communication
+count,(c)operationsSpecialistcommunicationcount,and(d)problemmanagercommunicationcount
+teams than the hybrid teams. This difference is not significant for —one being the AI Design Partner and the second being the AI
+the Operations Specialists (p-value=0.35, W=86.5). Similarly, OperationsPartner.Figure11showstheproportionoftotalcommu-
+after the shock is introduced (Session 2), the trend remains for nicationcount between human-humanandhuman–AI. Communi-
+both the Design Specialists (p-value=0.05, W=103.5) and cation is equally proportioned within the first problem-solving
+Problem Manager (p-value=0.010, W=114), while there is no session between human-human discourse (46.6%) and human–AI
+significant difference for the Operations Specialists (p-value= discourse(53.3%).However,aftertheshock,thisbehaviorradically
+0.93,W=72).TheProblemManagersinthehumanteamcondition changes.Communicationshiftsmoreheavilytohuman–AIcommu-
+react the most to the problem shocks by exhibiting the steepest nication, almost tripling to nearly 80.5% of the overall
+increase in average communication count between sessions, as communication.
+seeninFig.9(d),incomparisontoFigs.9(a),9(b),and9(c). AsmentionedpreviouslyinSec.3,bothAIPartnersmonitorthe
+Thesecondbehavioralmetric,actioncount,describesadifferent chat channels to collaborate with their human teammates. It is
+trendbetweenthetwoteamstructures.TodetermineifAIPartners restricted by a grammar structure, where team members enter
+influenced the action taken by human designers, a two-sample requestsinavalidatedformat.Figure12showsthepossibletypes
+Wilcox test is used. In this work, the action is assessed by the of requests from human designers to their AI Partners for each
+average number of design changes, regardless of what specific team role for both experiment sessions. For the first experiment
+action is taken. Because the AI Partners in the hybrid teams session,allteamrolescommunicatewithasimilarfrequencywith
+cannot act in the same manner as their human counterparts, their AI Partners. However, after the shock, there is a drastic
+actionsareonlycountedforhumanpartners,andthevaluesarenor- increase in the communications with their AI Partners for both
+malized based on the number of human members in the team. theOperationSpecialistsandProblemManagerroles.Specifically,
+Figure 10(a) shows the average action count per team condition thereisamediumeffectsize(Cohen’sd=0.66)incommunication
+by session, indicating no significant difference in the overall frequency between sessions, indicating a practically significant
+action count between team structures (Session 1: p-value=0.792, increase in communication. Design Specialists focus evenly on
+W=75; Session 2: p-value=0.187, W=93), with the human requesting new designs (“Want [New Design]” 46.20%) and
+teams and hybrid teams acting similarly. Additionally, Figs. design updates (“Want [Design Update]” 34.38%), and Problem
+10(b)–10(d) dive deeper into this problem-solving behavior, Managers focus primarily on requesting design updates (“Want
+showingactioncountsfordifferentteamroles.Thereisnosignifi- [Design Update]” 76.47%). Contrary, Design Specialists do not
+cant difference in Session 1 and Session 2 for Design Specialists requestneworupdateddesignsolutions.Instead,DesignSpecialists
+(Session 1: p-value=0.75, W=76; Session 2: p-value=0.43, W increasetheirinquiryonthedesignstatus(“Ping[DesignStatus]”)
+=84), Operation Specialists (Session 1: p-value=0.62, W=61; oftheAIPartners.
+Session 2: p-value=0.57, W=60), and Problem Managers
+(Session1:p-value=0.81,W=74.5;Session2:p-value=0.59,W
+=60.5). Generally, the human teams tend to communicate more 4.4 Team Members’ Experience. This section analyses the
+thanandactsimilarlytothehybridteams. questionnairestakenbyteammembersfollowingeachexperiment
+session. The first part of the questionnaire uses a version of the
+NASA-RTLX [63,64], modified per Nolte and McComb [71] to
+4.3 Hybrid Team Process Behaviors. This section specifi- betteralignwithcognitiveexperience,toacquireinsightsintopar-
+callystudiesthebehaviorsofthehybridteams.Recallthathybrid ticipants’ cognitive demand and workload perceptions while
+teams consist of three human team members and two AI Partners working throughout the design problem. To determine if AI
+JournalofMechanicalDesign AUGUST2024,Vol.146 / 081401-9
+Downloaded
+from
+http://asmedigitalcollection.asme.org/mechanicaldesign/article-pdf/146/8/081401/7236810/md_146_8_081401.pdf
+by
+guest
+on
+07
+June
+2026
+
+Fig. 10 Average team action count: (a) overall average action count per team member, (b) Design Specialist action count,
+(c)OperationsSpecialistactioncount,and(d)ProblemManageractioncount
+Partners influenced participants’ cognitive demand and workload foreachparticipantbysummingtheirscoresforthefollowingsub-
+perceptions, a two-way ANOVA is used. The second part of the dimensions that are individually rated: mental demand, temporal
+questionnaireasks participants aboutteamperformance, andteam demand, performance, effort, and frustration. The sum of these is
+cohesion features, including overall team productivity, effort, and averaged by dividing by the number of sub-dimensions (i.e.,
+whether the team came to a consensus effectively. This includes five). Similarly, cognitive experience scores are calculated for
+modified versions of the short Trust Perception Scale-HRI [66], each participant by summing their scores for all the modified
+the Team Effectiveness Instrument [65], and an effectiveness NASA-RTLXsub-dimensions(mentaldemand,temporaldemand,
+survey developed by the researchers of this study using the performance,effort,stress,discouragement,insecurity,andfrustra-
+resultsofapreviousstudy[67].TodetermineifAIPartnersinflu- tion)anddividingbythenumberofsub-dimensions(i.e.,eight).For
+encedparticipants’teamperceptions,aWilcoxtestisused. bothoftheseglobaldimensions,theinverseoftheperformancesub-
+dimension is taken before summation to match the scaling of the
+4.4.1 Cognitive Experience and Mental Workload. The first others.
+part of the questionnaire appraises participants’ mental workload Figure13showstheoverallcognitiveexperience(Fig.13(a))and
+and cognitive experience. Mental workload scores are calculated the mental workload (Fig. 13(b)) measurements by team role for
+Fig.11 Communicationbehaviorforhybridteams
+081401-10 / Vol.146,AUGUST2024 TransactionsoftheASME
+Downloaded
+from
+http://asmedigitalcollection.asme.org/mechanicaldesign/article-pdf/146/8/081401/7236810/md_146_8_081401.pdf
+by
+guest
+on
+07
+June
+2026
+
+Fig.12 CommunicationrequestsforAIPartnersbyteamroles
+eachteamcondition.Theresultsoftheoverallcognitiveexperience 4.4.2 TeamEffectivenessandCohesion. Thesecondpartofthe
+and the mental workload present no significant difference when questionnaire measures and evaluates participants’ perceptions of
+comparing the design roles and team structures even after the their team’s effectiveness and interactions critical to the team’s
+shockintroducedinSession2.However,divingintotheunderlying success.Teammembers’answersarerecordedusingaLikert-type
+sub-dimensions of these NASA-RTLX measures, the Problem scale representing seven discrete options, from “strongly dis-
+Manager role in both team conditions faces a significant increase agree/inaccurate”to“stronglyagree/accurate.”
+inmentaldemand(p=0.032,W=347.5)whentransitioningfrom Figures14and15presenttheresultsfromthesequestionnaires.
+Session1toSession2.Additionally,thereisasignificantdifference During Session 2, members of the hybrid teams perceived their
+infrustrationbetweenthehumanandhybridteams(p=0.032,W= teams as less efficient (p=0.088, W=779.5), and team roles
+2833).TheOperationsSpecialistsfacethelowestvariabilityinthe were not clear (p=0.0202, W=706.5) when compared to human
+NASA-RTLXmeasurementsacrossteamrolesforboththehuman teams. They also identify significantly less effective feedback
+andhybridteams. (p=0.028, W=721.5), significantly less equal participation (p=
+Fig.13 Overallexperiencesbyteamrolemeasuredthrough(a)cognitivescoreand(b)mentalworkload
+JournalofMechanicalDesign AUGUST2024,Vol.146 / 081401-11
+Downloaded
+from
+http://asmedigitalcollection.asme.org/mechanicaldesign/article-pdf/146/8/081401/7236810/md_146_8_081401.pdf
+by
+guest
+on
+07
+June
+2026
+
+Fig.14 Teameffectivenessperception:(a)teamisefficient,(b)teamcommunicateseffectively,(c)teammembersarecooper-
+ative,and(d)membersareclearabouttheirroles
+0.0099,W=676),andsignificantlylesscollaboration(p=0.0076, composedofthreehumanmembersandtwoAIPartnerswhocan
+W=666.5) efforts from their teammates. Furthermore, hybrid communicate and share solutions between team members. It is
+teams perceived that their team communicated significantly less believedthathumanandAIcollaborationcouldyieldconsiderable
+effectivelyduringbothexperimentsessions(Session1:p=0.046, improvements in overall performance compared to human-only
+W=744.5; and Session 2: p=0.013, W=687). The results from teams [29,30]. However, the engineering design community is
+the questionnaire highlight a negative perception of team still researching factors influencing human–AI teaming effective-
+members regarding the effectiveness and cohesion within the ness and enjoyment. This study adds to the body of research by
+hybridteams,eventhoughtheyperformedequivalentlywell. introducing a unique AI Partner that can dynamically interact,
+both reactively and proactively, in real-time with their human
+counterparts to emulate genuine team partners. The anticipatory
+5 Discussion
+andproactiveinformation-pullingbehaviorofAIPartnersinteam
+Thisworkstudiestheperformanceandproblem-solvingbehav- interactions is expected to improve team performance [41–43].
+iors of hybrid-partnered engineering design teams compared with The impacts of these AI Partners on both performance and
+human-onlydesignteams,with adrastic, unexpectedshockintro- problem-solvingbehaviorsareexploredinthecontextofengineer-
+ducedmidwaythroughthedesigntask.Thehumanteamsarecom- ingteamssolvingcomplex,interdisciplinarydesignproblems.
+posedoffivehumanmemberswithspecificdistinctroleswhocan Both human and hybrid teams perform similarly. The overall
+communicate and share solutions. Similarly, the hybrid teams are performance of hybrid teams is an indication that the AI
+081401-12 / Vol.146,AUGUST2024 TransactionsoftheASME
+Downloaded
+from
+http://asmedigitalcollection.asme.org/mechanicaldesign/article-pdf/146/8/081401/7236810/md_146_8_081401.pdf
+by
+guest
+on
+07
+June
+2026
+
+Fig.15 Participationperception:(a)teamparticipatesequallyand(b)teamgiveseffectivefeedback
+members’skilllevelmaybecomparabletothehumanmembersof the problem shock is introduced prior to the second problem
+the team [52–54]. This supports the design of the AI Partners session. As the Problem Managers are directly connected to all
+created for this research, by showing that they can adeptly stand otherindividualswithintheteam,theyserveasthecentralnodeof
+in as substitutes for human partners as opposed to simply being theteamstructure[73,74].Theupsurgeincommunicationcouldbe
+assistants [22,33,52]. While there is not a significant difference causedbythecentralitythatthesemanagershaveinboththecommu-
+between human-only and hybrid teams in overall performance, nicationstructure(theneedtocommunicateinformationacrossdisci-
+the hybrid teams do exhibit greater variability in terms of their plines)andinthetaskstructure(theneedtooverseeandsubmitfinal
+team performance, with a long tail of high-profit teams. These plans), as they mediate and transform the flow of information for
+results indicate that hybrid teams demonstrate high potential for other team members [75]. These critical efforts for information
+betterperformanceandthatthehighcapabilityofAIPartnerscan flowmayhavebeenmoreeffectiveforrespondingtothechangein
+be a contributing factor. Other works have shown that possible the problem. As shown in the results, the human team members
+mechanisms behind team performance can be information- respondtothe newconstraintsaddedtotheproblemby increasing
+processing functions [40] or compatibility with human partners their communication efforts, especially at the management level.
+[66]. Thisresultopensaquestionofwhetherlimitationswithinthecom-
+Itisalsosignificantthatthehybridteamsmaintainacomparable munication between human and AI hinder the adaptation of the
+performance across sessions, regardless of the AI Partners being hybridteamstotheabruptshock.Forinstance,forthehumanpartic-
+blindtotheabruptchangesinconstraints.Itislikelythattheincrease ipantsinthisstudy,knowingthefactthattheirfellowteammateisan
+incommunicationbetweenhumanparticipantsandAIPartnerssup- AI could have deterred their willingness to communicate. Works
+portedtheconsistentlevelofperformanceinhybridteams.Thisresult examining human–computer and human–robot interaction suggest
+demonstrates that the adaptivity characteristic of human–AI hybrid that human–AI communication experiences reduced interpersonal
+teamscancomefromthehumansideofthepartnership,insteadof attractionthatcouldaffectuserperception[76,77],whilesuchlimita-
+developingtheperfectadaptiveAIPartners.Italsopresentsthepos- tionsaretypicallynotpresentinhuman-humancollaboration.Thisis
+sibility of hybrid teams largely outperforming human-only teams an important consideration that must be accounted for inthe long-
+with certain team dynamics such as effective communication [56]. termperformanceoftheseteams.
+This insight is potentially of great importance as a principle for Analysis of communication frequency and distribution reveals
+forming teams in dynamic scenarios, in which the human portion problem-solving behaviors related to interdependence within the
+oftheteamshouldbeonlyaslargeasnecessarytohandleadaptation. hybridteams.Duringthefirstsession,weobservedthatthecommu-
+Inadditiontocomparing performance levels, a critical aspectof nicationbetweenhumanmembersandhuman–AImembersisequally
+thisworkistoexplorehowtheintegrationoftheseAIPartnersfun- distributed. However, following the shock, communication shifts
+damentally impacts the teams’ problem-solving behaviors. The muchmoreheavilyamonghuman–AImembers,particularlyforthe
+underlying difference between human and hybrid teams is present OperationSpecialistsandProblemManagerroles.Onthecontrary,
+intheiroverallcommunication, whilethereisalmostnodifference DesignSpecialistsshowaslightincreaseinhuman–AIcommunica-
+intheoverallactionbehavior.Previousliteratureonthedesignthink- tion.Wecaninferthathumanteammembersseemtorelymoreon
+ingprocessindicatesthepresenceofanincreaseinteamcommunica- their AI Partners under uncertain shocks, especially for operation-
+tionatthebeginningofthecollectivedesignprocess,astheteamis related tasks rather than for design tasks which aligns with results
+clarifying goals and establishing a common understanding of the fromsimilarpreviousstudies[78].Resultsofthisworkpointtothe
+design requirements [72]. A similar pattern could be observed in significanceofcommunicationforthesuccessofhuman–AIteams.
+thisstudywhentheshockwasintroduced,whichalteredthedesign Accordingly, it would be critical in future research to analyze the
+requirements and effectively propelled the team to communicate qualityofcommunication[79].Forinstance,patternsinthecontent
+toward goal clarification. Examining the communication behavior of the chat can be analyzed using natural language processing
+at a role level reveals that Problem Managers in human teams methodstoexaminewhattypesofinformationarebeingtransferred
+exhibit the steepest increase in communication, particularly after between members in a hybrid team. Such analysis can further
+JournalofMechanicalDesign AUGUST2024,Vol.146 / 081401-13
+Downloaded
+from
+http://asmedigitalcollection.asme.org/mechanicaldesign/article-pdf/146/8/081401/7236810/md_146_8_081401.pdf
+by
+guest
+on
+07
+June
+2026
+
+determineiftherelationshipbetweencommunicationandactionsin Funding Data
+hybridteamsrestrictsteamperformance.
+(cid:129) Air Force Office of Scientific Research (AFOSR) Grant No.
+Even though the AI Partners show effectiveness in replacing
+FA9550-18-1-0088.
+human counterparts, questionnaire results show that human team
+(cid:129) Defense Advanced Research Projects Agency (DARPA),
+members within the hybrid teams have a negative perception of
+their team’s effectiveness and cohesion. The results align with CooperativeAgreementNo.N66001-17-1-4064.
+prior research findings on the perception of teamwork in HAT
+that human teammates are usually perceived as more effective Conflict of Interest
+and facilitate more communication than autonomous partners
+[49]. This finding resonates strongly in terms of cooperative fea-
+Therearenoconflictsofinterest.
+tures,includingeffectivecommunicationandfeedback,collabora-
+tion,andequalparticipation,wherethehybridteamsallratethese
+Data Availability Statement
+as significantly inferior. These findings have strong implications
+forhybridteamsofthefuture.InorderforhumanandAIPartners Thedatasetsgeneratedandsupportingthefindingsofthisarticle
+to effectively work together, there needs to be more of a positive are obtainable from the corresponding author upon reasonable
+team experience, as these factors correlate highly within request.
+problem-solvingteams[57,58,80].Eventhoughthetwoteamcon-
+ditions perform similarly, whether these negative perceptions References
+impacted their potential team performance cannot be answered
+[1]“Modeling the Global Economic Impact of AI | McKinsey,” https://www.
+here.Therefore,itcouldbeoneareaoffurtherexperimentation. mckinsey.com/featured-insights/artificial-intelligence/notes-from-the-ai-frontier-
+modeling-the-impact-of-ai-on-the-world-economy,AccessedFebruary17,2023.
+[2]Caldwell,S.,Sweetser,P.,O’Donnell,N.,Knight,M.J.,Aitchison,M.,Gedeon,
+6 Conclusion
+T.,Johnson,D.,Brereton,M.,Gallagher,M.,andConroy,D.,2022,“AnAgile
+New Research Framework for Hybrid Human-AI Teaming: Trust,
+This work analyzes and compares the team performance, Transparency, and Transferability,” ACM Trans. Interact. Intell. Syst., 12(3),
+pp.17:1–17:36.
+problem-solving behaviors, and team experiences of human and
+human–AI hybrid teams during a complex, interdisciplinary [3]v 2 a 0 n 19 d , en “S B ix os C ch h , al K le . n , g S e c s ho fo o r nd H er u w m o a e n rd -A , I T. C , o B - l L a e n a k r e n n i d n a g a ,” l, A R d ., ap an ti d ve N I e n e s r t i r n u c c x t , io M na . l ,
+design task. The AI Partners in this research emulate genuine Systems:LectureNotesinComputerScience,R.A.Sottilare,andJ.Schwarz,
+team partners, being able to react to and proactively collaborate eds.,SpringerInternationalPublishing,Cham,pp.572–589.
+with their human teammates dynamically. A drastic change (i.e., [4]“DigitalWorkforceTeam/HACO: Files of the HACO Framework,” GitHub,
+https://github.com/DigitalWorkforceTeam/HACO,AccessedFebruary17,2023.
+shock) to the problem constraints is also introduced midway
+[5]“Top Strategic Predictions for 2018 and Beyond: Pace Yourself, for
+through the experiment to simulate an evolving engineering Sanity’sSake,”Gartner,https://www.gartner.com/en/doc/3803530-top-strategic-
+problem in practice. Results show that the hybrid teams perform predictions-for-2018-and-beyond-pace-yourself-for-sanitys-sake,AccessedFebruary
+similarlytohumanteams,indicatingthattheAIPartnerscaneffec- 18,2023.
+tively replace and adeptly support their human design partners in
+[6]Dubey,A.,Abhinav,K.,Jain,S.,Arora,V.,andPuttaveerana,A.,2020,“HACO:
+A Framework for Developing Human-AI Teaming,” Proceedings of the 13th
+terms of performance. However, a similar conclusion cannot be
+InnovationsinSoftwareEngineeringConferenceonFormerlyKnownasIndia
+drawn in other aspects of the teamwork. Hybrid teams struggle Software Engineering Conference, in ISEC 2020, New York, March,
+with adapting their coordination and communication following AssociationforComputingMachinery,pp.1–9.
+theshock.Thehumanmembersinthehybridteamsalsoperceive [7]Song,B.,SoriaZurita,N.F.,Nolte,H.,Singh,H.,Cagan,J.,andMcComb,C.,
+2022, “When Faced With Increasing Complexity: The Effectiveness of
+their team as inferior across several interpersonal dimensions, Artificial Intelligence Assistance for Drone Design,” ASME J. Mech. Des.,
+includingtheeffectivenessofteamcommunication,feedback,and 144(2),p.021701.
+the equality of contribution among other team members. These [8]SoriaZurita,N.F.,andTumer,I.Y.,2017,“ASurvey:TowardsUnderstanding
+results imply that flexible AI isn’t always necessary, as humans EmergentBehaviorinComplexEngineeredSystems,”ProceedingsoftheASME
+canaddressandcompensateforthedeficiencyoftheAIteammate. 2017InternationalDesignEngineeringTechnicalConferencesandComputers
+However,inflexibleAIcausesincreasedhumanstress,whichcould a
+A
+n
+m
+d
+er
+I
+i
+n
+ca
+fo
+n
+rm
+So
+a
+c
+ti
+i
+o
+et
+n
+yo
+in
+fM
+E
+e
+n
+c
+g
+h
+i
+a
+n
+n
+e
+i
+e
+c
+r
+a
+i
+l
+ng
+Eng
+C
+in
+o
+e
+n
+e
+fe
+rs
+re
+D
+nc
+ig
+e
+i
+,
+tal
+C
+C
+le
+o
+v
+l
+e
+le
+la
+c
+n
+ti
+d
+o
+,
+n,
+O
+pp
+H
+.
+,
+1–
+A
+1
+u
+2
+g
+.
+. 6–9,
+beahiddenvulnerabilityforteamperformanceandreliabilityfora [9]Song,B.,SoriaZurita,N.F.,Zhang,G.,Stump,G.,Balon,C.,Miller,S.W.,
+prolonged duration. These findings point toward several areas of Yukish, M., Cagan, J., and McComb, C., 2020, “Toward Hybrid Teams: A
+improvementforthesehybridteams,namelyeffectivecommunica- PlatformtoUnderstandHuman-ComputerCollaborationDuringtheDesignof
+Complex Engineered Systems,” Proceedings of the Design Society: DESIGN
+tion,cooperation,participation,andfeedbackbetweenhumanand Conference,Dubrovnik,Croatia,Oct.26–29,Vol.1,pp.1551–1560.
+AI members of the team. In addition, the AI used in this work [10]Yerkes,R.M.,andDodson,J.D.,1908,“TheRelationofStrengthofStimulusto
+haslimitedintelligenceandnaturallanguageprocessingcapability, RapidityofHabit-Formation,”J.Comp.Neurol.Psychol.,18(5),pp.459–482.
+which may have affected team performance and behavior. There- [11]Koch,J.,2017,“DesignImplicationsforDesigningwithaCollaborativeAI,”
+fore, future work should address more skilled and capable AI Proceedings of the SS-17-01: Artificial Intelligence for the Social Good;
+SS-17-02: Computational Construction Grammar and Natural Language
+agentswithimprovedintelligenceandverbalcommunicationcom- Understanding;SS-17-03:ComputationalContext:WhyIt’sImportant,WhatIt
+petency.Overall,theresultsprovideinsightsintothebehaviorsof Means,andCanItBeComputed?;SS-17-04:DesigningtheUserExperience
+humans interacting with AI teammates and the factors needed to of Machine Learning Systems; SS-17-05: Interactive Multisensory Object
+trulyconstructeffectivehybriddesignteams. Perception for Embodied Agents; SS-17-06: Learning from Observation of
+Humans; SS-17-07: Science of Intelligence: Computational Principles of
+Natural and Artificial Intelligence; SS-17-08: Wellbeing AI: From Machine
+Learning to Subjectivity Oriented Computing, Palo Alto, CA, March, AAAI
+Acknowledgment Press,pp.415–418.https://research.aalto.fi/en/publications/design-implications-
+for-designing-with-a-collaborative-ai,AccessedMarch5,2023.
+This work was supported by the Air Force Office of Scientific [12]Kim,S.-G.,Yoon,S.M.,Yang,M.,Choi,J.,Akay,H.,andBurnell,E.,2019,“AI
+Research under Grant No. FA9550-18-1-0088 and the Defense forDesign:VirtualDesignAssistant,”CIRPAnn.,68(1),pp.141–144.
+Advanced Research Projects Agency through cooperative agree- [13]Valdez, S., Seepersad, C., and Kambampati, S., 2021, “A Framework for
+mentNo.N66001-17-1-4064.Anyopinions,findings,andconclu- Interactive Structural Design Exploration,” Proceedings of the ASME 2021
+International Design Engineering Technical Conferences and Computers and
+sionsorrecommendationsexpressedinthispaperarethoseofthe InformationinEngineeringConference,VirtualConference,AmericanSociety
+authorsanddonotnecessarilyreflecttheviewsofthesponsors. ofMechanicalEngineersDigitalCollection,pp.1–12.
+Theauthor’saffiliationwithTheMITRECorporationisprovided [14]Camburn,B.,Arlitt,R.,Anderson,D.,Sanaei,R.,Raviselam,S.,Jensen,D.,and
+for identification purposes only and is not intended to convey or Wood,K.L.,2020,“Computer-AidedMindMapGenerationviaCrowdsourcing
+andMachineLearning,”Res.Eng.Des.,31(4),pp.383–409.
+imply MITRE’s concurrence with, or support for, the positions, [15]Chong,L.,andYang,M.,2023,“AIvs.Human:ThePublic’sPerceptionsofthe
+opinions,orviewpointsexpressedbytheauthor. DesignAbilitiesofArtificialIntelligence,”Proc.Des.Soc.,3,pp.495–504.
+081401-14 / Vol.146,AUGUST2024 TransactionsoftheASME
+Downloaded
+from
+http://asmedigitalcollection.asme.org/mechanicaldesign/article-pdf/146/8/081401/7236810/md_146_8_081401.pdf
+by
+guest
+on
+07
+June
+2026
+
+[16]Raina,A.,McComb,C.,andCagan,J.,2019,“LearningtoDesignFromHumans: [42]Demir,M.,Likens,A.D.,Cooke,N.J.,Amazeen,P.G.,andMcNeese,N.J.,
+Imitating Human Designers Through Deep Learning,” ASME J. Mech. Des., 2019,“TeamCoordinationandEffectivenessinHuman-AutonomyTeaming,”
+141(11),p.111102. IEEETrans.Hum.-Mach.Syst.,49(2),pp.150–159.
+[17]Saadi,J.I.,andYang,M.C.,2023,“GenerativeDesign:ReframingtheRoleof [43]Demir,M.,McNeese,N.J.,andCooke,N.J.,2017,“TeamSituationAwareness
+the Designer in Early-Stage Design Process,” ASME J. Mech. Des., 145(4), Within the Context of Human-Autonomy Teaming,” Cogn. Syst. Res., 46,
+p.041411. pp.3–12.
+[18]Regenwetter,L.,Nobari,A.H.,andAhmed,F.,2022,“DeepGenerativeModels [44]McComb,C.,Boatwright,P.,andCagan,J.,2023,“FocusandModality:Defining
+inEngineeringDesign:AReview,”ASMEJ.Mech.Des.,144(7),p.071704. a Roadmap to Future AI-Human Teaming in Design,” Proc. Des. Soc., 3,
+[19]HeyraniNobari,A.,Rashad,M.F.,andAhmed,F.,2021,“CreativeGAN:Editing pp.1905–1914.
+GenerativeAdversarialNetworksforCreativeDesignSynthesis,”Proceedingsof [45]Werder,K.,andMaedche,A.,2018,“ExplainingtheEmergenceofTeamAgility:
+theASME2021InternationalDesignEngineeringTechnicalConferencesand AComplexAdaptiveSystemsPerspective,”Inf.Technol.People,31(3),pp.819–
+Computers and Information in Engineering Conference, Virtual Conference, 844.
+AmericanSocietyofMechanicalEngineersDigitalCollection,pp.1–13. [46]Zhang,G.,SoriaZurita,N.F.,Stump,G.,Song,B.,Cagan,J.,andMcComb,C.,
+[20]Chen,Q.,Wang,J.,Pope,P.,(Wayne)Chen,W.,andFuge,M.,2022,“Inverse 2021,“DataontheDesignandOperationofDronesbyBothIndividualsand
+DesignofTwo-DimensionalAirfoilsUsingConditionalGenerativeModelsand Teams,”DatainBr.,36,p.107008.
+SurrogateLog-Likelihoods,”ASMEJ.Mech.Des.,144(2),p.021712. [47]Walliser,J.,deVisser,E.,Wiese,E.,andShaw,T.,2019,“TeamStructureand
+[21]Camburn,B.,He,Y.,Raviselvam,S.,Luo,J.,andWood,K.,2020,“Machine Team Building Improve Human–Machine Teaming With Autonomous
+Learning-BasedDesignConceptEvaluation,”ASMEJ.Mech.Des.,142(3),p. Agents,”J.Cogn.Eng.Decis.Mak.,13(4),pp.258–278.
+031113. [48]Gao, F., Cummings, M. L., and Bertuccelli, L. F., 2012, “Teamwork in
+[22]Song,B.,Gyory,J.T.,Zhang,G.,SoriaZurita,N.F.,Stump,G.,Martin,J., ControllingMultipleRobots,”MITWebDomain,https://dspace.mit.edu/handle/
+Miller, S. W., et al., 2022, “Decoding the Agility of Artificial Intelligence- 1721.1/81765.AccessedJanuary29,2023.
+AssistedHumanDesignTeams,”Des.Stud.,79(C),p.101094. [49]Walliser, J. C., Mead, P. R., and Shaw, T. H., 2017, “The Perception of
+[23]Nie,Z.,Lin,T.,Jiang,H.,andKara,L.B.,2021,“TopologyGAN:Topology Teamwork With an Autonomous Agent Enhances Affect and
+OptimizationUsingGenerativeAdversarialNetworksBasedonPhysicalFields PerformanceOutcomes,”Proc.Hum.FactorsErgon.Soc.Annu.Meet.,61(1),
+OvertheInitialDomain,”ASMEJ.Mech.Des.,143(3),p.031715. pp.231–235.
+[24]Sharpe,C.,Wiest,T.,Wang,P.,andSeepersad,C.C.,2019,“AComparative [50]Fan, X., McNeese, M., and Yen, J., 2010, “NDM-Based Cognitive Agents for
+Evaluation of Supervised Machine Learning Classification Techniques for SupportingDecision-MakingTeams,”Hum.-Comput.Interact.,25(3),pp.195–234.
+EngineeringDesignApplications,”ASMEJ.Mech.Des.,141(12),p.121404. [51]Azhar,M.Q.,andSklar,E.I.,2017,“AStudyMeasuringtheImpactofShared
+[25]Dering,M.L.,Tucker,C.S.,andKumara,S.,2018,“AnUnsupervisedMachine Decision Making in a Human-Robot Team,” Int. J. Rob. Res., 36(5–7),
+Learning Approach to Assessing Designer Performance During Physical pp.461–482.
+Prototyping,”ASMEJ.Comput.Inf.Sci.Eng.,18(1),p.011002. [52]Lewis,M.,Sycara,K.,andPayne,T.R.,2003,“AgentRolesinHumanTeams,”
+[26]Williams,G.,Meisel,N.A.,Simpson,T.W.,andMcComb,C.,2019,“Design Proceedings of the AAMAS-03 Workshop on Humans and Multi-Agent
+Repository Effectiveness for3DConvolutionalNeural Networks:Application Systems, Melbourne, Australia, Jan. 1, pp. 1–7. https://eprints.soton.ac.uk/
+toAdditiveManufacturing,”ASMEJ.Mech.Des.,141(11),p.111701. 257737/.AccessedJanuary29,2023.
+[27]Gyory,J.T.,SoriaZurita,N.F.,Martin,J.,Balon,C.,McComb,C.,Kotovsky, [53]Larson,L.,andDeChurch,L.A.,2020,“LeadingTeamsintheDigitalAge:Four
+K.,andCagan,J.,2022,“HumanVersusArtificialIntelligence:AData-Driven PerspectivesonTechnologyandWhatTheyMeanforLeadingTeams,”Leadersh.
+Approach to Real-Time Process Management During Complex Engineering Q.,31(1),p.101377.
+Design,”ASMEJ.Mech.Des.,144(2),p.021405. [54]Nass,C.,Fogg,B.J.,andMoon,Y.,1996,“CanComputersBeTeammates?,”
+[28]Woodruff,R.,Beebe,N.,KaurJosan,P.,Dutta,P.,Short,A.-R.,Wong,R.K.W., Int.J.Hum-Comput.Stud.,45(6),pp.669–678.
+Dunbar,B.J.,Selva,D.,andDiaz-Artiles,A.,2021,“3DInteractiveModelof [55]Lyons,J.,Mahoney,S., Wynne,K. T.,andRoebke,M.A., 2018, “Viewing
+HERA to Support ECLSS Anomaly Resolution Using a Virtual Assistant,” Machines as Teammates: A Qualitative Study,” Proceedings of the AAAI
+Proceedingsofthe2021IEEEAerospaceConference(50100),BigSky,MT, Spring Symposia, Palo Alto, CA, March. https://www.semanticscholar.org/
+March,pp.1–10. paper/Viewing-Machines-as-Teammates%3A-A-Qualitative-Study-Lyons-Maho
+[29]Daughertyrc,P.R.,andWilson,H.J.,2018,Human+Machine:Reimagining ney/965e8bb95cc2cc46b822b1a0f3fde5d8e99ffedb,AccessedJanuary29,2023.
+WorkintheAgeofAI,HarvardBusinessPress,Brighton,MA. [56]Wynne, K. T., and Lyons, J. B., 2018, “An Integrative Model of
+[30]Wilson,H.J.,andDaugherty,P.R.,2018,“CollaborativeIntelligence:Humans Autonomous Agent Teammate-Likeness,” Theor. Issues Ergon. Sci., 19(3),
+andAIAreJoiningForces,”HarvardBusinessReview,https://hbr.org/2018/07/ pp.353–374.
+collaborative-intelligence-humans-and-ai-are-joining-forces. Accessed February [57]Kratzer,J.,Leenders,R.T.,andVanEngelen,J.M.,2010,“TheSocialNetwork
+17,2023. AmongEngineeringDesignTeamsandTheirCreativity:ACaseStudyAmong
+[31]Zhang,G.,Raina,A.,Cagan,J.,andMcComb,C.,2021,“ACautionaryTale TeamsinTwoProductDevelopmentPrograms,”Int.J.ProjectManage.,28(5),
+AbouttheImpactofAIonHumanDesignTeams,”Des.Stud.,72(C),p.100990. pp.428–436.
+[32]Wright,J.L.,Chen,J.Y.C.,Quinn,S.A.,andBarnes,M.J.,2013,“TheEffects [58]Wu,Q.,andCormican,K.,2016,“SharedLeadershipandTeamCreativity:A
+ofLevelofAutonomyonHuman-AgentTeamingforMulti-RobotControland SocialNetworkAnalysisinEngineeringDesignTeams,”J.Technol.Manage.
+LocalSecurityMaintenance,”https://apps.dtic.mil/sti/pdfs/ADA595105.pdf. Innov.,11(2),pp.2–12.
+[33]Wright,J.L.,Chen,J.Y.C.,andBarnes,M.J.,2018,“Human–Automation [59]Hanna, N.,andRichards,D.,2013,“ACollaborative Activity forEvaluating
+Interaction for Multiple Robot Control: the Effect of Varying Automation HAT-COM:Human-AgentTeamworkCommunicationModel,”Proceedingsof
+AssistanceandIndividualDifferencesonOperatorPerformance,”Ergonomics, theAdaptiveAgentsandMulti-AgentSystems,St.Paul,MN,May,pp.1369–
+61(8),pp.1033–1045. 1370.https://www.semanticscholar.org/paper/A-collaborative-activity-for-evalua
+[34]Wright,M.C.,andKaber,D.B.,2005,“EffectsofAutomationofInformation- ting-HAT-COM%3A-Hanna-Richards/1ae65338c61042ee5e01f3b82f321809456
+ProcessingFunctionsonTeamwork,”Hum.Factors,47(1),pp.50–66. 0a9c6.AccessedJanuary29,2023.
+[35]Chen,J.Y.C.,andBarnes,M.J.,2012,“SupervisoryControlofMultipleRobots: [60]Demir,M.,McNeese,N.J.,Cooke,N.J.,andMyers,C.,2016,“TheSynthetic
+Effects of Imperfect Automation and Individual Differences,” Hum. Factors, Teammate as a Team Player in Command-and-Control Teams,” Proc. Hum.
+54(2),pp.157–174. FactorsErgon.Soc.Annu.Meet.,60(1),pp.116–116.
+[36]Fan,X.,Oh,S.,McNeese,M.,Yen,J.,Cuevas,H.,Strater,L.,andEndsley, [61]Sycara,K.,andLewis,M.,2002,“IntegratingAgentsIntoHumanTeams,”Proc.
+M. R., 2008, “The Influence of Agent Reliability on Trust in Human-Agent Hum.FactorsErgon.Soc.Annu.Meet.,46(3),pp.413–417.
+Collaboration,” Proceedings of the 15th European Conference on Cognitive [62]SoriaZurita,N.F.,Gyory,J.T.,Balon,C.,Martin,J.,Kotovsky,K.,Cagan,J.,
+Ergonomics: the Ergonomics of Cool Interaction, in ECCE ‘08, New York, and McComb, C., 2022, “Data on the Human Versus Artificial Intelligence
+AssociationforComputingMachinery,January,pp.1–8. ProcessManagementExperiment,”DatainBr.,41,p.107917.
+[37]Demir, M., McNeese, N. J.,and Cooke, N. J.,2016, “Team Communication [63]Hart,S.G.,2006,“Nasa-TaskLoadIndex(NASA-TLX);20YearsLater,”Proc.
+BehaviorsoftheHuman-AutomationTeaming,”Proceedingsofthe2016IEEE Hum.FactorsErgon.Soc.Annu.Meet.,50(9),pp.904–908.
+InternationalMulti-DisciplinaryConferenceonCognitiveMethodsinSituation [64]Hart,S.G.,andStaveland,L.E.,1988,“DevelopmentofNASA-TLX(TaskLoad
+Awareness and Decision Support (CogSIMA), San Diego, CA, Mar. 20–25, Index): Results of Empirical and Theoretical Research,” Adv. Psychol., 52,
+pp.28–34. pp.139–183.
+[38]Fan, X., Sun, S., McNeese, M., and Yen, J., 2005, “Extending the [65]Gibson, C. B., Zellmer-Bruhn, M. E., and Schwab, D. P., 2003, “Team
+Recognition-PrimedDecisionModeltoSupportHuman-AgentCollaboration,” Effectiveness in Multinational Organizations: Evaluation Across Contexts,”
+Proceedings of the Fourth International Joint Conference on Autonomous GroupOrgan.Manag.,28(4),pp.444–474.
+AgentsandMultiagentSystems,inAAMAS‘05,NewYork,Associationfor [66]Schaefer, K. E., 2016, “Measuring Trust in Human Robot Interactions:
+ComputingMachinery,July,pp.945–952. Development of the ‘Trust Perception Scale-HRI,’,” Robust Intelligence and
+[39]McNeese,N.J.,Demir,M.,Cooke,N.J.,andMyers,C.,2018,“TeamingWitha Trust in Autonomous Systems, R. Mittu, D. Sofge, A. Wagner, and W. F.
+SyntheticTeammate:InsightsIntoHuman-AutonomyTeaming,”Hum.Factors, Lawless,eds.,SpringerUS,Boston,MA,pp.191–218.
+60(2),pp.262–273. [67]Wheelan,S.A.,andHochberger,J.M.,1996,“ValidationStudiesoftheGroup
+[40]O’Neill, T., McNeese, N., Barron, A., and Schelble, B., 2022, “Human– DevelopmentQuestionnaire,”SmallGroupRes.,27(1),pp.143–170.
+Autonomy Teaming: A Review and Analysis of the Empirical Literature,” [68]Stump,G.,Lego,S.,Yukish,M.,Simpson,T.W.,andDonndelinger,J.A.,2009,
+Hum.Factors,64(5),pp.904–938. “VisualSteeringCommandsforTradeSpaceExploration:User-GuidedSampling
+[41]Demir,M.,Cooke,N.J.,andAmazeen,P.G.,2018,“AConceptualModelof WithExample,”ASMEJ.Comput.Inf.Sci.Eng.,9(4),p.044501.
+TeamDynamicalBehaviorsandPerformanceinHuman-AutonomyTeaming,” [69]Yujian,L.,andBo,L.,2007,“ANormalizedLevenshteinDistanceMetric,”IEEE
+Cogn.Syst.Res.,52,pp.497–507. Trans.PatternAnal.Mach.Intell.,29(6),pp.1091–1095.
+JournalofMechanicalDesign AUGUST2024,Vol.146 / 081401-15
+Downloaded
+from
+http://asmedigitalcollection.asme.org/mechanicaldesign/article-pdf/146/8/081401/7236810/md_146_8_081401.pdf
+by
+guest
+on
+07
+June
+2026
+
+[70]Stump,G.M.,Miller,S.W.,Yukish,M.A.,Simpson,T.W.,andTucker,C., [76]Susskind, A. M., and Odom-Reed, P. R., 2019, “Team Member’s
+2019, “Spatial Grammar-Based Recurrent Neural Network for Design Form Centrality, Cohesion, Conflict, and Performance in Multi-
+andBehaviorOptimization,”ASMEJ.Mech.Des.,141(12),p.124501. University Geographically Distributed Project Teams,” Commun. Res., 46(2),
+[71]Nolte,H.,andMcComb,C.,2021,“TheCognitiveExperienceofEngineering pp.151–178.
+Design:anExaminationofFirst-YearStudentStressAcrossPrincipalActivities [77]Lei,S.I.,Shen,H.,andYe,S.,2021,“AComparisonBetweenChatbotand
+oftheEngineeringDesignProcess,”Des.Sci.,7(3),pp.1–31. Human Service: Customer Perception and Reuse Intention,” Int. J. Contemp.
+[72]Fong,T.,Scholtz,J.,Shah,J.A.,Fluckiger,L.,Kunz,C.,Lees,D.,Schreiner,J., Hosp.Manag.,33(11),pp.3977–3995.
+etal.,2006,“APreliminaryStudyofPeer-to-PeerHuman-RobotInteraction,” [78]Bansal,G.,Nushi,B.,Kamar,E.,Weld,D.S.,Lasecki,W.S.,andHorvitz,E.,
+Proceedingsofthe2006IEEEInternationalConferenceonSystems,Manand 2019, “Updates in Human-AI Teams: Understanding and Addressing the
+Cybernetics,Taipei,Taiwan,Oct.8–11,pp.3198–3203. Performance/CompatibilityTradeoff,”Proc.AAAIConf.Artif.Intell.,33(01),
+[73]Stempfle, J., and Badke-Schaub, P., 2002, “Thinking in Design Teams—An pp.2429–2437.
+AnalysisofTeamCommunication,”Des.Stud.,23(5),pp.473–496. [79]Edwards, A., Edwards, C., Westerman, D., and Spence, P. R., 2019, “Initial
+[74]Balkundi,P.,andHarrison,D.A.,2006,“Ties,Leaders,AndTimeinTeams: Expectations, Interactions, and Beyond With Social Robots,” Comput. Hum.
+Strong Inference About Network Structure’s Effects On Team Viability And Behav.,90,pp.308–314.
+Performance,”Acad.Manage.J.,49(1),pp.49–68. [80]Lyons, J. B., Sycara, K., Lewis, M., and Capiola, A., 2021, “Human–
+[75]Scott,J.,andCarrington,P.J.,2011,TheSAGEHandbookofSocialNetwork AutonomyTeaming:Definitions,Debates,andDirections,”Front.Psychol.,12,
+Analysis,SAGEPublications. pp.1–15.
+081401-16 / Vol.146,AUGUST2024 TransactionsoftheASME
+Downloaded
+from
+http://asmedigitalcollection.asme.org/mechanicaldesign/article-pdf/146/8/081401/7236810/md_146_8_081401.pdf
+by
+guest
+on
+07
+June
+2026

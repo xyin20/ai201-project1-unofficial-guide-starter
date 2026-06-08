@@ -1,0 +1,1638 @@
+A Bayesian Framework for Human–AI Collaboration:
+Complementarity and Correlation Neglect
+Saurabh Amin Amine Bennouna Daniel Huttenlocher
+MIT Northwestern University MIT
+amins@mit.edu amine.bennouna@northwestern.edu huttenlocher@mit.edu
+Dingwen Kong Liang Lyu Asuman Ozdaglar
+MIT MIT MIT
+dingwenk@mit.edu lianglyu@mit.edu asuman@mit.edu
+February 17, 2026
+Abstract
+We develop a decision-theoretic model of human–AI interaction to study when
+AI assistance improves or impairs human decision-making. A human decision-maker
+observes private information and receives a recommendation from an AI system, but
+may combine these signals imperfectly. We show that the effect of AI assistance
+decomposes into two main forces: the marginal informational value of the AI beyond
+what the human already knows, and a behavioral distortion arising from how the
+human uses the AI’s recommendation. Central to our analysis is a micro-founded
+measure of informational overlap between human and AI knowledge. We study an
+empirically relevant form of imperfect decision-making—correlation neglect—whereby
+humans treat AI recommendations as independent of their own information despite
+sharedevidence. Underthismodel,wecharacterizehowoverlapandAIcapabilitiesshape
+the Human-AI interaction regime between augmentation, impairment, complementarity,
+and automation, and draw key insights.
+1 Introduction
+Artificial intelligence technologies are advancing at a rapid pace, with transformative potential
+across many domains. AI’s greatest promise lies in its ability to amplify human decision-
+1
+6202
+beF
+51
+]TG.sc[
+1v13341.2062:viXra
+
+making: it can sift through vast volumes of data with unprecedented scale and extract task-
+relevant insights and recommendations. Yet the value of these recommendations ultimately
+depends on how they are interpreted and used by human decision-makers.
+Consider an AI recommendation system used in medical diagnosis. Such a system
+may base its recommendations on a comprehensive analysis of prior patient outcomes and
+historical physician decisions. Yet doctors differ in expertise, decision styles, and how they
+use algorithmic advice. Whether AI improves outcomes, therefore, depends critically on
+how physicians integrate its recommendations into their own judgment. For instance, If
+a physician fails to recognize that an AI recommendation already incorporates key test
+results and redundantly supplements it, systematic errors may arise. Conversely, if the AI
+omits important patient-specific information and the physician over-trusts its output while
+discounting their own assessment, diagnostic errors may again occur. This illustrate that the
+effectiveness of AI-assistance hinges not only on model accuracy, but also on the structure of
+human–AI interaction.
+Prior literature, as we discuss in the next section, documents cases in which AI assistance
+improves human decision-making, as well as cases in which it degrades performance. In some
+settings, full automation—where AI acts alone without a human in the loop—has been shown
+to outperform human–AI collaboration altogether. A natural question is then when and why
+each of these regimes arises.
+This paper adopts a decision-theoretic framework to study how AI assistance affects
+human decision-making. Central to our analysis is an explicit model of human–AI interaction,
+which allows us to characterize the informational and behavioral forces that govern distinct
+interaction regimes: augmentation, when AI assistance improves human decision-making;
+impairment, when AI assistance degrades it; automation, when AI should replace human
+decision-making outright; and complementarity, when AI-assisted humans outperform either
+humans or AI alone.
+Contributions and Main Insights. We introduce a Bayesian framework to study
+human–AI interaction. We consider a setting in which a human decision-maker observes
+private information about an uncertain state and additionally receives a signal from an AI
+before taking an action. Critically, the human does not necessarily combine the two signals
+optimally.
+Our first insight is a general decomposition of the realized benefit of AI assistance into
+two competing forces: the marginal value of AI information, which captures the incremental
+decision value beyond what the human already knows, and a behavioral penalty, which
+captures distortions arising from the human’s imperfect decision rule using the AI signal. We
+show that AI assistance impairs performance precisely when this behavioral penalty exceeds
+2
+
+the marginal informational benefit.
+Second, to study how these two forces shape human–AI interaction regimes and when each
+dominates, we introduce the central notion of information overlap. Specifically, we develop
+a micro-founded model of information overlap between human and AI signals. Both the
+human and the AI aggregate subsets of a common pool of primitive information sources. This
+structure yields a natural and interpretable overlap coefficient: the fraction of AI information
+that is redundant given human expertise. Importantly, when AI acquires information from a
+fixed pool of accessible sources, we show that informational overlap is approximately invariant
+to AI capability growth, and is thus a stable, domain-specific parameter. This allows us to
+independently vary AI capability and informational overlap when analyzing joint performance.
+Third, we instantiate the human’s imperfect decision rule with an empirically relevant
+form: correlation neglect Agarwal et al. (2023); Enke and Zimmermann (2017), whereby
+humans treat AI recommendations as conditionally independent of their own information
+even when both draw on shared evidence. We explicitly characterize how information overlap
+and correlation neglect jointly determine when decisions are best made by the human alone,
+by the AI alone, or through the AI-assisted human.
+Depending on the degree of overlap, three qualitatively distinct phase-transition patterns
+emerge. (i) When overlap is low, even imperfect humans benefit from AI access, and the
+system transitions smoothly from complementarity to automation as AI improves, with
+automation eventually dominating due to the behavioral penalty faced by AI-assisted humans.
+(ii) When overlap is intermediate, weak AI can strictly impair human performance due to
+double-counting of shared information, creating an “impairment” region in which withholding
+AI is optimal until AI capability becomes sufficiently high for complementarity to be achieved.
+As AI capabilities grow even stronger, automation ultimately prevails. (iii) When overlap
+is high, the behavioral penalty is so severe that AI assistance is never preferred, and the
+optimal decision-making system transitions directly from human-only (impairment) to AI-
+only decision-making (automation). The thresholds separating these regimes admit explicit
+closed-form expressions in terms of the model primitives.
+A striking insight across the different phase-transition patterns is that automation is
+ultimately unavoidable under improving AI capability and stagnant human use of AI. This
+highlights that human learning in the effective use of AI is critical for pushing the automation
+frontier outward.
+Finally, our analysis reveals a reversal of the classical informativeness result. While
+additional information always weakly improves decisions for a Bayesian-rational decision-
+maker, this monotonicity fails under correlation neglect. In particular, there exist parameter
+regimes in which revealing an informative AI signal strictly worsens human decision-making.
+This reversal does not arise because the AI signal lacks informational content, but because
+3
+
+humansmisperceivethedependencebetweentheirowninformationandtheAI’srecommendation.
+Taken together, these insights contribute to the debate on whether increasingly powerful
+AI systems should assist or automate decisions. Rather than viewing this choice as driven
+solely by AI capability, our results emphasize the central role of informational overlap and
+human misspecficiation in designing optimal forms of human–AI collaboration.
+2 Related Literature
+AgrowingbodyofworkstudieshowtocombineAIpredictionswithhumanexpertiseKleinberg
+et al. (2017); Mullainathan and Obermeyer (2021). Much of the focus of this literature is to
+study whether the combined human-AI system exhibits complementarity, performing better
+than human or AI alone. Even though performance improvements from AI recommendations
+is recorded in some settings, notably in medical imaging Tschandl et al. (2020), image
+classification Steyvers et al. (2022), and recently for customer assistance in a large-scale
+deployment in call centers Brynjolfsson et al. (2025), several experimental and empirical
+studies show this goal is hard to achieve. For example, Bansal et al. (2019) shows that
+updates that can increase AI’s prediction performance may hurt team performance by
+increasing overreliance on AI. Adding explanations to the AI decisions does not appear to
+reduce overreliance, and in fact some studies showed it may even increase it Bansal et al.
+(2021), motivating use of cognitive forcing interventions to motivate people to engage more
+thoughtfully with AI recommendations Buçinca et al. (2021). Recent work Agarwal et al.
+(2023) shows empirically that providing AI predictions to radiologists worsens diagnostic
+quality in certain regimes, precisely because humans must integrate AI information with their
+own and do so imperfectly.
+Recent theoretical work has formalized when human-AI complementarity can be achieved
+using either models for optimally combining information held by different agents or through
+“learning-to-defer” approaches. In combination frameworks, the combined system’s loss is
+expressed as a weighted average of human and AI losses Donahue et al. (2022) or a convex
+combination of judgments Rastogi et al. (2023), with weights taken as given rather than
+derived from how a human processes AI information. Donahue et al. (2022) shows that
+complementarity can be achieved when there are subsets of information regions where each
+agent has better information. Alur et al. (2024) introduces a method to identify information
+regions that are indistinguishable to an agent, in which case signal from the prediction of the
+other agent can then be leveraged to improve predictions overall. These approaches require
+data from the joint distribution of agent signals. Peng et al. (2025) showed a negative result
+in the absence of such joint information that shows, except under restrictive conditions, the
+impossibility of having a combined prediction better than each agents calibrated predictions.
+4
+
+Learning-to-defer methods take a two-stage algorithmic triaging approach, deciding when
+an automated model can pass the decision to a human without sharing any of its information
+Madras et al. (2018); Mozannar and Sontag (2020); Lykouris and Weng (2025). A key
+difference of these works from ours is that they assume the human decision function is
+exogeneous and abstract away from endogenous changes in human beliefs in response to AI
+information.
+A closely related paper is Agarwal et al. (2025), which develops a sufficient-statistic
+approach to designing optimal human-AI collaboration that bypasses the structural modeling
+of human behavior. Their approach is powerful but relies on the assumption that the
+probability a human makes a correct classification depends only on the posterior probability
+given the AI signal. This assumption enables a reduced-form approach to optimizing over
+the full space of disclosure policies, but as they note, it is typically violated when human
+and AI signals are conditionally dependent, which is a key case of interest in our paper.
+Our framework decomposes the forces that govern the value of human-AI collaboration into
+informational overlap and behavioral misspecification and determines optimal deployment
+modes as a function of AI capability and signal dependence.
+The behavioral mechanism studied in our paper builds on experimental evidence that
+people systematically neglect correlation when aggregating information from multiple sources,
+demonstrated in Enke and Zimmermann (2017). This behavioral pattern extends to broader
+economic settings: Eyster and Weizsacker (2010) document correlation neglect in financial
+decision-making, Levy and Razin (2015) show it affects voting behavior, paradoxically
+improving aggregate information aggregation by inducing voters to overweight evidence
+relative to preferences, and Levy et al. (2022) show that a persuader can fully exploit
+correlation neglect to manipulate beliefs.
+Our work relates to the information design literature Kamenica and Gentzkow (2011);
+BergemannandMorris(2016),thoughitaddressesadistinctproblem. Instandardinformation
+design, a sender chooses a signal structure to influence a Bayesian receiver’s actions. In our
+setting, the AI signal is exogenous; its precision and overlap with human information are
+primitives of the environment. The question is which decision-maker should be preferred:
+the AI-assisted human, the human-only, or the AI-only. Our value-of-information analysis
+connects to the literature on signal complements and substitutes Börgers et al. (2013). For
+a Bayesian decision-maker, the answer is immediate: revealing an informative signal to an
+aligned decision-maker cannot reduce decision quality. This conclusion breaks down under
+correlation neglect and our contribution is to analyze its implications for human-interaction.
+Whenthehumantreatscorrelatedsignalsasindependent, variousregimescanoccur, including
+AI-assistance worsening human decision quality. In our framework, we characterize how
+informational overlap and AI capability jointly determine the interaction regime.
+5
+
+Our model assumes a human decision-maker receives an AI signal and must integrate it
+with their own information about an uncertain state. Two modeling innovations distinguish
+our approach. First, we parameterize informational overlap through a coefficient measuring
+the share of AI information that is redundant given human expertise, ranging from zero
+(the disjoint-information setting of learning-to-defer literature literature) to one (complete
+redundancy), with intermediate values capturing realistic cases where human and AI draw
+partially on shared evidence. Second, we incorporate correlation neglect: the human treats
+partiallyoverlappingsignalsasconditionallyindependent,leadingtodouble-countingofshared
+evidence. These features enable identifying regimes where different modes of collaboration
+are optimal: when overlap is low, even a correlation-neglect human always benefits from AI
+access. When overlap is intermediate, weak AI harms the human through double-counting,
+generating a region where withholding AI is optimal; only sufficiently capable AI overcomes
+this penalty, enabling complementarity. This withholding region arises endogenously from
+the interaction of information overlap and human misspecification, a mechanism absent in
+both loss-level combination and learning-to-defer frameworks.
+3 A Bayesian Model of Human–AI Interaction
+Let Y ∈ Y denote a random variable representing the true state of the world and the
+underlying uncertainty faced by the decision-maker. The human’s knowledge is modeled as a
+random variable H ∈ H that provides information about the state of the world Y. Similarly,
+the AI system produces a signal A ∈ A, also modeled as a random variable informative about
+Y.
+The task for the human is to choose a decision d ∈ D so as to minimize an expected loss
+that depends on the realized state of the world. The loss function is given by
+L : Y ×D → R.
+If the human were to observe the true state Y directly, the optimal decision would be
+δ(Y) = argminL(Y,d).
+d∈D
+In practice, however, the state of the world is uncertain. The human does not observe Y
+and instead has access only to their own information H together with the AI signal A. After
+observing both signals, the human chooses a decision according to a decision rule
+δ : H×A → D,
+6
+
+which maps realizations of H and A into a decision. The expected loss incurred by the
+AI-assisted human is therefore
+(cid:2) (cid:0) (cid:1)(cid:3)
+E L Y,δ(H,A) .
+Y,H,A
+This loss is the central object of interest in our paper. Our goal is to understand which
+aspects of the problem—relating to the environment, the human decision-maker, the AI
+system, and their interaction—shape this loss, and thereby contribute to either the success
+or the failure of human–AI collaboration.
+Example 1 (AI-Assisted Clinical Diagnosis). Consider the task of diagnosing a patient for a
+particular disease. The state of the world Y indicates whether the patient has the disease,
+and its prior distribution reflects the disease prevalence in the population. The loss function
+corresponds to a classification loss, capturing the costs associated with false positives and
+false negatives.
+The human decision-maker is a physician whose knowledge consists of medical training,
+prior experience, and observations made during the consultation. This information, together
+with diagnostic tests and interactions with the patient, is summarized by the random variable
+H, which is correlated with the true disease state. For example, observing that a patient
+appears fatigued may increase the physician’s posterior belief that the disease is present.
+The AI system has access to information summarized by the signal A. This includes
+medical textbooks in its training set, large-scale historical medical records and patterns
+learned from prior cases. The AI signal is informative about the disease state through its
+correlation with Y, for instance, by comparing the current patient to similar historical cases.
+Both H and A can be interpreted as summary statistics of richer underlying information.
+In simple settings, they may correspond to probabilistic assessments—for example, the
+physician’s and the AI’s estimated probability that the patient has the disease, although they
+may also represent more detailed or structured forms of communication. The physician then
+combines these two signals to form a diagnosis, represented by the decision rule δ(H,A).
+4 The Value of Information
+Before analyzing human–AI interaction, we first introduce a principled way to compare
+the usefulness of different signals: in particular, the value of the AI signal to the human
+decision-maker. We define the value of information as a decision-theoretic object: it measures
+how much a signal could reduce expected loss if it were used optimally. This serves as an
+evaluation of the fundamental value of the signals. In practice, performance of the AI-assisted
+humancanbelowerbecausehumansmaynotusethesignaloptimally—theymaymisinterpret,
+7
+
+overweight, or underweight AI recommendations. We will capture this aspect later in the
+paper.
+Definition 1 (Value of Information). Let S ∈ S be a signal (e.g., H, A, or the concatenation
+signal (H,A)). Define the no-information baseline Bayesian risk
+(cid:2) (cid:0) (cid:1)(cid:3)
+L := inf E L Y,δ .
+0 Y 0
+δ0∈D
+The value of information of S is defined as
+(cid:2) (cid:0) (cid:1)(cid:3)
+v(S) := L − inf E L Y,δ(S) ≥ 0.
+0 Y,S
+δ:S→D
+The quantity v(S) is the maximum achievable risk reduction from observing S, relative
+to the best constant action. Nonnegativity follows because the decision-maker can always
+ignore the signal and choose the baseline action. Notably, v(S) is an upper bound on the
+benefit of access to S under any constrained or misspecified decision rule.
+For a fixed task, successive generations of AI systems can be viewed as generating different
+AI signals A ,A ,... with different informativeness about Y. Performance improvement of
+1 2
+AI models on standard static benchmarks (e.g., a fixed classification task) can therefore be
+interpreted as evidence of increasing v(A): the standalone decision value of the AI signal
+when used optimally. Importantly, however, for AI-assistance the relevant object is typically
+not v(A) but the joint value v(A,H), which we will analyze soon.
+This definition of information value is built from the task (loss function) and the joint
+distribution of (Y,S), directly capturing decision relevance of a signal. Familiar statistical
+quantities such as conditional variance and mutual information naturally emerge when we
+specify the problem instance.
+Example 2 (Regression). Suppose the state is real-valued Y ∈ R and the loss function is
+quadratic: L(Y,d) = (Y −d)2. Then we have
+v(S) = Var(Y)−Var(Y | S).
+Example 3 (Classification). Suppose the state is binary Y ∈ {0,1} and the loss function is
+log loss: L(Y,d) = −Y logd−(1−Y)log(1−d). The value of a signal S is
+v(S) = I(Y;S),
+where I denotes the mutual information.
+8
+
+4.1 Joint value and marginal value
+In our setting the human has access to H, and may additionally observe the AI signal A.
+Under Bayesian-optimal inference, the best achievable loss by the AI-assisted human is:
+inf E[L(Y,δ(H,A))] = L −v(H,A).
+0
+δ:H×A→D
+where v(H,A) is shorthand for the value of the concatenated signal (H,A).
+This identity clarifies an important point for model choice and deployment: even if two AI
+systems have different standalone values v(A), what matters for a fixed human decision-maker
+is how much additional value the AI provides on top of the human’s information:
+Definition 2 (Marginal Value of Information). The marginal value of AI information A
+complementing human information is defined as
+v(A | H) := inf E[L(Y,δ(H))]− inf E[L(Y,δ(H,A))]
+δ:H→D δ:H×A→D
+= v(A,H)−v(H)
+ThemarginalvalueofAI,v(A | H),isolatestheincrementaldecisionvalueofAIconditional
+on the human’s knowledge. It is the appropriate measure for evaluating AI as assistance,
+rather than AI in isolation.
+Interestingly, the marginal value of AI, v(A | H), can be larger or smaller than its
+standalone value v(A), depending on whether the signals are informational complements or
+substitutes (Börgers et al., 2013). Note that
+v(A | H) > v(A) ⇐⇒ v(A,H) > v(A)+v(H),
+Thus, v(A | H) exceeds v(A) exactly when the joint value is superadditive: the two signals
+create synergy in decision value. Conversely, when A largely replicates the evidence already
+in H, we expect v(A,H) ≈ v(H), so that v(A | H) is much smaller than v(A). The following
+proposition shows that their ratio can be arbitrarily large.
+Proposition 1. For any t ∈ [0,+∞), there exists a problem instance such that
+v(A | H)
+= t.
+v(A)
+The ratio t = v(A | H)/v(A) can be read as a measurement for relative complementarity.
+Here, we provide two concrete examples where t can take extreme values in the medical
+context.
+9
+
+• (very large t) Suppose A and H are conditionally independent given the disease state
+Y because they draw on different evidence sources: e.g., the AI aggregates large-scale
+historical patterns and laboratory test interpretation, while the clinician contributes
+bedside observations and contextual information not present in the data. If the disease is
+extremely rare (very low prior) and treatment requires surpassing a threshold diagnosis
+probability, then neither the human alone nor the AI alone can achieve a high enough
+diagnosis confidence to trigger treatment, despite high true positive and low false
+positive rates. In this case, v(A) and v(H) can be near zero. Yet, combining the
+two independent pieces of evidence can shift the posterior significantly, crossing the
+threshold, making v(H,A) large and hence v(A | H) large.
+For example, suppose the disease prevalence is 0.1%; the human-alone and AI-alone
+true positive rates are both 70%, and their false positive rates are both 1%. In this
+case, a single positive AI or human flag yields only a 6.5% posterior confidence in the
+presence of the disease. However, when both flags are positive, the posterior confidence
+jumps to 83.1%, which is much more likely to trigger treatment.
+• (very small t) If the AI is trained on and primarily summarizes the same evidence the
+expert already uses (e.g., the same X-ray image), then A is highly redundant relative to
+H. The AI may still have standalone value for non-experts (v(A) > 0), but conditional
+on an expert’s signal its marginal value is small (v(A | H) ≈ 0).
+A key conceptual implication is that standalone AI performance benchmarks can be misleading
+for AI-assistance to a human: the same improvement in v(A) can translate into very different
+changes in v(A | H) depending on the overlap structure between A and H. In particular,
+improvementsinstandaloneAIperformancev(A)maycomefrombecomingbetter at redundant
+information, which has little impact on the marginal value v(A | H). In other words, better
+AI (higher v(A)) does not necessarily lead to better AI-assisted human performance (higher
+v(A | H)); the relationship can be complex and non-monotone. Throughout the paper, we
+will study in depth how AI capability impacts AI-assisted human performance and identify
+critical aspects that govern human-AI interaction.
+4.2 Misspecification and complementarity gap
+So far, the marginal value v(A | H) is defined under optimal usage of the AI signal A by the
+human. However, making the Bayesian-optimal decision requires complete knowledge of the
+joint distribution of (Y,H,A): the AI’s reliability, the human’s own expertise, and crucially
+the dependence structure between H and A. In particular, it would require understanding
+when the two sources tend to agree or disagree, and in which circumstances each is more
+10
+
+likely to be correct. Clearly, human beliefs are far from such detailed knowledge in most real
+settings.
+We therefore model the human as using a (possibly “misspecified”) decision rule δ ˆ, leading
+to realized AI-assisted human loss
+(cid:2) (cid:0) ˆ (cid:1)(cid:3)
+E L Y,δ(H,A) .
+Y,H,A
+Different instances of δ ˆ correspond to different human behavioral biases (e.g., correlation
+neglect, overtrust, limited attention). In Section 6.2, we will study in-depth one such example
+of human behavioral misspecification.
+The next theorem characterizes two forces determining the performance of the AI-assisted
+human: the marginal value of AI information and the degree of misspecification in how the
+human uses it.
+Theorem 1 (Complementarity Gap). Suppose L is a Bregman loss (e.g., squared loss, cross-
+entropy). Let δ ˆ be the decision rule of the imperfect human decision-maker, and let δ⋆ be the
+Bayesian-optimal decision rule. Then
+inf E (cid:2) L(Y,δ(H)) (cid:3) −E (cid:2) L(Y,δ ˆ (H,A)) (cid:3) = v(A | H) −E (cid:2) L(δ⋆(H,A),δ ˆ (H,A)) (cid:3)
+Y,H Y,H,A H,A
+δ:H→D (cid:124) (cid:123)(cid:122) (cid:125) (cid:124) (cid:123)(cid:122) (cid:125) (cid:124) (cid:123)(cid:122) (cid:125)
+(cid:124) (cid:123)(cid:122) (cid:125) Realized Human-AI Marginal Value of AI Human Misspecification
+Human Alone
+The identity decomposes the realized impact of the human’s use of the AI into two terms:
+the first term v(A | H) captures the maximum improvement a Bayes-optimal decision-maker
+could extract from observing the AI signal; the second term is a behavioral penalty: under
+Bregman losses, it can be interpreted as an expected divergence between the Bayes-optimal
+action and the action induced by the human’s misspecified decision rule.
+Notice that the right-hand side can be negative, which means the AI assisted human is
+worse than the human deciding alone. This is the case when the human’s missuse of the AI
+(captured by the behavioral penalty) overwhelms the marginal value of the AI signal.
+A key remark is that these two terms are not independent, and their interaction can be
+subtle: an AI with higher marginal value can also be more severely misused by the human.
+In the following, we disentangle the key drivers behind these forces and analyze how they
+interact in shaping the AI-assisted human performance.
+11
+
+5 A Conceptual Model of Overlap
+So far, our framework has identified two forces that govern the performance of an AI-assisted
+human. The first is informational: the marginal value of AI information v(A | H), which
+is determined by how much genuinely new information the AI provides beyond what the
+human already knows. The second is behavioral: human missuse of AI, which can prevent
+the human from optimally extracting that incremental AI information.
+Our goal now is to understand how these two forces interact in shaping the performance
+of the AI-assisted human across domains. We seek to address the following natural questions:
+When does introducing an AI signal improve human decision-making, and when can it harm
+it? When is automation preferable, and when does augmentation yield complementarity?
+We study these questions from the perspective of a fixed human decision-maker with
+expertise H and a (possibly misspecified) decision rule δ ˆ. Across domains, two critical features
+vary: AI capability (how good the AI model is at the domain’s task) and “informational
+overlap” betweenH andA(howredundanttheAI’sinformationisrelativetohumanexpertise).
+While AI capability can be measured through v(A), the notion of overlap is more subtle
+as it depend on the structure of the joint distribution of H | Y and A | Y. This section is
+dedicated to the study of this critical notion.
+Specifically, we introduce a micro-founded signal-construction model from which a measure
+of overlap naturally emerges. We assume that the human signal H and the AI signal A are
+built by aggregating a common pool of primitive cues. This will make the overlap structure
+between H and A explicit and measurable through an overlap coefficient λ.
+5.1 Model
+Let the state Y be normally distributed,
+Y ∼ N(µ ,τ−1),
+0 0
+and consider quadratic loss L(Y,d) = (Y − d)2, so posterior variance directly maps into
+Bayesian risk.
+Suppose the environment contains a collection of conditionally independent Gaussian
+primitive cues,1
+(cid:0) (cid:1)
+S = {s ,...,s }, s ⊥⊥ s | Y, s | Y ∼ N Y,Nτ−1 .
+1 N i j i
+1Thefollowinganalysisreadilyextendstoheterogeneousprimitiveprecisions{τ }aslongastheirvariation
+i
+is bounded, so that no single cue asymptotically dominates. See Appendix A for details.
+12
+
+The scaling Nτ−1 normalizes total information in the world: pooling all N cues yields a
+signal with precision τ.
+The human observes a subset H ⊆ S and forms the sufficient statistic (the sample mean)
+(cid:18) (cid:19)
+1 (cid:88) N
+H := s , so that H | Y ∼ N Y, τ−1 .
+i
+|H| |H|
+si∈H
+Similarly, the AI observes A ⊆ S and outputs
+(cid:18) (cid:19)
+1 (cid:88) N
+A := s , so that A | Y ∼ N Y, τ−1 .
+i
+|A| |A|
+si∈A
+We summarize the standalone strength of the human and AI signals by their conditional
+precisions
+|H| |A|
+τ := Var(H | Y)−1 = τ, τ := Var(A | Y)−1 = τ.
+H A
+N N
+In this construction, increasing AI capability corresponds to increasing |A| (the number of
+distinct cues, or data points, that the AI model effectively aggregates), which increases τ up
+A
+to the environmental cap. In fact, v(A) = τ−1 −(τ +τ )−1, strictly increasing with τ .
+0 0 A A
+5.2 Decomposition lemma and overlap coefficient
+The key domain-dependent object is how much of the AI’s information is redundant given
+what the human already knows. The next lemma formalizes this by decomposing the AI signal
+into (i) a component predictable from the human signal, and (ii) an orthogonal innovation
+component.
+Lemma 1 (Decomposition Lemma). Conditional on Y, the pair (H,A) is jointly Gaussian
+distributed. Define the overlap coefficient
+Cov(H,A | Y)
+λ := .
+Var(H | Y)
+Define the innovation signal
+A−λH
+˜
+A := .
+1−λ
+Then we can write the decomposition
+˜
+A = λH +(1−λ)A,
+13
+
+where A ˜ | Y ∼ N(Y,τ˜−1) and A ˜ ⊥⊥ H | Y, with precision
+(cid:16) (cid:17)−1 (1−λ)2
+˜
+τ˜ = Var(A | Y) = .
+τ−1 −λ2τ−1
+A H
+Moreover, under the micro-founded cue construction,
+|A∩H|
+λ = .
+|A|
+Here, the coefficient λ is the regression coefficient of A on H (conditional on Y), and in
+our micro-foundation it has a sharp combinatorial meaning:
+|A∩H| AI cues already known by the human
+λ = = .
+|A| total AI cues
+Thus, the overlap coefficient λ directly measures the share of the AI signal that is
+redundant from the human’s perspective. Two extreme cases are:
+• If λ ≈ 0, then the AI mostly draws on cues the human does not have; A is largely novel
+information, and we expect strong potential for human-AI complementarity.
+• If λ ≈ 1, then the AI is essentially re-aggregating what the human already knows. In
+this case, even a very accurate AI may add little marginal value, which could be easily
+overwhelmed by behavioral penalty.
+The innovation signal A ˜ is the fundamental additional information that the AI provides
+beyond what the human already knows. The decomposition shows that observing (H,A)
+is equivalent to observing (H,A ˜ ), where H and A ˜ are conditionally independent given Y.
+Therefore, the marginal value of AI information reduce to the precision of the orthogonal
+innovation signal, τ˜. Precisely, it takes a closed form:
+1 1
+v(A | H) = Var(Y | H)−Var(Y | H,A) = − .
+τ +τ τ +τ +τ˜
+0 H 0 H
+This highlights a key conceptual message: for the AI-assisted human performance, what
+matters is not τ per se, but the incremental precision τ˜.
+A
+5.3 Interpreting overlap coefficient
+Lemma 1 shows that the joint information structure of (H,A | Y) is summarized by two
+ingredients: (i) how strong the AI signal is (i.e., τ or equivalently v(A)), and (ii) how
+A
+14
+
+redundant it is relative to the human (i.e., λ). These two parameters are sufficient to
+determine the incremental precision τ˜, and therefore pin down v(A | H) and, under behavioral
+models, the AI-assisted human loss.
+In practical settings, there are domains where AI draws primarily on information that
+human does not have, and there are also domains where AI is essentially re-aggregating human
+knowledge. We argue that, for a fix domain, and within a time period where the information
+source of AI is relatively stable (e.g., mostly from the web text), the overlap coefficient λ
+remains stable across AI capability generations (e.g., from GPT-3 to GPT-4 to GPT-5).
+In particular, we instantiate the model in Section 5.1 on a setting where the AI randomly
+acquires new cues from its accessible pool (which is determined by the domain’s information
+structure). We show that λ is approximately invariant to increases in |A| (equivalently,
+τ , AI capability). This implies that the overlap coefficient λ is primarily domain-specific,
+A
+while AI capability growth primarily raises τ without affecting λ. This allow us to vary
+A
+both AI capability τ and domain overlap λ independently in analyzing how they shape the
+A
+performance of the AI-assisted human.
+Formally, Suppose the primitive cue space splits into cues the AI can potentially access
+(e.g., historical records, test results) and cues it cannot (e.g., certain real-time physical
+observations):
+S = S ∪ S , S ∩S = ∅.
+ai-acc ai-noacc ai-acc ai-noacc
+Let |S | = m|S| and |H∩S | = k|S|. For a given model generation, the AI forms A
+ai-acc ai-acc
+by sampling a subset of size |A| = a|S| uniformly at random from S . We consider the
+ai-acc
+regime where |S| is large (information is sufficiently granular), and we use the ratios (a,m,k)
+to describe information-set sizes. AI capability growth is captured by increasing a from 0 (no
+usable data) up to m (exhaust all AI-accessible data). The setup is illustrated in Figure 1.
+The ratio
+|H∩S | k
+ai-acc
+=
+|S | m
+ai-acc
+is a domain-specific overlap rate: it is the fraction of all AI-accessible cues that the human
+already has in their information set.
+Proposition 2 (Overlap stabilization under random sampling). Let A be drawn uniformly
+among all a|S|-element subsets of S . Then the overlap coefficient λ = |A ∩ H|/|A|
+ai-acc
+satisfies
+k
+p
+λ → as |S| → +∞.
+m
+p
+where “→” denotes convergence in probability.
+Proposition 2 highlights that, in this granular-information regime, λ is approximately
+15
+
+Cues accessible to AI Cues inaccessible to AI
+H
+H∩S
+ai-acc
+|A∩H|
+= λ
+|A|
+A
+S S
+ai-acc ai-noacc
+Figure 1: Conceptual model with cues split into two subsets (Section 5.3). The AI can only
+access primitive cues in S and samples uniformly from this set.
+ai-acc
+pinned down by the domain parameter k/m and is thus invariant to AI capability growth
+(changes in a). Intuitively, as the AI draws more cues from the same accessible pool, it
+acquires redundant and non-redundant information in roughly fixed proportions.
+This decoupling allows us to compare different AI models across domains and generations:
+• Across domains: As captured by λ, domain-specific overlap can vary substantially.
+Domains where humans and AI rely on similar underlying evidence (high k/m) will
+exhibit high overlap, whereas domains where humans primarily bring distinct, hard-
+to-digitize information (low k/m) can exhibit low overlap and greater potential for
+complementarity.
+• Across AI model generations: AI capability improvements mainly raise τ by
+A
+allowing the AI to aggregate more cues (larger a), while leaving λ roughly stable.
+Finally, note the limit of this invariance claim: λ can change if the AI-accessible pool itself
+expands (e.g., new modalities, new sensors) or if human workflows shift (human reallocates
+their attention, changing which AI-accessible cues enter human information set H). Our
+perspective here is that conditional on a stable access regime, λ is best viewed as a domain
+parameter, whereas τ is the natural index of AI capability growth. This motivates studying
+A
+joint performance as a function of (τ ,λ) in the next section, leading to our main insights.
+A
+16
+
+6 Human–AI Interaction Analysis
+In this section, we study how the Human–AI interaction evolves across different domains
+(λ) and AI capabilities τ . We characterize when different interaction regimes occur such
+A
+as augmentation, automation and complementarity. We study these regimes in two different
+human decision-making models. First, a Bayes-rational human, to isolate the pure information
+channel. Second, a correlation-neglect human, which captures a natural form of behavioral
+misspecification. The contrast between these two benchmarks reveals when augmentation
+helps, when it harms, and when automation dominates.
+Recall that Section 5 provides a micro-founded Gaussian instance for the joint distribution
+of (Y,H,A), summarized by three parameters:
+τ = Var(H | Y)−1 (human signal precision),
+H
+τ = Var(A | Y)−1 (AI signal precision),
+A
+Cov(H,A | Y)
+λ = (overlap coefficient),
+Var(H | Y)
+satisfying the natural constraint implied by the micro-founded model:
+(cid:26) (cid:27) (cid:26) (cid:27)
+|A∩H| |H| τ
+H
+λ = ≤ min ,1 = min ,1 .
+|A| |A| τ
+A
+These quantities fully determine the conditional joint distribution of (H,A) | Y. By Lemma 1,
+we can orthogonalize the AI signal as
+˜ ˜
+A = λH +(1−λ)A, A ⊥⊥ H | Y,
+where the incremental precision is
+(1−λ)2
+τ˜ := Var(A ˜ | Y)−1 = .
+τ−1 −λ2τ−1
+A H
+6.1 Perfect (Bayesian-rational) Human Decision-maker
+In this benchmark, the decision-maker knows the true joint distribution of (Y,H,A) and
+implements the Bayes-optimal decision rule. She uses the AI signal optimally and extracts
+the innovation signal A ˜, accounting for redundancy. As a result, access to AI cannot worsen
+performance: complementarity is always achieved under Bayesian-optimal integration.
+17
+
+Here, when the human acts alone, the loss is
+1
+L := inf E[L(Y,δ(H))] = Var(Y | H) = .
+H
+δ:H→D τ 0 +τ H
+When the human uses AI, the joint loss becomes
+1
+˜
+L := inf E[L(Y,δ(H,A))] = Var(Y | H,A) = Var(Y | H,A) = .
+H−AI
+δ:H×A→D τ 0 +τ H +τ˜
+Since there is no behavioral misspecification, the realized gain from AI access is exactly the
+marginal value of AI information:
+v(A | H) = L −L(cid:98) .
+H H−AI
+The following proposition describes how the impact of AI on human decision-making varies
+with (i) AI standalone capability, (ii) overlap with human information, and (iii) human
+expertise.
+Proposition 3 (Comparative statics). Consider feasible pairs of (τ ,τ ,λ) satisfying 0 <
+A H
+(cid:110) (cid:111)
+λ < min τH,1 . Then:
+τA
+(i) v(A | H) is strictly increasing in τ .
+A
+(ii) v(A | H) is strictly decreasing in λ.
+(iii) v(A | H) is strictly decreasing in τ .
+H
+Proposition3isolatesthepure informational channel. Itsaysthatifhumanscouldintegrate
+AI optimally, then (i) improving AI capability always helps, (ii) overlap is unambiguously
+harmful because it reduces the incremental precision τ˜, and (iii) the more expert the human
+(higher τ ), the less marginal benefit any AI signal provides, featuring diminishing returns of
+H
+information.
+Notably, any empirical failures of complementarity must be driven by the second force
+in our framework: behavioral misspecification. In the next section, we show that once the
+human does not use AI optimally, more subtle interactions emerge in how these factors shape
+the performance of the AI-assisted human.
+6.2 Correlation-neglect Human Decision-maker
+We now study the Human-AI interaction under human behavioral misspecification. We
+consider the instance of a human who exhibits correlation neglect: she treats her signal H
+18
+
+and the AI signal A as conditionally independent given Y, even though they are not. This is
+a natural stylized model of “naïve evidence aggregation,” in which agreement between sources
+is mistakenly interpreted as independent corroboration. Empirical evidence of such behaviors
+includes Eyster and Weizsacker (2010); Kallir and Sonsino (2009); Enke and Zimmermann
+(2019); Agarwal et al. (2023).
+Formally, we assume the subjective model of the correlation-neglect human is
+Y ∼ N(µ ,τ−1),
+0 0
+(cid:0) (cid:1)
+H | Y ∼ N Y,τ−1 ,
+H
+(cid:0) (cid:1)
+A | Y ∼ N Y,τ−1 ,
+A
+H ⊥⊥ A | Y,
+so that the human correctly understands the prior distribution of state Y, the marginal
+distributions A | Y and H | Y, but incorrectly believes that2 H ⊥⊥ A | Y. Upon receiving
+signals H and A, the (subjective) posterior belief of a human decision maker with correlation
+neglect is
+(cid:18) (cid:19)
+τ µ +τ H +τ A 1
+0 0 H A
+Y | H,A ∼ N , .
+τ +τ +τ τ +τ +τ
+0 H A 0 H A
+The correlation-neglect human’s decision rule is
+(cid:2) (cid:3)
+δCN(H,A) = argminECN L(Y,d) | H,A ,
+d∈D
+where ECN[·] denotes expectation computed under the subjective model. Under quadratic
+loss, the decision rule is simply the posterior mean under the subjective model
+τ µ +τ H +τ A
+δCN(H,A) = ECN[Y | H,A] = 0 0 H A . (1)
+τ +τ +τ
+0 H A
+Substituting A = λH +(1−λ)A ˜ into (1) yields
+τ τ +λτ (1−λ)τ
+δCN(H,A) = 0 µ + H A H + A A ˜ , T := τ +τ +τ .
+0 0 H A
+T T T
+The resulting expected loss of the AI assisted human admits a closed form. First,
+E (cid:2) L (cid:0) Y,δCN(H,A) (cid:1)(cid:3) =
+(cid:16)τ
+0
+(cid:17)2 1
++
+(cid:18)
+τ
+H
++λτ
+A
+(cid:19)2
+1
++
+(cid:18)
+(1−λ)τ
+A
+(cid:19)2
+1
+.
+T τ T τ T τ˜
+0 H
+2Similar modeling choice of correlation neglect appears in Ortoleva and Snowberg (2015); Levy and Razin
+(2015); Levy et al. (2022).
+19
+
+Plugging in the expression for τ˜ simplifies this to
+1 2λτ
+L(cid:98) := + A , T := τ +τ +τ . (2)
+H−AI T T2 0 H A
+The decomposition in (2) is interpretable:
+• The term 1/T is the loss the decision-maker would achieve if independence were true
+(i.e., if she were correctly aggregating three independent Gaussian signals with precisions
+τ ,τ ,τ ).
+0 H A
+• The additional term 2λτ /T2 is an overlap penalty. It captures two forces: (i) reduced
+A
+marginal value of AI information due to overlap, and (ii) double-counting of overlapping
+evidence by the correlation-neglect human. When λ = 0, both forces vanish: the
+human’s independence assumption is correct and correlation neglect is costless.
+Ourgoalinwhatfollowistocharacterizethehuman-AIinteractionacrossdifferentdomains
+(λ) and AI capabilities (τ ). Different regimes of interaction will arise from comparing the
+A
+AI-assisted human loss, with the human only and AI only losses:
+1 1
+L = (human-only), L = (AI-only). (3)
+H AI
+τ +τ τ +τ
+0 H 0 A
+Key questions we address next are: when does augmentation arise? when does automation
+dominate? When is complementarity achievable?
+6.2.1 Augmentation
+When does AI assistance improve human decision-making?
+Formally, we ask for which domains (overlap λ) and AI capability levels (τ ) the joint
+A
+AI-assisted human loss L(cid:98) is lower than the human-only loss L . We refer to this regime
+H−AI H
+as augmentation.
+A first-order expansion of the Human-AI loss around τ = 0 yields
+A
+(2λ−1)τ
+A
+L(cid:98) = L + +o(τ ).
+H−AI H (τ +τ )2 A
+0 H
+The expansion shows that the initial effect of introducing a weak AI is beneficial when λ < 1
+2
+and negative when λ > 1. This hints that the overlap cutoff λ = 1 plays a central role in
+2 2
+determining whether introducing AI into the human workflow is beneficial.
+20
+
+The next proposition provides an explicit characterization as to when AI assistance
+benefits the human and when it deteriorates her performance.
+Proposition 4 (Augmentation). Define the augmentation threshold
+τ (λ) = (τ +τ )(2λ−1).
+aug 0 H
+(i) If λ < 1, then L(cid:98) < L for all τ > 0.
+2 H−AI H A
+(ii) If λ > 1, then L(cid:98) < L if and only if τ > τ (λ).
+2 H−AI H A aug
+Proposition 4 shows that when λ < 1, AI always improves human decision-making, no
+2
+matter AI capabilities: augmentation is always achieved. Intuitively, low overlap (λ < 1)
+2
+means the AI contributes more novel than redundant information as λ = |A∩H| from the
+|A|
+micro founded model.
+Its informational benefit dominates the behavioral penalty from correlation neglect.
+However, when overlap is large (λ > 1), Proposition 4 shows that introducing an AI with
+2
+low capabilities deteriorates performance of the human decision-maker. A weak AI adds
+little novel information and the human missuse of it dominates the information benefit. The
+threshold τ (λ) is increasing in λ: more overlap requires a stronger AI before it is beneficial
+aug
+to use the signal to assist a correlation-neglect decision-maker.
+Our model offers a prediction for early-stage AI deployment: when AI capability is
+limited and overlap with human expertise is high, introducing AI assistance can degrade
+performance relative to human-only decision-making. Augmentation becomes beneficial only
+after AI capability surpasses the threshold τ (τ), which is higher in domains with greater
+aug
+informational overlap.
+6.2.2 Automation
+When is it optimal to rely on the AI alone rather than AI-assisted human or human alone?
+The following proposition characterizes the automation regime.
+Proposition 5 (Automation). Define the automation threshold
+(cid:112)
+τ −2λτ + (τ −2λτ )2 +8λτ (τ +τ )
+H 0 H 0 H 0 H
+τ (λ) = > 0.
+auto
+4λ
+Then L < L(cid:98) if and only if τ > τ (λ). Here, τ (λ) is strictly decreasing in λ.
+AI H−AI A auto auto
+Furthermore, define
+1 τ (cid:16) (cid:17)
+λ ¯ = + H ∈ 1,1 .
+2 2(τ +τ ) 2
+0 H
+21
+
+¯
+(i) If λ < λ, then L < min{L ,L(cid:98) } if and only if τ > τ (λ).
+AI H H−AI A auto
+In this case, we also have τ (λ) > τ .
+auto H
+¯
+(ii) If λ > λ, then L < min{L ,L(cid:98) } if and only if τ > τ .
+AI H H−AI A H
+In particular, there is no range of AI capabilities for which the joint system outperforms
+both baselines: the complementarity region is empty.
+Proposition 5 shows that automation is inevitable with increasing AI capabilities: under
+human behavioral misspecification (correlation neglect here), there exists a threshold on AI
+capabilities beyond which relying on AI alone outperforms both human-only and AI-assisted
+human decision-making.
+Notably, under Bayesian-optimal integration (Section 6.1), automation is never optimal—
+the human always adds value by correctly extracting the innovation signal. In our setting,
+the automation regime arises entirely from behavioral misspecification. This highlights a
+key implication: reducing correlation neglect (whether through training, interface design,
+or information structures that separate novel from redundant AI information) would raise
+the automation threshold, expanding the range of AI capabilities over which augmentation
+remains beneficial.
+When overlap is moderate (case (i) in Proposition 5), the automation threshold (τ (λ))
+auto
+is above human capabilities (τ ). That is, automation requires more than the AI merely
+H
+matching human capabilities. This is because the AI-assisted human still provides better
+performance than the human alone.
+When overlap is severe (case (ii) in Proposition 5), automation becomes optimal as soon
+as AI capability exceeds human capability. Intuitively, severe overlap means that human
+and AI information is largely redundant, so AI assistance adds little new information while
+behavioral misspecification in human use of AI can dominate and reduce overall performance.
+6.2.3 Complementarity
+When does the AI-assisted human improve upon both the AI alone and the human alone?
+The following proposition characterizes when complementarity arises.
+Proposition 6 (Complementarity). Complementarity (i.e., L(cid:98) < min{L ,L }) is
+H−AI AI H
+possible if and only if
+τ (λ) < τ (λ),
+aug auto
+which is equivalent to the overlap condition
+¯
+λ < λ.
+22
+
+(i) If λ < 1, then L(cid:98) < min{L ,L } if and only if τ ∈ (0,τ (λ)).
+2 H−AI AI H A auto
+(ii) If 1 < λ < λ ¯ , then L(cid:98) < min{L ,L } if and only if τ ∈ (τ (λ),τ (λ)).
+2 H−AI AI H A aug auto
+Proposition 6 shows that complementarity is possible only when, as AI capability grows,
+augmentation precedes automation; i.e., the AI becomes strong enough to help (τ > τ (λ))
+A aug
+before it becomes strong enough to replace (τ > τ (λ)). This is possible when the domain
+A auto
+overlap is not too high (λ < λ ¯) so that the behavioral penalty from correlation neglect does
+not overwhelm the informational gain from AI assistance.
+When overlap is low (λ < 1), complementarity is achieved for all AI capabilities until the
+2
+automation threshold. When overlap is moderate (1 < λ < λ ¯), complementarity is achieved
+2
+in an interval, between the augmentation and automation thresholds τ ∈ [τ (λ),τ (λ)].
+A aug auto
+Outside of this range, weak AI assistance penalizes the human as its misuse dominates
+its limited benefits, while very strong AI makes automation optimal as its misuse make it
+preferable to bypass the human. As λ increases, τ (λ) decreases while τ (λ) increases,
+auto aug
+narrowing the range of AI capabilities for which complementarity is achievable.
+6.2.4 Phase Transitions
+We are now able to give a complete characterization of the interaction regimes and a how
+the human-AI interaction evolves across different domains with increasing AI capabilities.
+We obtain three qualitatively different patterns, indexed by overlap. Figure 2 shows how
+expected losses varies with AI capability τ for each overlap region discussed below.
+A
+• Low overlap (0 < λ < 1, Figure 2b).
+2
+In these domains, overlap is mild, so despite human behavioral misspecification—
+correlation neglect—the human always benefits from AI assistance. Improving AI
+capabilities transitions through two regimes.
+Regime I (Complementarity): τ ∈ (0,τ (λ)) ⇒ L(cid:98) = min{L ,L(cid:98) ,L },
+A auto H−AI H H−AI AI
+Regime II (Automation): τ ∈ (τ (λ),+∞) ⇒ L = min{L ,L(cid:98) ,L }.
+A auto AI H H−AI AI
+Weaker AI benefits the human but is not strong enough to automate the tasks. As
+AI capabilities grow, human’s behavioral misspecification becomes penalizing and
+automation eventually dominates.
+• Intermediate overlap (1 < λ < λ ¯ , Figure 2a).
+2
+Overlap here is large enough that weak AI can penalize the human where the behavioral
+misspecification dominates the AI marginal value. The overlap is however not large
+23
+
+Humanalone
+Human+AI
+A
+I
+alone
+Complemen-
+Impairment tarity Automation
+AI capability (τ )
+A
+ssol
+detcepxE
+0 τ (λ) τ (λ)
+aug auto
+(a) Intermediate overlap (1/2 < λ < λ¯). Here, λ = 0.67.
+Complementarity Automation
+AI capability (τ )
+A
+ssol
+detcepxE
+Impairment Automation
+0 τ (λ) auto
+AI capability (τ )
+A
+(b) Low overlap (λ ≤ 1/2). Here, λ = 0.45.
+ssol
+detcepxE
+0 τ H
+(c) High overlap (λ ≥ λ¯). Here, λ = 0.85.
+Figure 2: Expected loss as a function of AI capability τ in the conceptual model (Section 5).
+A
+Shown are losses of human acting alone (L , gray), AI acting alone (L , blue), and AI-
+H AI
+assisted human who exhibits correlation neglect (L(cid:98) , red). Regime thresholds and the
+H−AI
+best-performing agent in each regime are labeled on the x-axis, with the smallest lost curve
+thickened. Each panel fixes τ = 1,τ = 1 and λ.
+Y H
+24
+
+enough to render complementarity impossible. In these domains, augmentation happens
+before automation and the thresholds satisfy
+0 < τ (λ) < τ (λ).
+aug auto
+Three regimes arise when increasing AI capabilities.
+Regime I (Impairment): τ ∈ (0,τ (λ)) ⇒ L = min{L ,L(cid:98) ,L },
+A aug H H H−AI AI
+Regime II (Complementarity): τ ∈ (τ (λ),τ (λ)) ⇒ L(cid:98) = min{L ,L(cid:98) ,L },
+A aug auto H−AI H H−AI AI
+Regime III (Automation): τ ∈ (τ (λ),+∞) ⇒ L = min{L ,L(cid:98) ,L }.
+A auto AI H H−AI AI
+In this case, complementarity only arises in the intermediate region: only after AI is
+capableenoughsothatitsmarginalvalueovercomeshuman’sbehavioralmisspecification,
+but before AI becomes so strong that it becomes optimal to bypass the human.
+• Highoverlap(λ ¯ < λ < 1, Figure2c). Inthesedomains,thebehaviormisspecification’s
+impact is so severe, that the AI-assisted human is always dominated by the human-alone
+or the AI-alone: the human-AI interaction is significantly penalizing.
+Here, we transition directly from human-only to AI-only regimes.
+Regime I (Impairment): τ ∈ (0,τ ) ⇒ L = min{L ,L(cid:98) ,L },
+A H H H H−AI AI
+Regime II (Automation): τ ∈ (τ ,+∞) ⇒ L = min{L ,L(cid:98) ,L }.
+A H AI H H−AI AI
+A phase diagram of all three complementarity regimes, and how they vary with overlap λ
+and AI capability τ when other model parameters are fixed, is shown in Figure 3.
+A
+7 Conclusion and Discussion
+This paper adopts a decision-theoretic framework to study how AI assistance affects human
+decision-making, especially when humans act imperfectly, such as by exhibiting correlation
+neglect. We introduce a Bayesian model in which an AI-assisted human combines informative
+signals from herself and the AI, and decompose the benefit of AI assistance into the marginal
+value of AI information (relative to the human) and a behavioral penalty that arises from
+human misuse. We then quantify the performance of an AI-assisted human in a micro-founded
+conceptual model as a function of two key factors: the AI’s standalone capability, and the
+information overlap that captures redundancy of AI information for the human. This analysis
+characterizes three distinct regimes of human-AI interaction: impairment, automation, and
+complementarity. Crucially, our results show that the value of AI assistance does not depend
+25
+
+1
+Impairment
+¯
+λ
+(λ)
+τA
+=τaug A utom
+1
+2
+ation
+τ
+A=
+τ Complementarity auto(λ)
+0
+0 τ H
+AI capability (τ )
+A
+)λ(
+tneicffieoc
+palrevO
+Figure 3: Phase diagram of agent-optimal regimes in the conceptual model (Section 5) when
+the human exhibits correlation neglect. The diagram varies AI capability τ (x-axis) and
+A
+overlap coefficient λ (y-axis): each (τ ,λ) point corresponds to a unique joint distribution of
+A
+signals (Y,H,A). Regimes are labeled according to the best-performing agent: AI-assisted
+human (complementarity, red), human alone (impairment, gray), and AI alone (automation,
+blue). Threshold functions where two agents perform identically are shown as solid curves
+where they define regime boundaries, and dashed curves elsewhere. Each panel in Figure 2
+shows loss functions along a horizontal slice of this diagram. The figure fixes τ = 1 and
+Y
+τ = 1.
+H
+solely on its own capability: other factors, such as information overlap and human behavioral
+biases, play a central role in designing optimal forms of human–AI collaboration.
+Our results carry important design implications. On the AI side, our result suggests
+that AI systems should be trained to predict what humans miss, not what they already
+know. Residual learning approaches that target the component of the state unexplained by
+human information can reduce effective overlap while preserving accuracy. On the human
+side, initiatives to reduce correlation neglect—such as through training or improved user
+interfaces—may expand the range of AI models and capabilities under which complementarity
+can be achieved.
+Several directions for future work emerge from our analysis. First, the framework can be
+extended beyond correlation neglect to other behavioral biases, such as overconfidence in one’s
+own expertise or algorithm aversion. Another natural extension is to model repeated human–
+26
+
+AI interaction, in which the human gradually learns the conditional dependence between
+signals and reduce misspecification in her beliefs over time. Finally, empirical measurement
+of the overlap coefficient and its effects on human–AI performance across different domains,
+using data on medical diagnosis or human–AI interaction design, can ground our theoretical
+predictions and inform practical deployment decisions.
+Acknowledgment
+We are grateful to the MIT Gen-AI Consortium for financial support.
+References
+Nikhil Agarwal, Alex Moehring, Pranav Rajpurkar, and Tobias Salz. Combining human
+expertise with artificial intelligence: Experimental evidence from radiology. Working Paper
+31422, National Bureau of Economic Research, July 2023. URL http://www.nber.org/p
+apers/w31422.
+Nikhil Agarwal, Alex Moehring, and Alexander Wolitzky. Designing human-ai collaboration:
+A sufficient-statistic approach. Working Paper 33949, National Bureau of Economic
+Research, June 2025. URL http://www.nber.org/papers/w33949.
+RohanAlur,ManishRaghavan,andDevavratShah. Humanexpertiseinalgorithmicprediction.
+Advances in Neural Information Processing Systems 37, 2024. doi: 10.52202/079017-4384.
+URL https://www.proceedings.com/079017-4384.html.
+A. Banerjee, Xin Guo, and Hui Wang. On the optimality of conditional expectation as a
+bregman predictor. IEEE Transactions on Information Theory, 51(7):2664–2669, 2005.
+doi: 10.1109/TIT.2005.850145.
+GaganBansal,BesmiraNushi,EceKamar,DanielS.Weld,WalterS.Lasecki,andEricHorvitz.
+Updates in human-ai teams: Understanding and addressing the performance/compatibility
+tradeoff. Proceedings of the AAAI Conference on Artificial Intelligence, 33(01):2429–2437,
+Jul. 2019. doi: 10.1609/aaai.v33i01.33012429. URL https://ojs.aaai.org/index.php
+/AAAI/article/view/4087.
+Gagan Bansal, Tongshuang Wu, Joyce Zhou, Raymond Fok, Besmira Nushi, Ece Kamar,
+Marco Tulio Ribeiro, and Daniel Weld. Does the whole exceed its parts? the effect of
+ai explanations on complementary team performance. In Proceedings of the 2021 CHI
+Conference on Human Factors in Computing Systems, CHI ’21, New York, NY, USA, 2021.
+27
+
+AssociationforComputingMachinery. ISBN9781450380966. doi: 10.1145/3411764.3445717.
+URL https://doi.org/10.1145/3411764.3445717.
+Dirk Bergemann and Stephen Morris. Information design, bayesian persuasion, and bayes
+correlatedequilibrium. American Economic Review, 106(5):586–91, May2016. doi: 10.1257/
+aer.p20161046. URL https://www.aeaweb.org/articles?id=10.1257/aer.p20161046.
+Tilman Börgers, Angel Hernando-Veciana, and Daniel Krähmer. When are signals
+complements or substitutes? Journal of Economic Theory, 148(1):165–195, 2013.
+Erik Brynjolfsson, Danielle Li, and Lindsey Raymond. Generative ai at work*. The Quarterly
+Journal of Economics, 140(2):889–942, 02 2025. ISSN 0033-5533. doi: 10.1093/qje/qjae044.
+URL https://doi.org/10.1093/qje/qjae044.
+Zana Buçinca, Maja Barbara Malaya, and Krzysztof Z. Gajos. To trust or to think: Cognitive
+forcing functions can reduce overreliance on ai in ai-assisted decision-making. Proc.
+ACM Hum.-Comput. Interact., 5(CSCW1), April 2021. doi: 10.1145/3449287. URL
+https://doi.org/10.1145/3449287.
+Kate Donahue, Alexandra Chouldechova, and Krishnaram Kenthapadi. Human-algorithm
+collaboration: Achieving complementarity and avoiding unfairness. In Proceedings of the
+2022 ACM Conference on Fairness, Accountability, and Transparency, FAccT ’22, page
+1639–1656, New York, NY, USA, 2022. Association for Computing Machinery. ISBN
+9781450393522. doi: 10.1145/3531146.3533221. URL https://doi.org/10.1145/353114
+6.3533221.
+Benjamin Enke and Florian Zimmermann. Correlation neglect in belief formation. The Review
+of Economic Studies, 86(1):313–332, 12 2017. ISSN 0034-6527. doi: 10.1093/restud/rdx081.
+URL https://doi.org/10.1093/restud/rdx081.
+Benjamin Enke and Florian Zimmermann. Correlation neglect in belief formation. The review
+of economic studies, 86(1):313–332, 2019.
+Erik Eyster and Georg Weizsacker. Correlation neglect in financial decision-making. 2010.
+Ido Kallir and Doron Sonsino. The neglect of correlation in allocation decisions. Southern
+Economic Journal, 75(4):1045–1066, 2009.
+Emir Kamenica and Matthew Gentzkow. Bayesian persuasion. American Economic Review,
+101(6):2590–2615, October 2011. doi: 10.1257/aer.101.6.2590. URL https://www.aeaweb
+.org/articles?id=10.1257/aer.101.6.2590.
+28
+
+Jon Kleinberg, Himabindu Lakkaraju, Jure Leskovec, Jens Ludwig, and Sendhil Mullainathan.
+Human decisions and machine predictions*. The Quarterly Journal of Economics, 133(1):
+237–293, 08 2017. ISSN 0033-5533. doi: 10.1093/qje/qjx032. URL https://doi.org/10
+.1093/qje/qjx032.
+Gilat Levy and Ronny Razin. Correlation neglect, voting behavior, and information
+aggregation. American Economic Review, 105(4):1634–1645, 2015.
+Gilat Levy, Inés Moreno de Barreda, and Ronny Razin. Persuasion with correlation neglect:
+a full manipulation result. American Economic Review: Insights, 4(1):123–138, 2022.
+Sharon L Lohr. Sampling: design and analysis. Chapman and Hall/CRC, 2021.
+Thodoris Lykouris and Wentao Weng. Learning to defer in congested systems: The ai-human
+interplay, 2025. URL https://arxiv.org/abs/2402.12237.
+David Madras, Toniann Pitassi, and Richard Zemel. Predict responsibly: improving fairness
+and accuracy by learning to defer. In Proceedings of the 32nd International Conference on
+Neural Information Processing Systems, NIPS’18, page 6150–6160, Red Hook, NY, USA,
+2018. Curran Associates Inc.
+Hussein Mozannar and David Sontag. Consistent estimators for learning to defer to an
+expert. In Proceedings of the 37th International Conference on Machine Learning, ICML’20.
+JMLR.org, 2020.
+Sendhil Mullainathan and Ziad Obermeyer. Diagnosing physician error: A machine learning
+approach to low-value health care*. The Quarterly Journal of Economics, 137(2):679–727,
+12 2021. ISSN 0033-5533. doi: 10.1093/qje/qjab046. URL https://doi.org/10.1093/qj
+e/qjab046.
+Pietro Ortoleva and Erik Snowberg. Overconfidence in political behavior. American Economic
+Review, 105(2):504–535, 2015.
+Kenny Peng, Nikhil Garg, and Jon Kleinberg. A no free lunch theorem for human-ai
+collaboration. Proceedings of the AAAI Conference on Artificial Intelligence, 39(13):14369–
+14376, Apr. 2025. doi: 10.1609/aaai.v39i13.33574. URL https://ojs.aaai.org/index.p
+hp/AAAI/article/view/33574.
+Charvi Rastogi, Liu Leqi, Kenneth Holstein, and Hoda Heidari. A taxonomy of human and
+ml strengths in decision-making to investigate human-ml complementarity. Proceedings of
+the AAAI Conference on Human Computation and Crowdsourcing, 11(1):127–139, Nov.
+2023. doi: 10.1609/hcomp.v11i1.27554. URL https://ojs.aaai.org/index.php/HCOMP
+/article/view/27554.
+29
+
+Mark Steyvers, Heliodoro Tejeda, Gavin Kerrigan, and Padhraic Smyth. Bayesian modeling
+of human–ai complementarity. Proceedings of the National Academy of Sciences, 119(11):
+e2111547119, 2022. doi: 10.1073/pnas.2111547119. URL https://www.pnas.org/doi/a
+bs/10.1073/pnas.2111547119.
+Philipp Tschandl, Christoph Rinner, Zoe Apalla, Giuseppe Argenziano, Noel Codella, Allan
+Halpern, Monika Janda, Aimilios Lallas, Caterina Longo, Josep Malvehy, John Paoli,
+Susana Puig, Cliff Rosendahl, H. Peter Soyer, Iris Zalaudek, and Harald Kittler. Human–
+computer collaboration for skin cancer recognition. Nature Medicine, 26(8):1229–1234, Aug
+2020. ISSN 1546-170X. doi: 10.1038/s41591-020-0942-0. URL https://doi.org/10.103
+8/s41591-020-0942-0.
+30
+
+Appendix A Heterogeneous-precision extension (including
+Proof of Proposition 2)
+Here, we provide an extension where information cues can be heterogeneous. We prove a
+generalized version of Proposition 2, and Proposition 2 itself directly follows as a special case.
+In this extension, let S = {s ,...,s } be a collection of conditionally independent
+1 N
+heterogeneous Gaussian primitive cues about state Y:
+(cid:0) (cid:1)
+s ⊥⊥ s | Y (i ̸= j), s | Y ∼ N Y,Nτ−1 ,
+i j i i
+where τ > 0 is cue i’s normalized precision.
+i
+Assumption 2 (Bounded variation). There exist constants 0 < τ ≤ τ < ∞ such that for all
+i ∈ S,
+τ ≤ τ ≤ τ.
+i
+The human observes a subset H ⊆ S and the AI observes a subset A ⊆ S. In the
+heterogeneous-precision setup, the natural sufficient statistic for Y in each subset is the
+precision-weighted average:
+(cid:80) (cid:80)
+τ s τ s
+H := i∈H i i , A := i∈A i i .
+(cid:80) (cid:80)
+τ τ
+i∈H i i∈A i
+Define the total precision masses
+(cid:88) (cid:88)
+T := τ , T := τ .
+H i A i
+i∈H i∈A
+Then H | Y ∼ N (cid:0) Y,NT−1 (cid:1) and A | Y ∼ N (cid:0) Y,NT−1 (cid:1).
+H A
+Lemma 2 (Weighted overlap formula). Recall the overlap coefficient
+Cov(H,A | Y)
+λ := .
+Var(H | Y)
+Under this extension model,
+(cid:80)
+λ = i∈A∩H τ i = T A∩H , where T := (cid:88) τ .
+(cid:80) A∩H i
+τ T
+i∈A i A i∈A∩H
+In particular, if τ = τ for some τ > 0 and for all i, then λ = |A∩H|/|A|.
+i
+31
+
+Proof. Direct computation shows that
+(cid:88) τ τ N (cid:88) N
+i i
+Cov(H,A | Y) = ·Var(s | Y) = τ = T .
+i i A∩H
+T T T T T T
+H A H A H A
+i∈A∩H i∈A∩H
+Similarly,
+(cid:88) τ2 N
+Var(H | Y) = i ·Var(s | Y) = .
+T2 i T
+i∈H H H
+Therefore,
+λ = Cov(H,A | Y) = TH N TA T A∩H = T A∩H .
+Var(H | Y) N T
+TH A
+The AI-accessible pool S ⊆ S and its complement S is defined similarly. The
+ai−acc ai−noacc
+AI constructs A by drawing a subset of size a|S| uniformly at random from S .
+ai−acc
+DefinethetotalprecisionmassintheAI-accessiblepoolandinthehumanandAI-accessible
+intersection:
+(cid:88) (cid:88)
+T := τ , T := τ .
+ai−acc i H∩ai−acc i
+i∈Sai−acc i∈H∩Sai−acc
+Define also the precision-weighted overlap rate
+T
+H∩ai−acc
+θ := .
+N
+T
+ai−acc
+Proposition 7 (Overlap stabilization with heterogeneity). Under Assumption 2, let A be
+drawn uniformly among all (a|S|)-element subsets of S . Let λ be the overlap coefficient
+ai−acc
+defined in Lemma 2. Then
+p
+λ →− θ as N = |S| → ∞.
+N
+p
+In particular, if θ → θ for some constant θ ∈ [0,1], then λ →− θ.
+N
+Proof. Write M := |S | and n := aN. For each i ∈ S , define two bounded arrays
+ai−acc N ai−acc
+w := τ , u := τ 1{i ∈ H}.
+i i i i
+Then
+(cid:80)
+(cid:88) τ = (cid:88) w , (cid:88) τ = (cid:88) u , so λ = i∈A u i .
+i i i i (cid:80)
+w
+i∈A i∈A i∈A∩H i∈A i∈A i
+32
+
+Define sample means over the random subset A:
+1 (cid:88) 1 (cid:88)
+µ := u , µ := w .
+(cid:98)u i (cid:98)w i
+n n
+N N
+i∈A i∈A
+Also define the corresponding population means over S :
+ai−acc
+1 (cid:88) T 1 (cid:88) T
+H∩ai−acc ai−acc
+µ := u = , µ := w = .
+u i w i
+M M M M
+i∈Sai−acc i∈Sai−acc
+Then
+µ µ
+(cid:98)u u
+λ = , θ = .
+N
+µ µ
+(cid:98)w w
+Because A is drawn uniformly among all n -subsets of S , it is a simple random sample
+N ai−acc
+without replacement from the finite population S . Therefore, for x ∈ {u,w}, (see, e.g.,
+ai−acc
+Lohr (2021))
+(cid:16) n (cid:17)S2
+E[µ ] = µ , Var(µ ) = 1− N x ,
+(cid:98)x x (cid:98)x
+M n
+N
+where S2 = 1 (cid:80) (x −x¯)2 denotes the finite-population variance of {x } .
+x M−1 i∈Sai−acc i i i∈Sai−acc
+Under Assumption 2, we have w ∈ [τ,τ] and u ∈ [0,τ]. Therefore,
+i i
+S2 ≤ (τ −τ)2, S2 ≤ τ2,
+w u
+and thus
+(τ −τ)2 τ2
+Var(µ ) ≤ , Var(µ ) ≤ .
+(cid:98)w (cid:98)u
+n n
+N N
+Since n = aN → ∞, both variances go to 0. By Chebyshev’s inequality, for every ε > 0,
+N
+(cid:0) (cid:1) (cid:0) (cid:1)
+P |µ −µ | > ε → 0, P |µ −µ | > ε → 0,
+(cid:98)w w (cid:98)u u
+i.e.,
+p p
+µ −µ →− 0, µ −µ →− 0.
+(cid:98)w w (cid:98)u u
+Now let’s show the convergence of the ratio. Note that µ ≥ τ > 0 almost surely, and
+(cid:98)w
+likewise µ ≥ τ > 0. Using
+w
+µ µ µ −µ µ µ −µ
+(cid:98)u u (cid:98)u u u (cid:98)w w
+λ−θ = − = − · ,
+N
+µ µ µ µ µ
+(cid:98)w w (cid:98)w w (cid:98)w
+we obtain
+1 τ
+|λ−θ | ≤ |µ −µ |+ |µ −µ |.
+N τ (cid:98)u u τ2 (cid:98)w w
+33
+
+The right-hand side converges to 0 in probability; therefore,
+p
+λ →− θ .
+N
+Remark 1 (Relationship to the baseline model). Our baseline model corresponds to the case
+τ = τ ∀i, |S | = mN, |H∩S | = kN,
+i ai−acc ai−acc
+so that
+(cid:80)
+θ =
+i∈H∩Sai−acc τ i
+=
+k
+,
+N (cid:80)
+τ m
+i∈Sai−acc i
+and Proposition 7 reduces to the original overlap stabilization λ →− p k/m.
+Appendix B Missing Proofs
+B.1 Proof of Proposition 1
+Consider a binary state Y ∈ {0,1} with prior Y ∼ Bern(1), real-valued decision d ∈ R, and
+2
+logistic loss L(Y,d) = −Y logd−(1−Y)log(1−d) where log base is always set to 2.
+First, we show that the ratio v(A|H) can take any value in [1,∞). Take two independent
+v(A)
+noise bits U ∼ Bern(p) and V ∼ Bern(q). Let
+A = Y ⊕U ⊕V,
+and
+H = V.
+Then we have that
+v(A | H) = I(Y;A | H)
+= I(Y;Y ⊕U ⊕V | V)
+= I(Y;Y ⊕U)
+= 1−h(p),
+where h(·) is the binary entropy function.
+34
+
+For v(A), we have
+v(A) = I(Y;A)
+= I(Y;Y ⊕(U ⊕V))
+= 1−h(p+q −2pq).
+Therefore, the ratio is
+v(A | H) 1−h(p)
+= .
+v(A) 1−h(p+q −2pq)
+When q = 0 we have v(A|H) = 1. When q ↑ 1, we have v(A|H) → +∞. By continuity, for any
+v(A) 2 v(A)
+t ∈ [1,∞) there exists some q such that the ratio equals t.
+Second, we show that the ratio v(A|H) can take any value in [0,1). Take an independent
+v(A)
+noise bit U ∼ Bern(p) and an independent indicator M ∼ Bern(1−t). Let
+A = Y ⊕U,
+and
+(cid:40)
+A, if M = 1
+H =
+⊥, if M = 0,
+where ⊥ indicates a null signal with no information.
+In this case,
+v(A) = I(Y;A) = 1−h(p),
+while
+v(A | H) = I(Y;A | H) = Pr(H = ⊥)I(Y;A) = t(1−h(p)),
+so that
+v(A | H)
+= t.
+v(A)
+B.2 Proof of Theorem 1
+We first recall the definition of Bregman loss functions (BLFs), as per Banerjee et al. (2005):
+Definition 3 (Bregman Loss Functions). Let ϕ : Rn (cid:55)→ R be a strictly convex and
+differentiable function. Then, the Bregman loss function D : Rn × Rn (cid:55)→ R is defined
+ϕ
+as
+D (y,d) = ϕ(y)−ϕ(d)−⟨y −d,∇ϕ(d)⟩.
+ϕ
+35
+
+Note that D is asymmetric. Two notable examples of BLFs are:
+ϕ
+• Squared loss: Let ϕ(x) := ⟨x,x⟩ = ∥x∥2. Then, the BLF is the L -loss: D (y,d) =
+2 ϕ
+∥y −d∥2. In particular, when n = 1 and Y is a scalar, the BLF is the mean squared
+error (MSE): D (y,d) = (y −d)2.
+ϕ
+• Cross-entropy loss: Let y be deterministic vector in the n-simplex, and ϕ(x) :=
+(cid:80)n x logx be the negative entropy function. Then, the BLF is the KL divergence:
+i=1 i i
+D (y,d) = KL(y∥d). Inparticular,wheny isaone-hotvector,D (y,d) = − (cid:80)n 1[y = 1]logd
+ϕ ϕ i=1 i i
+is exactly the log loss, and its expectation
+E [D (Y,d)] = H(p ,d), ∀d ∈ Rn
+Y ϕ Y
+is the cross-entropy loss, where p ∈ Rn gives the distribution of Y.
+Y
+Given any information set S (such as H, A or (H,A)), a Bayesian-optimal agent who
+observes S = s makes the risk-minimizing decision
+δ⋆(s) := argminE[L(Y,d)|S = s]. (4)
+d∈Rn
+We cite two useful properties of BLFs from Banerjee et al. (2005):
+Lemma 3 (Conditional Expectation Minimizes BLF). Let Y ∈ Rn be a random variable, S
+be an information set, δ⋆(S) be the optimal predictor given S as defined in (4), and L := D
+ϕ
+be a BLF. Then, δ⋆(S) is uniquely given by the conditional expectation:
+δ⋆(s) = E[Y |S = s], ∀s ∈ supp(S). (5)
+Lemma 4 (Three-Point Lemma). Let Y ∈ Rn be a random variable, S be an information
+set, δ⋆(S) = E[Y |S = s], δ(cid:98)(S) be an arbitrary predictor given S, and D be a BLF. Then,
+ϕ
+(cid:104) (cid:16) (cid:17)(cid:105) (cid:104) (cid:16) (cid:17)(cid:105)
+E D Y,δ(cid:98)(S) −E [D (Y,δ⋆(S))] = E D δ⋆(S),δ(cid:98)(S) . (6)
+Y,S ϕ Y,S ϕ S ϕ
+Lemma 4 and Lemma 3 are Equation (1) and Theorem 1 in Banerjee et al. (2005),
+respectively. Note that Lemma 4 immediately implies uniqueness in Lemma 3. Banerjee
+et al. also show that under mild conditions, (5) holds only if the loss function is a BLF, thus
+establishing BLF as necessary and sufficient.
+We now prove Theorem 1:
+36
+
+Proof. Denote expected losses with
+(cid:104) (cid:16) (cid:17)(cid:105)
+L(cid:98) := E L δ(cid:98)(H,A),Y , (realized AI-assisted human loss)
+H−AI Y,H,A
+L⋆ := E [L(δ⋆(H,A),Y)], (optimal AI-assisted human loss)
+H−AI Y,H,A
+L := E [L(δ(H),Y)]. (optimal human-only loss)
+H Y,H,A
+Note that we had defined δ(H) as the Bayesian-optimal human-only decision rule. Applying
+Lemma 4 to S = (H,A), δ(cid:98)(S) = δ(cid:98)(H,A) and D = L gives
+ϕ
+(cid:104) (cid:16) (cid:17)(cid:105)
+L(cid:98) −L⋆ = E L δ⋆(H,A),δ(cid:98)(H,A) . (7)
+H−AI H−AI H,A
+Likewise, apply Lemma 4 to S = (H,A) and δ(cid:98)(S) = δ(H) = E[Y |H] (the last equality is
+given by Lemma 3), and relate to Definition 2 that gives v(A|H). This gives
+v(A|H) := L −L⋆ = E [L(δ⋆(H,A),δ(H))], (8)
+H H−AI H,A
+where the first equality is exactly the definition of marginal value. From (7) and (8),
+(cid:104) (cid:16) (cid:17)(cid:105)
+L −L(cid:98) = E [L(δ⋆(H,A),δ(H))]−E L δ⋆(H,A),δ(cid:98)(H,A)
+H H−AI H,A H,A
+(cid:104) (cid:16) (cid:17)(cid:105)
+= v(A|H)−E L δ⋆(H,A),δ(cid:98)(H,A) ,
+H,A
+which completes the proof.
+B.3 Proof of Lemma 1
+We first prove that A ˜ ⊥⊥ H | Y. Note that
+1
+˜
+Cov(A,H | Y) = (Cov(A,H)−λ·Var(H | Y)) = 0.
+1−λ
+Since (H,A ˜ ) is also jointly Gaussian distributed conditional on Y, we have A ˜ ⊥⊥ H | Y.
+Therefore, from conditional independence, we obtain
+Var(A | Y) = λ2Var(H | Y)+(1−λ)2Var(A ˜ | Y),
+which gives the expression for Var(A ˜ | Y).
+37
+
+Finally, we have
+(cid:88) 1 1 |A∩H|
+Cov(H,A | Y) = ·Var(s | Y) = Nτ−1.
+i
+|H||A| |H||A|
+i∈A∩H
+Similarly,
+(cid:88) 1 1
+Var(H | Y) = ·Var(s | Y) = ·Nτ−1.
+|H|2 i |H|
+i∈H
+Therefore,
+|A∩H|
+Cov(H,A | Y) |A∩H|
+|H||A|
+λ = = = .
+Var(H | Y) 1 |A|
+|H|
+B.4 Proof of Proposition 3
+The marginal information value v(A | H) can be written as
+1 1
+v(A | H) = −
+τ +τ τ +τ +τ˜
+0 H 0 H
+where
+(1−λ)2
+τ˜ =
+τ−1 −λ2τ−1
+A H
+First, we show that τ˜ is increasing in τ , deceasing in τ , and decreasing in λ. The first two
+A H
+is straightforward; for the third, note that
+∂τ˜ 2λτ−1(1−λ)2 −2(1−λ)(τ−1 −λ2τ−1)
+= H A H
+∂λ (τ−1 −λ2τ−1)2
+A H
+2(1−λ)(λτ−1 −τ−1)
+= H A < 0
+(τ−1 −λ2τ−1)2
+A H
+Therefore, v(A | H) is increasing in τ and decreasing in λ since τ and λ affects v(A | H)
+A A
+only through τ˜. Finally, v(A | H), as a function of τ and τ˜, is decreasing in τ and increasing
+H H
+in τ˜; combing the above result, v(A | H) is decreasing in τ .
+H
+38
+
+B.5 Proof of Proposition 4
+The difference between L and L can be computed as follows: (recall T = τ +τ +τ )
+H−AI H 0 H A
+1 2λτ 1
+A
+L −L = + −
+H−AI H T T2 τ +τ
+0 H
+(τ +τ )(τ +τ +(1+2λ)τ )−(τ +τ +τ )2
+0 H 0 H A 0 H A
+=
+T2(τ +τ )
+0 H
+τ ((2λ−1)(τ +τ )−τ )
+A 0 H A
+=
+T2(τ +τ )
+0 H
+Therefore, if λ < 1, we always have L −L < 0.
+2 H−AI H
+If λ > 1, L −L ≤ 0 if and only if
+2 H−AI H
+(2λ−1)(τ +τ )−τ ≤ 0,
+0 H A
+which is equivalent to τ ≥ τ (λ) as desired.
+A aug
+B.6 Proof of Proposition 5
+Solving for L < L , we obtain that
+AI H−AI
+L < L ⇔ 2λτ (τ +τ )−τ (τ +τ +τ ) > 0.
+AI H−AI A 0 A H 0 H A
+The quadratic has a unique positive root
+(cid:112)
+τ −2λτ + (τ −2λτ )2 +8λτ (τ +τ )
+H 0 H 0 H 0 H
+τ (λ) = ,
+auto
+4λ
+so that we further have
+L < L ⇔ τ > τ (λ)
+AI H−AI A auto
+Moreover, it is straightforward that
+L < L ⇔ τ > τ .
+AI H A H
+Therefore,
+L < min{L ,L } ⇔ τ > max{τ (λ),τ }.
+AI H−AI H A auto H
+39
+
+Finally, solving for τ (λ) ≥ τ , we obtain
+auto H
+1 τ
+¯ H
+τ (λ) ≥ τ ⇔ λ ≤ λ = + .
+auto H
+2 2(τ +τ )
+0 H
+The rest of the statements in the proposition follows directly.
+B.7 Proof of Proposition 6
+From the above proof, we know that for complementarity L < min{L ,L } to hold, we
+H−AI AI H
+need
+τ < τ (λ) and τ > τ (λ).
+A auto A aug
+Therefore, complementarity is possible if and only if the above condition is possible, which is
+equivalent to
+τ (λ) < τ (λ).
+aug auto
+Solving for the range of λ, the above condition is again equivalent to
+1 τ
+¯ H
+λ < λ = +
+2 2(τ +τ )
+0 H
+If λ ≤ 1, then L < L holds for any τ > 0, so that complementarity only needs
+2 H−AI H A
+L < L , which is equivalent to τ < τ (λ).
+H−AI AI A auto
+If 1 < λ < λ ¯, then complementarity is equivalent to
+2
+τ < τ (λ) and τ > τ (λ).
+A auto A aug
+i.e., τ ∈ (τ (λ),τ (λ)).
+A aug auto
+40

@@ -1,0 +1,461 @@
+MATHEMATICAL MODELS OF ADAPTATION
+IN HUMAN-ROBOT COLLABORATION
+Stefanos Nikolaidis1, Jodi Forlizzi2, David Hsu3, Julie Shah4 and Siddhartha Srinivasa1
+1The Robotics Institute, Carnegie Mellon University
+2Human-Computer Interaction Institute, Carnegie Mellon University
+3Department of Computer Science, National University of Singapore
+4Computer Science and Artificial Intelligence Laboratory, Massachusetts Institute of Technology,
+snikolai@cmu.edu, forlizzi@cs.cmu.edu, dyhsu@comp.nus.edu.sg,
+julie_a_shah@csail.mit.edu, siddh@cmu.edu
+Abstract—A robot operating in isolation needs to reason
+over the uncertainty in its model of the world and adapt its
+ownactionstoaccountforthisuncertainty.Similarly,arobot
+interacting with people needs to reason over its uncertainty
+over the human internal state, as well as over how this
+state may change, as humans adapt to the robot. This paper
+summarizes our own work in this area, which depicts the
+different ways that probabilistic planning and game-theoretic
+algorithms can enable such reasoning in robotic systems that
+collaborate with people. We start with a general formulation
+Fig. 1: The robot maximizes the performance of the
+of the problem as a two-player game with incomplete infor-
+human-robot team by executing the optimal policy
+πR∗
+.
+mation. We then articulate the different assumptions within
+this general formulation, and we explain how these lead to Therobottakesinformation-seeking actionsthatallowes-
+exciting and diverse robot behaviors in real-time interactions timationofthehumanpolicyπH,butalsocommunicative
+with actual human subjects, in a variety of manufacturing, actions that guide πH towards better ways of doing the
+personal robotics and assistive care settings.
+task. These actions emerge out of optimizing for
+πR∗
+.
+I. INTRODUCTION
+In human collaboration, the success of the team often
+depends on the ability of team members to coordinate internalstate,i.e.,theirowngoalsandexpectationsabout
+their actions, by reasoning over the beliefs and actions of the world and the robot. Their state can change, as they
+theirteammates.Wewanttoenablerobotteammateswith adapt themselves to the robot and its actions. Much like
+this very capability in human-robot teams, e.g., service in manipulation, a robot interacting with people needs
+robots interacting with users at home, manufacturing to use this information when choosing its own actions
+robots sharing the same physical scape with human me- (Fig.1).Thisrequiresnotonlyanunderstandingofhuman
+chanicsandautonomouscarsinteractingwithdriversand behavior when interacting with robotic systems, but also
+pedestrians. of the computational challenges and opportunities that
+When it comes to robots operating in isolation, there arise by enabling this reasoning into deployed systems in
+has been tremendous progress in enabling them to act the real world.
+autonomously by reasoning over the physical state of the Toaddressthesechallenges,wehaveusedinsightsfrom
+world. A manipulator picking up a glass needs to know behavioral economics to propose scalable models of hu-
+the position and orientation of the glass on the table, man behavior and machine learning algorithms to auto-
+the location of other objects that it should avoid, and the matically learn these models from data. Integrating these
+way these objects will move if pushed to the side. More models into probabilistic planning and game-theoretic
+importantly, it needs to reason over the uncertainty in its algorithms has allowed generation of robot actions in a
+model of the world and adapt its own actions to account computationally tractable manner.
+for this uncertainty, for instance by looking at the table This paper is a summary of our work in this area,
+with its camera, or by moving slowly until it senses the which has been inspired by recent technical advances in
+glass in its gripper. human-robot interaction [1], and to a large extent it has
+However, humans are not just obstacles that the robot been made possible by breakthroughs in computational
+should avoid. They are intelligent agents with their own representations of uncertainty [2], and in algorithms that
+have leveraged these representations [3]. It has also been
+This is a summary of work done in collaboration with Keren Gu,
+inspiredbytheremarkableresultsofgame-theoreticalgo-
+AntonKuznetsov,MinaeKwon,PremyszlawLasota,SwapravaNath,Ariel
+Procaccia,RamyaRamakrishnan,YuXiangZhu. rithms in deployed applications [4].
+7102
+guA
+4
+]OR.sc[
+2v68520.7071:viXra
+
+Fig. 2: We have applied our research to human-robot collaboration across different robot morphologies and settings:
+in manufacturing, assistive care, social navigation and at home.
+We start by formulating our overarching goal of com- task. Over the course of a task of total time duration T,
+putingtherobotactionsthatmaximizeteamperformance robot and human receive an accumulated reward:
+as an optimization problem in a two-player game with
+T
+incomplete information (Sec. II). In hindsight, our ap- (cid:88) RR(x ,aR,aH)
+t t t
+proachesinthelastyearsreflectthedifferentassumptions t=1
+andapproximationsthatwemadewithinthescopeofthis
+for the robot and
+general formulation.
+We start by assuming a leader-assistant teamwork (cid:88) T RH(x ,aR,aH)
+model 1, where the goal of the robot is to follow the t t t
+t=1
+human preference (Sec. III). We show that this model is
+for the human.
+an instance of our general framework by representing the
+We assume a robot policy πR, which maps world states
+human preference as a reward function, shared by both
+to actions. The human chooses their own actions based
+agents and unknown to the robot. We show that cross-
+on a human policy πH. If the robot could control both its
+training [5], [6], an algorithm emulating effective human
+ownandthehumanactions,itwouldsimplycomputethe
+team training practices, as well as clustering users into
+policies that maximize its own reward.
+types from joint-action demonstrations [7] significantly
+However, the human is not another actuator that the
+improves robot adaptation to the human.
+robot can control. Instead, the robot can only estimate
+Wethenexaminethecasewhentherobotcanindirectly
+thehumandecisionmakingprocessfromobservationand
+affect human actions as an equal partner, by treating
+make predictions about future human behavior, which in
+the interaction as an underactuated dynamical system
+turn will affect the reward that the robot will receive.
+(Sec. IV). We present a bounded-memory model [8]–[10]
+Therefore,theoptimalpolicyfortherobotiscomputed
+and a best-response model of human behavior [11], and
+by taking the expectation over human policies πH.
+show that this results in human-adaptation to the robot.
+Finally,closingtheloopbetweenthetworesultsinmu-
+(cid:34) (cid:35)
+T
+tualadaptation(Sec.IV):Therobotbuildsonlineamodel πR∗ ∈argmax (cid:69) (cid:88) RR(x ,aR,aH)|πR,πH (1)
+t t t
+of the human adaptation by taking information seeking πR t=1
+actions, and adapts its own actions in return [8]–[10].
+Solving this optimization is challenging: First, the hu-
+Table I organizes the works presented in this paper, with manrewardRH maybeunknowntotherobotinadvance.
+respect to the different aspects of the general formulation Second, even if the robot knows RH, it may be unable to
+that each one addresses.
+predict accurately the human actions, since human be-
+Each section articulates the different assumptions
+havior is characterized by bounded rationality [12]. Third,
+and explains how these lead to the robot behaviors
+even if the human acts always rationally, exhaustively
+that we observed in real-time interactions with actual
+searching for the equilibria is computationally intractable
+human subjects, in a variety of manufacturing, home in most cases [13]. Finally, even if RH ≡RR, most real-
+environments and assistive care settings (Fig. 2).
+world problems have multiple equilibria, and in the ab-
+sence of a signaling mechanism, it is impossible to know
+which ones the agents will choose.
+II. PROBLEMFORMULATION
+III. ROBOTADAPTATION.
+Human-robotcollaborationcanbeformulatedasatwo
+Inseveralmanufacturingapplications,suchasassembly
+player game with partial information. We let x be the
+t
+tasks,althoughimportantconceptssuchastolerancesand
+worldstatethatcapturestheinformationthathumanand
+robotuseattimet totakeactionsaR,aHinacollaborative completion times are well-defined, many of the details
+t t
+are largely left up to the individualized preference of the
+1Wereferthereaderto[14]forthedefinitionsofleader-assistant and mechanics. A robotic assistant interacting with a new
+equalpartnersteamworkmodels. human worker should be able to learn the preferences of
+
+12
+10
+8
+6
+4
+2
+0
+Concurrent Human Robot
+Motion Idle Time Idle Time
+)s(emiT
+Cross-Training
+Sarsa( )
+Fig. 3: Cross-training in a virtual environment leads to fluent human-robot teaming.
+its human partner in order to be an effective teammate. phase enables the robot to observe the human actions
+We assume a leader-assistant teamwork model, where and estimate the human policy πH. The rotation phase
+the human leader’s preference is captured by the human allows the robot to observe the human inputs on the
+reward function RH and the human policy πH. In this robot actions and infer the human preference RH from
+model, the goal of the robot is to execute actions aligned human demonstrations [16]. After each training round,
+with the human preference. Therefore, in Eq. 1, we have: which occurs in a virtual environment, the robot uses the
+new estimates to compute the optimal policy from Eq. 1.
+RR≡RH
+Ourstudiesshowedthatcross-trainingprovidessignificant
+Learning of a Human Model.LearningjointlyπH andRH improvements in quantitative metrics of team fluency, as
+well as in the perceived robot performance and trust in
+can be challenging in settings where human and robot
+therobot(Fig.3).Theseresultsprovidethefirstindication
+takeactionssimultaneously,anddonothaveidenticalac-
+that effective and fluent human-robot teaming may be
+tionsets.Toenablearobottolearnthehumanpreference
+best achieved by modeling effective training practices for
+in collaborative settings, we looked at how humans com-
+human teamwork.
+municate effectively their preferences in human teams.
+In previous work [14], insights from human teamwork Inference of a Human Type. Cross-training works by
+have informed the design of a robot plan execution learning an individualized model for each human team-
+system which improved human-robot team performance. mate. For more complex tasks, this results in a large
+We focused on a team training technique known as cross- number of training rounds, which can be tedious from
+training, where human team-members switch roles to a human-robot interaction perspective. However, our pi-
+develop shared expectations on the task. This, in turn lot studies showed that even when there was a very
+allows them to anticipate one another’s needs and coor- large number of feasible action sequences towards task
+dinateeffectively.Usingthisinsight,weproposedhuman- completion, people followed a limited number of “domi-
+robot cross-training [5], [6], [15], a framework where the nant” strategies. Using this insight, we used unsupervised
+robot learns a model of its human counter-part through learning techniques to identify distinct human types from
+two phases: a forward-phase, where human and robot joint-action demonstrations (Fig. 4) [7]. For each type
+followtheirpre-definedroles,andarotationphase,where y ∈Y, we used supervised learning techniques to learn
+the roles of human and robot are switched. The forward the human reward RH(x ,aR,aH;y), as well as the human
+t t t
+Cross Human Bounded Best Mutual
+Training TypeInference Memory Response Adaptation
+[5],[6],[15] [7] [8],[10] [11] [8]–[10]
+(cid:51) (cid:51)
+Known
+HUMANMODEL (cid:51) (cid:51) (cid:51)
+Unknown
+(cid:51) (cid:51)
+Independent
+INTERACTIONMODEL (cid:51) (cid:51) (cid:51)
+Underactuated
+(cid:51) (cid:51)
+Leader-Assistant
+TEAMWORKMODEL (cid:51) (cid:51) (cid:51)
+EqualPartners
+TABLE I: Each work makes different assumptions on the human, interaction and teamwork models.
+
+RR aH RH aH
+aR aR
+α 1 α
+−
+Fig. 4: We clustered participants into types, based on how
+Fig.5:Thehumanstatechanges,asthehumanplayswith
+their preference of executing a hand-finishing task with
+probability α the best response to the robot action aR
+the robot.
+(middle row) with respect to the robot reward function
+RR, instead of playing the best-response with respect to
+policy πH(x ;y), This simplified the problem of learning their own reward function RH.
+t
+RH,πH of a new human worker, to simply inferring their
+type y. We enabled this inference by denoting the human
+underactuateddynamical system, where therobotreasons
+typeasalatentvariableinapartiallyobservablestochastic
+overhowitsownactionsaffectfuturehumanactions,and
+process(POMDP).Thisallowedtherobottotakeinforma-
+takes that into account into its own decision making.
+tionseekingactionsinordertoinferonlinethetypeanew
+A Bounded-Memory Model. This history h can grow
+user, and execute actions aligned with the preference of t
+arbitrarily large, making optimizing for the robot actions
+that type. This draws upon insights from previous work
+computationally intractable. In practice, however, people
+on cooperative games [17] and vehicle navigation [18],
+do not have perfect recall. Using insights from work on
+where the human intent was modeled as a latent variable
+bounded-rationality in behavioral economics, we simplify
+in a POMDP, albeit with prespecified models of human
+theoptimization,usingaBounded-memoryhumanAdap-
+types. In a human subject experiment, participants found
+tationModel(BAM)[8],[10].Thehumanobservesarecent
+that the robot executing the computed policy anticipated
+history of interactions h :
+their actions, and in complex robot configurations they k
+completedthetaskfasterthanmanuallyannotatingrobot h k =(x t−k ,a t R −k ,...,x t ,a t R)
+actions.
+andinfersaprobabilitydistributionoverjointglobalplans
+IV. HUMANADAPTATION.
+that the robot is executing. They may then switch from
+As robotics systems become more advanced, they have theplantheycurrentlyfollow,toanewplandemonstrated
+access to information that the human may not have; this by the robot with some probability associated with their
+suggests that rather than always following the human, type y – their willingness to adapt to the robot.
+theycouldusethisinformationasequalpartnerstoguide A Best-Response Model. A particular instance of treating
+their human teammates towards better ways of doing interaction as an underactuated system is modeling peo-
+the task. In that case, it is no longer optimal for the ple as computing a best-response to the last robot action
+robottooptimizethehumanrewardfunction;instead,the using their reward function RH:
+robot should maximize its own reward function, which is
+πH(x ,aR;y)∈argmax RH(x ,aR,aH;y)
+different than the human’s: t t t t t
+aH
+RR(cid:54)=RH
+In [11], we additionally broke the assumption that
+RH is static; instead, as the human observes the robot’s
+An improvement upon the leader-assistant setting is to
+actions and the outcomes, they may change their reward
+recognizethatthehumanpolicycanchangebasedonthe
+function RH to match those of the robot’s. We captured
+robot actions. We let a history of world states and robot
+thischangebyassumingthattherewardparameters y are
+actions h :
+t
+h =(x ,aR,...,x ,aR) not static but change stochastically based on the robot
+t 0 0 t t actions, according to a transition function: P(y t+1 |y t ,a t R).
+Given this history, the human policy πH(x ,h ;y) is Forinstance,thehumanmaylearnthetruebestresponse
+t t
+a function not only of the current world state x and to a robot action with some probability (Fig. 5). Including
+t
+human type y , but also of the history h . Modeling the this model in the optimization of Eq. 1 allows the robot
+t t
+human policy as a function of the robot actions and to take informative actions to teach the human, even by
+solvingtheoptimizationofEq.1makestheinteractionan failing in purpose [11].
+
+Fig. 6: Two different users control an assistive arm through joystick inputs. The plot indicates the robot belief (y-axis)
+on user’s adaptability (x-axis). The robot starts by moving straight towards both bottles, in order to infer the user
+adaptability. Top, left to right: A non-adaptable user insists on moving the joystick to the left and the robot adapts to
+the user to retain their trust. Bottom, left to right: The user changes their inputs to align them with the robot actions.
+The robot infers that the user is adaptable and guides them towards the optimal goal (right bottle).
+The cardinality of Y can grow exponential to the num-
+ber of robot actions, which makes the problem compu-
+tationally hard. Using our intuition that early exploration
+should be encouraged, in [11] we simplified the compu-
+tation via a linear-time optimal algorithm for solving the
+maximization of Eq. 1, and showed that our model can
+capture accurately the evolution of human behavior in a
+table-clearing setting.
+V. MUTUALADAPTATION.
+In our models of human adaptation, we have assumed
+that the robot knows the type y of the human, which
+parameterizes the human policy πH and the human User 1 User 2 User 3
+reward function RH. However, our studies have shown
+Fig. 7: Different paths on MOMDP policy tree for a
+that there is a large variability among different types
+human-robot (white/black dot) table-carrying task. The
+y. Additionally, the type y of a new human worker is
+circle color represents the belief on the human adaptabil-
+typically unknown in advance to the robot and it cannot
+ity, with darker shades indicating higher probability for
+be fully observed. In [8]–[10] we relax the assumption
+smallervalues(lessadaptability).Thewhitecirclesdenote
+of a known y for the human. Instead, we treat y as a
+auniformdistributionoverhumanadaptability.Thetable
+latent variable in a partially observable stochastic pro-
+color indicates disagreement (red) or agreement (green)
+cess,inparticularlyamixed-observabilityMarkovdecision
+between human and robot actions. User 1 is inferred as
+process, which has been shown to achieve significant
+non-adaptable, whereas Users 2 and 3 are adaptable.
+computational efficiency [2]. This allows the robotto take
+information seeking actions to infer online the parameter
+y, which specifies how the human policy πH is affected
+by the robot’s own actions. As a result, human and robot the robot infers a distribution over goals based on the
+mutually adapt to each other; the robot builds online a user input, and assists the user for that distribution [19].
+model of how the human adapts to the robot by inferring Mutual adaptation additionally allows the robot to reason
+their type y, and adapts its own actions in return. over how the user goal may change, as the user adapts
+Weinstantiatedthemutualadaptationformalismusing themselves to the robot. In our example, the starting
+as human type y the human adaptability, that is their user preference is for the robot to go towards the left
+willingness to adapt to new strategy demonstrated the bottle, while the robot considers the right bottle as a
+robot. Fig. 6 shows an instance of the mutual adaptation bettergoal,forinstancebecauseitisheavieranditshould
+formalism in a shared autonomy setting. In this setting, be placed in the green bin first. The robot starts by
+
+Task Performance Robot Trustworthiness
+erocS
+resU
+Ropt
+Rsub
+erocS
+Robotadaptationonly
+Mutualadaptation
+Noadaptation
+erocS
+ksaT
+in human adaptation to the robot. Closing the loop
+between the two results in mutual adaptation, where the
+robot builds online a model of human adaptation, and
+adapts its own actions in return.
+5 We have applied the mutual adaptation formalism in
+collaborative manipulation, social navigation and shared
+4
+autonomy settings. We have also been using the same
+3 formalism to incorporate verbal communication between
+the robot and the human [20]. We are excited about
+2
+generalizing our work in a variety of domains, robot
+1 morphologies and interaction modalities, where an au-
+Fig. 8: Results for the three conditions in our human tonomous system plans its actions by incorporating the
+subjects experiment [9]. Robot-adaptation only: the robot human internal state. The number of applications is vast:
+assisted the user on their preference. Mutual-adaptation: an autonomous car can infer the aggressiveness of a
+The proposed formalism of Sec. V. No adaptation: The nearbydriverandchoosetowaitorproceed;aGPSsystem
+robot goes to the optimal goal always ignoring the user. may infer whether a user is willing to follow its prompts;
+Mutual-adaptation performs better than robot adaptation apersonalrobotathomecan“nudge”auserabouttaking
+only, since a large number of users adapted to the robot, breaks and sleeping more.
+while achieving comparable trust-ratings. No adaptation As these applications become more complex, our work
+achieves the maximum performance by definition, but to has a number of limitations. The models of human in-
+the detriment of reported user trust in the robot. ternal state that robots can build reliably are restricted
+andachievingoptimalbehaviorinlarge,high-dimensional
+spaces faces computational intractability. To this end,
+moving straight (information-seeking action), observing flexible, compact representations of the human internal
+whether the human changes their inputs to follow the state and new algorithms for reasoning about these rep-
+robot (adaptable user), or insists on pushing the joystick resentations give much promise.
+to the left (non-adaptable). If the human is adaptable Overall, we believe that we have brought about a
+(bottom-row), the robot will guide them towards a better better understanding of different ways that probabilis-
+way of doing the task. If the human is non-adaptable tic planning and game-theoretic algorithms can support
+(top-row),therobotfollowsthehumanpreferencetowards principled reasoning in robotic systems that collaborate
+the left-bottle, in order to retain their trust. Similarly, with people. We look forward to continue addressing the
+Fig. 7 shows the MOMDP policy tree for a table-carrying exciting scientific challenges in this area.
+task. The robot infers the user adaptability, and chooses
+whether to move the table following the user’s initial REFERENCES
+preference, or to guide the user towards moving the table
+[1] AndreaThomaz,GuyHoffman,MayaCakmak,etal.Computational
+intheoppositedirection.Ourexperimentsincollaborative
+human-robot interaction. Foundations and Trends® in Robotics,
+manipulation [8], social navigation [10] and shared au- 2016.
+tonomy [9] settings showed that, when compared to one- [2] SylvieCWOng,ShaoWeiPng,DavidHsu,andWeeSunLee. Plan-
+ning under uncertainty for robotic tasks with mixed observability.
+way robot adaptation to the human, mutual adaptation
+TheInternationalJournalofRoboticsResearch,2010.
+significantly improved human-robot team performance, [3] HannaKurniawati,DavidHsu,andWeeSunLee. Sarsop:Efficient
+while achieving comparable trust ratings (Fig. 8). point-basedpomdpplanningbyapproximatingoptimallyreachable
+beliefspaces. InRobotics:Scienceandsystems,2008.
+VI. DISCUSSION [4] James Pita, Manish Jain, Fernando Ordónez, Christopher Portway,
+MilindTambe,CraigWestern,PraveenParuchuri,andSaritKraus.
+We presented a summary of our work in human- Using game theory for los angeles airport security. Ai Magazine,
+robot collaboration. We formulated the general problem 2009.
+asatwo-playergamewithincompleteinformation,where [5] Stefanos Nikolaidis and Julie Shah. Human-robot cross-training:
+computational formulation, modeling and evaluation of a human
+human and robot know each other’s goals. We then made
+teamtrainingstrategy.InProceedingsoftheACM/IEEEInternational
+a set of different assumptions and approximations within ConferenceonHuman-RobotInteraction(HRI),2013.
+the scope of this general formulation. Each assumption [6] StefanosNikolaidis,PrzemyslawLasota,RamyaRamakrishnan,and
+Julie Shah. Improved human–robot team performance through
+resultedindiverseandexcitingteamcoordinationbehav-
+cross-training,anapproachinspiredbyhumanteamtrainingprac-
+iors, which had a strong effect on team performance. tices. TheInternationalJournalofRoboticsResearch(IJRR),2015.
+Wehaveshownthatrepresentingthehumanpreference [7] Stefanos Nikolaidis, Ramya Ramakrishnan, Keren Gu, and Julie
+Shah.Efficientmodellearningfromjoint-actiondemonstrationsfor
+as a human reward function unknown to the robot and
+human-robot collaborative tasks. In Proceedings of the ACM/IEEE
+computing the robot policy that maximizes this function InternationalConferenceonHuman-RobotInteraction(HRI),2015.
+results in robot adaptation to the human. Assuming the [8] Stefanos Nikolaidis, Anton Kuznetsov, David Hsu, and Siddhartha
+Srinivasa.Formalizinghuman-robotmutualadaptation:Abounded
+human reward function to be known and treating the
+memory model. In Proceedings of the ACM/IEEE International
+interaction as an underactuated dynamical system results ConferenceonHuman-RobotInteraction(HRI),2016.
+
+[9] Stefanos Nikolaidis, Yu Xiang Zhu, David Hsu, and Siddhartha
+Srinivasa.Human-robotmutualadaptationinsharedautonomy.In
+Proceedings of the ACM/IEEE International Conference on Human-
+RobotInteraction(HRI),2017.
+[10] StefanosNikolaidis,DavidHsu,andSiddharthaSrinivasa. Human-
+robotmutualadaptationincollaborativetasks:Modelsandexperi-
+ments. TheInternationalJournalofRoboticsResearch(IJRR),2017.
+[11] Stefanos Nikolaidis, Swaprava Nath, Ariel D Procaccia, and Sid-
+dharthaSrinivasa. Game-theoreticmodelingofhumanadaptation
+in human-robot collaboration. In Proceedings of the ACM/IEEE
+InternationalConferenceonHuman-RobotInteraction(HRI),2017.
+[12] Daniel Kahneman. Maps of bounded rationality: Psychology for
+behavioraleconomics. TheAmericaneconomicreview,93(5):1449–
+1475,2003.
+[13] ChristosHPapadimitriou. Thecomplexityoffindingnashequilib-
+ria. AlgorithmicGameTheory,2007.
+[14] Julie Shah, James Wiken, Brian Williams, and Cynthia Breazeal.
+Improvedhuman-robotteamperformanceusingchaski,ahuman-
+inspiredplanexecutionsystem. InProceedingsofthe6thinterna-
+tional conference on Human-robot interaction, pages 29–36. ACM,
+2011.
+[15] Stefanos Nikolaidis, Przemyslaw Lasota, Gregory Rossano, Carlos
+Martinez, Thomas Fuhlbrigge, and Julie Shah. Human-robot col-
+laborationinmanufacturing:Quantitativeevaluationofpredictable,
+convergent joint action. In International Symposium on Robotics
+(ISR),2013.
+[16] BrennaDArgall,SoniaChernova,ManuelaVeloso,andBrettBrown-
+ing. Asurveyofrobotlearningfromdemonstration. Roboticsand
+autonomoussystems,57(5):469–483,2009.
+[17] Owen Macindoe, Leslie Pack Kaelbling, and Tomás Lozano-Pérez.
+Pomcop:Beliefspaceplanningforsidekicksincooperativegames.
+2012.
+[18] Tirthankar Bandyopadhyay, Kok SungWon, Emilio Frazzoli, David
+Hsu, Wee Sun Lee, and Daniela Rus. Intention-aware motion
+planning.InAlgorithmicFoundationsofRoboticsX,pages475–491.
+Springer,2013.
+[19] ShervinJavdani,HennyAdmoni,StefaniaPellegrinelli,SiddharthaS
+Srinivasa, and J Andrew Bagnell. Shared autonomy via hind-
+sight optimization for teleoperation and teaming. arXiv preprint
+arXiv:1706.00155,2017.
+[20] Stefanos Nikolaidis, Minae Kwon, Jodi Forlizzi, and Siddhartha
+Srinivasa. Planning with verbal communication for human-robot
+collaboration. Journal of Human-Robot Interaction (JHRI), 2018.
+(underreview).

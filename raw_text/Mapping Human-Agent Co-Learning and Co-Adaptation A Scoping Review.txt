@@ -1,0 +1,1991 @@
+Mapping Human-Agent Co-Learning and Co-Adaptation: A Scoping Review
+Shruti Kumar, Xiaoyu Chen, Xiaomei Wang*
+HFES 2024 Annual Meeting
+Keywords: AI/ML, Automation, Cognition, Decision, Teams/Collaboration/Organizations
+Technical Areas: Human AI Robot Teaming, CEDM
+Introduction
+Background
+Robots must adapt to human team behaviors to establish successful collaboration patterns as they
+become more prevalent. Many adaptations manifest through subtle and unconscious interactions,
+which are challenging to observe [1]. In service environments like restaurants, robots like the
+WAITER robot must adapt to human behaviors for effective collaboration. It requires flexible
+mappings between human instructions and robot actions, enabling intuitive interactions [2], [3],
+[4], [5]. Mutual adaptation, where both the robot and human adjust their behaviors [6], is crucial
+for efficient task completion and is guided by computational models like the Bounded-Memory
+Adaptation Model [7]. This co-evolution process shapes the tasks and environments, enhancing
+human learning and adaptation [3], [4], [5], [8], [9], [10], [11], [12], [13], [14], [15], [16], [17],
+[18], [19], [20], [21], [22], [23], [24], [25], [26], [27], [28], [29], [30], [31], [32]. In BCI systems,
+mutual adaptation enhances collaboration by creating a co-adaptation loop where the human and
+the system learn from each other. Techniques like ErrPs-based mediation improve the system's
+response by adjusting actions based on real-time EEG feedback [33], [34]. The FML-based
+Reinforcement Learning Agent (FRL-Agent) further facilitates continuous learning and
+adaptation, crucial in applications like neural prosthetics and rehabilitation devices [1], [6], [13],
+[35], [36], [37], [38], [39], [40], [41], [42], [43], [44], [45], [46], [47], [48], [49], [50], [51], [52].
+Robots are increasingly used as learning partners, where mutual adaptation plays a significant
+role. For example, robots can co-learn with humans in various tasks, from motor tasks to
+language acquisition, using models that allow humans and robots to adjust their behaviors based
+on the interaction [53], [54], [55]. These interactions enhance the learning experience and
+promote the development of trust and effective strategies in human-robot teams [56], [57], [58],
+[59]. In manufacturing and assistive technology, mutual adaptation ensures seamless human-
+robot collaboration. Systems like the Adaptive Fuzzy Neural Agent (AFNA) use co-learning
+mechanisms to optimize performance in intelligent factories and rehabilitation [35], [60]. These
+systems rely on real-time data sharing and adaptive control algorithms to respond to human
+inputs, ensuring safe and efficient operations [31], [61], [62], [63]. Shared autonomy integrates
+human input with robot autonomy to improve task performance. Mutual adaptation is critical in
+these scenarios, as humans and robots must adjust their actions based on feedback and shared
+goals [64], [65]. This approach is efficient in applications like assistive robotics, where the robot
+helps humans achieve better outcomes by guiding them toward optimal strategies [36], [66],
+[67]. Mutual learning between humans and AI systems supports collaborative decision-making in
+various domains, such as healthcare and education. AI systems adapt to human expertise and
+
+preferences, helping teams to co-evolve and improve over time [68], [69], [70]. The use of co-
+learning frameworks enhances the ability of AI to assist in complex decision-making processes,
+making these systems more responsive and effective [71], [72], [73], [74]. Interactive systems
+incorporating mutual adaptation, such as teleoperation and assistive devices, improve user
+experience by learning from user behavior and adjusting system responses accordingly [75],
+[76]. This approach is essential for developing intuitive interfaces that effectively collaborate
+with users in tasks requiring fine motor control or complex decision-making [63], [77], [78].
+Mutual adaptation fosters engaging and effective interactions between humans and robots in
+social play and edutainment. By learning from human behavior, robots can participate in games,
+teach new skills, or serve as companions, enhancing the overall experience [53], [74], [79].
+These interactions often involve co-learning processes that help both the human and the robot to
+improve their performance and adapt to new challenges [53], [58], [80].
+Objective
+Several papers have delved into the challenges of human-AI-robot co-learning and co-adaptation
+[1], [38], [39], [81]. It has been noted that the terminology used to describe this collaborative
+relationship in existing studies needs to be more consistent [39]. For example, the prefix "co" is
+used interchangeably to represent both "collaborative" and "mutual," and the terms "co-learning"
+and "co-adaptation" are sometimes used interchangeably. However, they can reflect subtle
+differences in the focus of the studies.
+The current scoping review's primary research question (RQ1) aims to gather existing papers
+discussing this collaboration pattern and examine the terms researchers use to describe this
+human-agent relationship.
+Given the relative newness of this area of study, we are also keen on exploring the specific types
+of intelligent agents and task domains that have been considered in existing research (RQ2). This
+exploration is significant as it can shed light on the diversity of human-agent interactions, from
+one-time to continuous learning/adaptation scenarios. It can also help us understand the
+dynamics of human-agent interactions in different task domains, guiding our expectations
+towards research situated in dynamic, complex domains.
+Our third objective (RQ3) is to investigate the cognitive theories and frameworks that have been
+utilized in existing studies to measure human-agent co-learning and co-adaptation. This
+investigation is crucial as it can help us understand the theoretical underpinnings of human-agent
+collaboration and adaptation, and it can also guide us in identifying any new frameworks
+proposed specifically for this type of relationship.
+Methods
+We conducted a scoping review to explore the current literature on Human and intelligent agents
+working in a collaborative space as a hybrid team to "co-learn" (also known as "co-adapt"),
+which is relatively new and intriguing to the researchers. Scoping reviews are an effective and
+valuable strategy for synthesizing emerging concepts and topics in a specific domain. Our review
+adheres to the PRISMA-ScR (Preferred Reporting Items for Systematic Reviews and Meta-
+
+Analyses Extension for Scoping Reviews) guidelines (Multimedia Appendix 1). We meticulously
+searched all peer-reviewed publications in the Web of Science, Engineering Village, and
+EBSCOhost database published before January 2024 to identify studies meeting the eligibility
+criteria within the scope of our review.
+Search Strategy
+Our search strategy was not just systematic, but also comprehensive. We meticulously crafted
+search terms to ensure we included all relevant papers in the database. These keywords were
+selected after a thorough preliminary literature review and were further refined based on
+feedback from content experts and our institution's librarian. Our collaboration with the librarian
+focused on refining the search strategy and ensuring we considered all papers related to human-
+agent/AI-based co-learning and mutual adaptation in our review. We used a hierarchical structure
+similar to a tree to optimize our search, starting from general (branch) terms and moving towards
+more specific (leaf) ones. We included synonyms in our search strategy to ensure a
+comprehensive search. For example, "Intelligent Agents," which is a branch term, was also
+represented by synonyms such as "Artificial Intelligence," "Robot," "Machine," and so on. We
+also accounted for leaf terms like "Machine Learning" and "Reinforcement Learning" as part of
+our search strategy. Figure 1 illustrates the different combinations of these terms and their
+variations, along with the Boolean (AND and OR) operators used to identify all relevant studies
+that met our criteria. For example, "Human-Intelligent Agents {OR} Human-Artificial Agents
+{OR} ..." {AND} "Co-learning {OR} Co-adaptation {OR} ..." were used to refine our search.
+Definition for Human- Intelligent Agent Co-learning/Co-adaptation
+The use of increasingly advanced AI technology is reshaping how individuals and teams learn
+and carry out their tasks. In hybrid teams, people work alongside artificially intelligent partners
+[38]. To leverage the unique strengths and weaknesses of a human and an intelligent agent, a
+hybrid team should be constructed based on principles that facilitate successful human-machine
+learning, interaction, and collaboration based on the principles of co-learning and mutual
+adaptation, where both the members of the team are benefited by learning from each other.
+Zoelen [39], describes co-learning as developing a cohesive team that necessitates ongoing
+collaborative learning among all team members. This process encompasses two alternating
+iterative stages: first, partners adapt their behavior to the task and each other (co-adaptation);
+second, partners sustain effective behavior through communication. For example, in his study, he
+recognized the recurrent behaviors indicative of co-learning by a task context conducive to the
+emergence of behavioral adaptation from interactions between humans and robots.
+Similarly, Nikolaidis[2] defines mutual adaptation between an agent and a human as ability of
+members of the team to co-exist in the same physical space with the aim to make more informed
+decisions and become trustworthy team members to achieve improved performances for the
+given task.
+In this paper, our focus is on reviewing human-agent collaboration which is a two-way sharing of
+responsibility and processing of information which determines a conducive environment for co-
+
+learning and mutual adaption. Furthermore, this review reflects on the domains and the important
+cognitive frameworks involved for co-adaptation during the human-agent teaming.
+Figure 1. Terms used for the Conceptual framework of the scoping review.
+Human-Intelligent Agent
+Co- learning
+Artificial Intelligence OR
+- Reinforcement Learning
+Co- adaptation
+- Natural Language Processing
+- Neural Networks
+OR
+- Fuzzy Logic
+s - Robotics
+t
+n Co-evolution
+e - Expert systems
+g A
+t
+- Knowledge based systems AND
+O R
+n
+e
+g ille Mutual learning
+t Machine
+n OR
+I
+Robot
+Mutual adaptation
+Automation OR
+Autonomy Hybrid Intelligence
+AI-Robot
+Inclusion and Exclusion Criteria
+This review included peer-reviewed studies that met the following primary conditions:
+1. The study focused on a Human-Intelligent Agent-based co-learning and mutual
+adaptation that involved two-way learning, adaptation, and evolution, which were the
+highlights of this study.
+We excluded studies with the following criteria:
+1. Studies related to co-creation (typically using generative AI for co-creating art products).
+2. Those focusing on motor adaptation (e.g., mimetic robot).
+3. Studies centered on computational linguistics.
+4. Those discussing the relationship between human society and AI instead of specific
+Humans and agents. (co-evolution)
+5. For comparison, the study included those that state "co-adaptation" and "mutual
+adaptation" but describe only the agent's adaptation to Humans, not humans and agents
+adapting to each other, for example, education/training purposes.
+
+6. Studies not published in English.
+Study data collection and synthesis
+We began the paper selection process by evaluating the eligibility of the studies based on the
+authors' inclusion and exclusion criteria. First, we removed duplicate papers and screened the
+remaining studies by reviewing their titles and abstracts. Next, we used an Excel spreadsheet to
+take detailed notes on each study. This spreadsheet contained information about the study's
+objective, application based on the domain and adaptation style, cognitive theories and
+frameworks, type of intelligent agent, the mutual performance of the Human and the agent,
+sample size, and additional notes. Any discrepancies were resolved through discussion to ensure
+fairness, requiring consensus between the reviewers. We standardized information from each
+paper after collecting the desired information using a PRISMA-data abstraction form. We used
+this method to finalize the selection of studies for review. Figure 2 displays the details regarding
+the study selection process.
+Results
+Study Selection
+Two authors meticulously compiled the papers selected for this scoping review in a systematic
+flowchart representation, as shown in Figure 2. Using specific keywords, the initial search on
+Web of Science, Engineering Village, and EBSCOhost resulted in 373 papers. We organized
+them using the Mendeley Reference Manager (v2.118.0), thus helping us filter and remove
+duplicate documents (131/373 = 35.12%). Further screening based on titles and abstracts left the
+authors with 92 papers for a full-text review. The last round of screening was based on inclusion
+and exclusion criteria, as mentioned in the respective section, resulting in the selection of 92
+papers (38.01% of the original 242) for full-text review. Finally, based on the eligibility, the
+authors removed 10.86% (10/92) of papers due to the unavailability and based on the full-text
+review. Additionally, later in the review, we include a discussion on applications of co-
+adaptation, covering two-way adaptation (84.14%), one-way adaptation (6.09%), both two-way
+and one-way (4.87%), and cases where information was not available (4.87%).
+
+Figure 2. PRISMA flowchart for systematic searching and selecting the
+papers.
+Records identified through database searching
+(N= 373)
+n
+o
+i
+t
+a
+c
+i
+f
+i
+t
+n
+e Record removed before screening
+d
+I • All the duplicates removed
+(N= 131)
+Records whose title and abstract were screened
+g (N= 242)
+n
+i
+n
+e
+e
+r
+c
+S
+Records excluded based on title or
+abstract (N= 150)
+y
+t
+i l Records obtained after full text was screening
+i
+b
+i g (N= 92)
+i
+l
+E
+• Paper that was not accessible at
+all (N=1)
+• Removed based on eligibility
+criteria (N= 9)
+• Removed papers with one-sided
+d
+e adaptation style (N=5)
+d
+u
+l
+c
+n
+Records included in the review
+I
+(N= 77)
+
+Table 1 provides an overview of 77 selected reports detailing the study's objective, the
+application domain and style of the human-intelligent agent system, and the cognitive theories
+and frameworks used by the hybrid team. Most of the work, over 50%, has been conducted in the
+last four years, indicating a need for future expansion in this emerging field of study. Notably,
+54.54% (42/77) of the papers were published within the last 2 to 3 years, demonstrating
+significant and recent growth in this research area.
+Table 1. The study design and reported findings of final selected papers.
+Application
+Cognitive
+Study, year, place theories and Sample
+Objective
+of Publication frameworks size, n
+Adaptation used
+Domain/Tasks
+style
+To explore and identify
+interaction patterns of Search and • Mental model
+Emma M. et al [1], tangible co-adaptations in navigation, • Decision
+Two-way 18
+2021, Netherlands human-robot team interaction making
+behaviors to enhance patterns • Trust
+collaborative performance.
+To develop a
+computational framework
+for mutual Bounded-
+Stefanos Nikolaidis One-way • Decision
+adaptation between Memory
+et al [2], 2017, and Two- making 170
+humans and robots in Adaptation
+United States way both • Trust
+collaborative tasks, Model
+enhancing team
+effectiveness and trust
+Restaurant-
+WAITER
+To introduce and evaluate a • Decision
+(Waiter Agent
+Xu Yong et al [3], learning model for mutual making
+Interactive Two-way 10
+2009, Japan adaptation in human-robot • Trust
+Training
+collaboration. • Mental model
+Experimental
+Restaurant)
+Virtual
+To investigate the principal Restaurants-
+features of active WAITER • Decision
+Xu Yong et al [4], adaptation in human-agent (Waiter Agent making
+Two-way 37
+2011, Japan collaboration using a Interactive • Trust
+developed experimental Training • Mental model
+environment. Experimental
+Restaurant)
+Xu Yong et al [5], To disclose the essence of WAITER • Decision
+Two-way 25
+2009, Japan mutual adaptation in (Waiter Agent making
+
+Application Cognitive
+Study, year, place Sample
+Objective theories and
+of Publication size, n
+frameworks
+human-agent interaction by Interactive •u sTedru st
+designing a waiter agent Training • Mental model
+task and conducting Experimental
+experiments. Restaurant)
+To elucidate the conditions WAITER
+required to induce mutual (Waiter Agent • Decision
+Yong Xu et al [6], adaptation in human-agent Interactive making
+Two-way 37
+2012, Japan collaborative interactions Training • Trust
+using the “WAITER” Experimental • Mental model
+experimental environment. Restaurant)
+To design and evaluate a
+computational learning • Decision
+Adaptive
+Ramya model that enables human- making
+perturbation
+Ramakrishnan et al robot teams to co-develop • Trust
+training, team- Two-way 48
+[7], 2017, United joint strategies for • Mental model
+training
+States performing novel tasks • Team
+strategy
+through perturbation performance
+training.
+To investigate Air cargo
+the evolution of human- logistics -
+machine collaboration Artifact for
+Döppner et al [8], • Decision
+(HMC) and explore human- Two-way NA
+2019, Germany making
+patterns of symbiotic co- machine
+evolution in a real-world collaboration
+business context (HMC)
+It provides a
+multidisciplinary,
+• Teamwork
+multilevel, and multiphasic
+• Team
+Burke C. S. et al conceptualization of team
+effectiveness
+[9], 2006, United adaptation, defining NA NA NA
+• Shared mental
+States adaptive team performance
+model
+and its emergent nature
+• Safety
+from a theoretical
+standpoint.
+To present a computational
+model that enables an
+Hendrik
+artificial conversational Symbol
+Buschmeier and
+agent to estimate and adapt Grounding Two-way • Utterance 1
+Stefan Kopp [10],
+to the user's mental state problem
+2013, Germany
+for better grounding in
+dialogue.
+To codify and evaluate
+• Human–robot
+Guy Hoffman [11], metrics for measuring Turn-taking
+NA fluency metrics 143
+2019, United States human-robot fluency in system
+• Task efficiency
+shared-location teamwork.
+
+Application Cognitive
+Study, year, place Sample
+Objective theories and
+of Publication size, n
+frameworks
+used
+To investigate the impact
+of different allocations of
+online and offline gradient
+Lygerakis Fotios et • Performance
+updates on game Marble-Maze
+al [12], 2021, Two-way • Total training 2
+performance and training game
+Greece time
+time in a real-time
+collaborative setting with
+humans.
+To explore a framework for Simulated • Performance
+AI that adapts to individual Navigation • Management
+Zhao Michelle et al
+human partners within a task- search- • Decision
+[13], 2022, United Two-way 108
+group, emphasizing the and-rescue making
+States
+benefits of AI adaptation in (SAR) • Mental state
+collaborative settings. environment • Preference
+To present a formalism for Table carrying
+Nikolaidis et al human-robot mutual task, Bounded • Effectiveness
+[14], 2016, United adaptation in collaborative memory Two-way • Performance 69
+States, Singapore tasks to improve team Adaptation • Trust
+effectiveness. Model
+To explore how social
+interaction evolves
+incrementally and can be • Adaptive
+One-way
+Youssef Khaoula et formalized into a protocol Sociable behavior
+and Two- 42
+al [15], 2014 of communication, using a Dining Table • Communicatio
+way both
+dish robot in a Sociable n
+Dining Table context that
+requires mutual adaptation.
+To develop automated
+metrics for quantifying
+• Efficiency
+mutual adaptation in
+Damian Dana D. et Rehabilitation • Decision
+human-robot interaction Two-way 7
+al [16], 2009 robotics making
+within rehabilitation
+• Performance
+robotics to enhance
+collaboration efficiency.
+To develop a novel
+negotiation strategy using Physical
+virtual fixtures to facilitate human-robot • Cognitive load
+Zhou Hua et al mutual adaptation between interactions, • Performance
+Two-way 36
+[17], 2021 humans and robots in manipulation • Decision
+collaborative tasks where tasks, haptic making
+both parties have negotiation
+incomplete information.
+Ogata T et al [18], To investigate mutual Navigation
+Two-way • Performance 7
+2005 adaptation between System,
+
+Application Cognitive
+Study, year, place Sample
+Objective theories and
+of Publication size, n
+frameworks
+humans and robots in an dynamical •u sIendc r emental
+open-end interaction system learning
+scenario using a specially • Robustness,
+developed humanoid robot, • Operability
+Robovie, focusing on
+• Mental
+incremental learning and
+impressions
+navigation system
+dynamics.
+To propose and explore a
+mathematical framework
+for studying co-adaptation
+between humans and
+adaptive interfaces in • Task
+De Santis Dalia scenarios where the Body-machine performance
+Two-way 10
+[19], 2021 interface evolves based on interfaces • Interaction
+user behavior, aiming to efficiency
+maximize interaction
+efficiency rather than
+optimizing specific task
+performance.
+To propose and investigate • Effective and
+a framework for mutual natural
+mind reading between a communicatio
+user and a life-like agent, n
+Yamada S and Mind reading
+aiming to establish • Emotional
+Yamaguchi T [20], game, Mind Two-way 8
+effective and natural state
+2002 mapping
+communication by • Processing
+acquiring each other's mind load
+mappings through a mutual • Mind state
+mind reading game. • Judgement
+To propose and
+experimentally test a
+Neural
+game-theoretic framework
+interfaces-
+for optimizing the closed-
+Madduri HMI, BCI,
+loop performance of a
+Maneeshika M. et rehabilitation, Two-way • Performance 7
+myoelectric interface for
+al [21], 2022 2D trajectory-
+continuous control,
+tracking task,
+focusing on co-adaptation
+sEMG
+between the user and the
+decoder.
+To understand how human
+motion features contribute
+Sciutti Alessandra to emergent coordination neuroscientific
+and Sandini Giulio with another agent (the bases of social Two-way • Efficiency NA
+[22], 2017 robot). While not explicitly interaction
+stated, the investigation
+suggests a mutual
+
+Application Cognitive
+Study, year, place Sample
+Objective theories and
+of Publication size, n
+frameworks
+adaptation scenario where used
+the robot reacts
+contingently to human
+actions, influencing the
+interaction dynamics.
+To develop and understand
+efficient reinforcement
+• Decision
+Gao Yuan [23], learning algorithms for
+social robotics Two-way making NA
+2020 human-robot co-adaptation
+• Performance
+in interactive
+environments.
+To analyze and improve an
+• Chatter
+expert-based online Online Co-
+• Human
+Young Carol et al learning algorithm to avoid Learning,
+Two-way intentions NA
+[24], 2019 chatter when predicting expert based
+• Internal state,
+human intention during learning
+• Mind state
+human-robot interaction.
+To investigate whether
+adding adaptive timing
+features and classifiers to
+O'Meara Sarah M. an electromyography myoelectric • Performance
+Two-way 48
+et al [25], 2021 (EMG) interface can control • Reliability
+improve the performance
+of trained human subjects
+in cursor-control tasks.
+To develop a data-based
+approach for improved • Output
+Warrier Rahul B. Data-based
+iterative robot learning for tracking
+and Devasia iterative Two-way 1
+output tracking from • Robot learning
+Santosh [26], 2017 learning
+novice human-in-the-loop • Performance
+demonstrations.
+To propose a theoretical
+perspective on
+anthropomorphism in
+Damiano Luisa and Social • Self-
+social robotics and to
+Dumouchel Paul robotics, NA knowledge NA
+develop a critical
+[27], 2018 Anthropology • Moral growth
+experimentally based
+ethical approach called
+"synthetic ethics.
+To explore how Generative
+AI tools can be used for
+Cress Ulrike and
+individual learning and
+Kimmerle Joachim, CSCL research Two-way • NA NA
+collective knowledge
+[28], 2023
+construction through
+argumentative dialogs.
+
+Application Cognitive
+Study, year, place Sample
+Objective theories and
+of Publication size, n
+frameworks
+used
+To explore and define a
+model for family-based • Learning
+Ahtinen Aino et al collaborative learning (co- Social experience
+Two-way 32
+[29], 2023 learning) about and with a Robotics • Task
+social robot in home completion
+environments.
+To investigate mutual
+adaptation between
+humans and robots through
+human-robot One-way
+Kitagawa Masahiro the imitation of human • Sleep-time
+interaction, and Two- 18
+et al [30], 2016 motions by robots, • Motion-time
+imitation way both
+examining how this
+interaction affects human
+behavior.
+To investigate human
+adaptation to a miniature
+Mohammad Yasser robot during collaborative Navigation
+and Nishida navigation tasks, exploring task, gesture Two-way • Performance 22
+Toyoaki [32], 2008 how both humans and based
+robots can adapt to each
+other's behaviors.
+It explores the usability of
+error-related potentials
+Stefan K Ehrlich
+(ErrPs) as a feedback
+and Gordon Cheng Guessing
+signal for mediating co- Two-way • Performance 18
+[33], 2018, game, BCI
+adaptation in less
+Germany
+constrained human-robot
+interaction scenarios.
+To investigate whether
+self-related and agent-
+related errors evoke BCI research, • Shared
+Dimova-Edeleva et
+different error-related grid-world Two-way workspace 11
+al [34], 2022
+potentials (ErrPs) in the game • Responsibility
+human brain during
+human-agent collaboration.
+It proposes an Adaptive
+Fuzzy Neural Agent
+Lee Chang-Shing
+(AFNA) with a Patch
+et al [35], 2022,
+Learning Mechanism for Go Game Two-way • Performance 19
+Tiawan, Canada,
+human and machine co-
+Japan
+learning using Fuzzy
+Markup Language (FML).
+Hu Xuhui et al To develop a human-robot Automatic • Performance
+Two-way 12
+[36], 2023 co-adaptation framework Control in • Intent
+
+Application Cognitive
+Study, year, place Sample
+Objective theories and
+of Publication size, n
+frameworks
+using biofeedback-based Assistive usreedc o gnition
+user adaptive behavior to devices, wrist • Robust control
+enhance user intent movement
+recognition in automatic based on
+control systems for surface
+assistance robots. electromyogra
+m (sEMG)
+To introduce and evaluate a
+novel fuzzy-based system
+for human-robot
+cooperative Edutainment,
+Human-Robot • Feelings
+integrating a brain-
+Lee Chang-Shing Cooperative • Attention
+computer interface (BCI) Two-way 10
+et al [37], 2020 Edutainment, • Fatigue
+ontology model and a
+Ontology • Stress
+Fuzzy Markup Language
+(FML)-based
+Reinforcement Learning
+Agent (FRL-Agent).
+Discusses the challenges of
+enabling effective human- • Mental model
+AI co-learning and • Theory of
+Karel van den Challenges for
+collaboration in hybrid minds
+Bosch et al [38], Human-AI co- Two-way NA
+teams, emphasizing the • Explainable AI
+2019, Netherlands learning
+need for bidirectional • Decision
+learning between humans making
+and AI systems.
+To identify interaction
+patterns of mutual
+Search and
+van Zoelen et al adaptation in human-robot • Mental model
+rescue (in
+[39], 2021, teams to facilitate co- Two-way • Situation 24
+earthquake
+Netherlands learning, where both Awareness
+operation)
+humans and robots learn
+from each other
+To develop an adaptive
+agent that can identify and
+• Decision
+Li Huao et al [40], complement human Team Space
+Two-way making 104
+2021, United States policies in human-agent Fortress
+• Trust
+teams to optimize team
+performance
+To develop an ontology-
+based model and Human-agent
+van Zoelen et al communication interface to team Ontology • Decision
+[41], 2023, enable human-AI teams to of Two-way making 10
+Netherlands recognize, formalize, and Collaboration • Performance
+communicate emergent Patterns
+collaboration patterns for
+
+Application Cognitive
+Study, year, place Sample
+Objective theories and
+of Publication size, n
+frameworks
+effective co-learning used
+To investigate and
+summarize the challenges Concept/
+and methodologies for Summary: • Trust,
+Ahlberg Sofie et al achieving co-adaptive COIN project, • Mental model
+Two-way NA
+[42], 2022, Sweden human-robot cooperation, safe • Decision
+emphasizing the need for planning/contr making
+robots to adapt to humans ol
+in real-time.
+To explore how humans
+and robots interact
+Motor
+Shafti Ali et al implicitly on a motor
+adaptation • Performance
+[43], 2020, United adaptation level in a Two-way 7
+level, Maze • Behavior
+Kingdom collaborative maze game
+game
+using deep reinforcement
+learning.
+To establish human- Human-
+machine mutual machine • Situation
+Azevedo Carlos R. understanding (HMMU) to mutual Awareness
+B. et al [44], 2017, foster trust and understanding Two-way • Cognitive NA
+Brazil collaboration between (HMMU), Agents
+humans and autonomous Autonomous • Trust
+systems Systems
+It proposes a co-
+evolutionary hybrid
+• Problem
+intelligence model that
+Summary: solving
+Krinkin Kirill et al integrates human and
+Cognitive Two-way • Mental NA
+[45], 2023, Russia machine cognitive
+architectures structures
+functions to overcome the
+• Performances
+limitations of data-centric
+AI
+To introduce the concept of Concept/
+the SMV (Symbols- Summary: • Decision
+Yao Yiyu [46], Meaning-Value) space for SMV making
+Two-way NA
+2023, Canada understanding human- (Symbols- • Mental model
+machine symbiosis and co- Meaning- • Trust
+intelligence Value)
+To explore mutual Concept/
+• Decision
+(reciprocal) learning to Summary:
+Ansari Fazel et al making
+develop collective human- ATODIDACT: Two-way NA
+[47], 2018, Austria • Problem
+machine intelligence in Smart factory
+solving
+smart factories Industry 4.0
+Liu Yizhi and It explores the feasibility of Construction • Performance
+Two-way 4
+Jebelli Houtan using an adaptive neural industry, • Mental images
+
+Application Cognitive
+Study, year, place Sample
+Objective theories and
+of Publication size, n
+frameworks
+[49], 2022, United network to translate Brainwave used
+States workers' mental images signals- EEG
+into robotic commands via
+brainwave signals for
+controlling construction
+robots.
+To establish a framework
+for studying co-adaptation
+between humans and
+Izadi Vahid et al automation systems in a Automation • Performance
+[50], 2023, United haptic shared control system, Haptic Two-way • Resolving NA
+States framework, focusing on shared control conflict
+resolving conflicts during
+co-steering of a semi-
+automated ground vehicle.
+To enhance mutual
+performance in human-
+robot collaboration (HRC)
+settings by using a transfer
+• Team
+learning technique called Human-Robot
+Tsitos Athanasios performance
+Probabilistic Policy Reuse, Collaborative Two-way 16
+C [51], 2022 • Decision
+allowing a deep Game
+making
+reinforcement learning
+(DRL) agent to adapt to
+different human partners in
+real-time.
+To develop a robotic
+intelligence framework Social robotics
+using mutual learning in clinical and
+• Empathy(Socia
+Xie Baijun and paradigms, focusing on healthcare,
+l boding,
+Park Chung Hyuk emotion recognition and game of Two-way 5
+stress, anxiety)
+[53], 2023 behavior perception for charades,
+• Engagement
+enhancing social gesture
+interactions in healthcare recognition
+settings.
+To enhance the
+effectiveness of robot-
+assisted language learning
+Language • Communicatio
+by addressing issues of
+Education, n
+boredom through mutual
+Yorita Akihiro et al Robot- • Self-efficacy
+learning based on social Two-way 1
+[54], 2013 Assisted • Social
+cognitive theory, focusing
+Language cognitive
+on adapting the robot's
+Learning theory
+behavior to maintain
+engagement over long-term
+interactions.
+
+Application Cognitive
+Study, year, place Sample
+Objective theories and
+of Publication size, n
+frameworks
+used
+To explore and evaluate
+co-learning activities
+between elementary school
+Social
+pupils and university
+Ahtinen Aino et al Robotics, • Perspectives
+students using social NA 56
+[55], 2023 Educational • Learning
+robots, focusing on
+Robotics
+educational benefits and
+data privacy
+considerations.
+Experiment 1-
+physical
+To study human-robot co-
+navigation task
+learning processes to
+van Zoelen et al with the robot One-way
+facilitate fluent • Performance
+[56], 2021, on a leash, and Two- NA
+collaborations through • Mental model
+Netherlands Experiment 2- way both
+implicit adaptation and
+Search and
+task learning.
+rescue in
+virtual task
+Assistive
+Tasks: human
+To present and evaluate a
+parenting
+computationally efficient • Judgement
+behavior,
+Ikemoto Shuhei et machine learning algorithm • Dependable
+namely, an
+al [57], 2012, for improving interaction Two-way • Safety 5
+assisted
+Japan, Germany quality between robots and • Performance
+standing-up
+human caregivers in close- • Efficiency
+task and an
+contact scenarios.
+assisted
+walking task
+To investigate perspective-
+taking in human-robot
+interaction, focusing on
+Brain-
+how changes in the robot's • Efficiency
+computer
+Dai Wei et al [58], cognitive-affective state • Decision
+interface Two-way 6
+2021 influence children's making
+(BCI), EEG
+behavior, emotional • Performance
+artifact
+responses, and perception
+of the robot during co-
+learning interactions.
+To develop a methodology
+for the participatory design
+of social robots that
+participatory
+Lee Hee Rin et al integrates feedback from
+design of Two-way • Depression 15
+[59], 2017 older adults diagnosed with
+social robots
+depression and their
+therapists, aiming for
+socially robust and
+
+Application Cognitive
+Study, year, place Sample
+Objective theories and
+of Publication size, n
+frameworks
+responsible robot design. used
+To enable positive co-
+adaptation and more
+seamless interaction Wearable
+between humans and robots,
+Moreno J. C. et al • Symbiotic-gait
+wearable robots (WRs), Bioinspiration, Two-way NA
+[60], 2014 behavior
+focusing on improving Neurorehabilit
+adaptability and flexibility ation
+through cognitive
+architectures.
+To propose a Smart
+Review: Smart
+Manufacturing Systems • Decision
+Manufacturing
+Peruzzini Design (SMSD) making
+Systems
+Margherita et al framework enabling Two-way • Socio-technical NA
+Design
+[61], 2023, Italy Industry 5.0 based on challenges
+(SMSD) for
+human-automation • Productivity
+Industry 5.0
+symbiosis.
+To develop a Deep
+Reinforcement Learning-
+based motion controller for • Robot-assisted
+Hodossy Balint K virtual testing of wearable gait
+Rehabilitation
+and Farina Dario robotic devices, focusing Two-way • Performance 0
+robotics
+[63], 2023 on co-adaptation and user • Decision
+intent representation in making
+simulated prosthetic leg
+control.
+Bounded-
+To evaluate how mutual
+Memory
+adaptation between • Performance
+Nikolaidis et al Adaptation- an
+humans and robots affects • Trust
+[64], 2017, assistive Two-way 51
+team performance and • Stochastic
+Singapore robotic arm on
+collaboration during shared decision model
+a table-
+autonomy tasks.
+clearing task
+To propose and evaluate a
+shared control framework
+• Perspective
+for human-multirobot
+taking
+foraging using a brain-
+• Interactions,
+Yadollahi Elmira et computer interface (BCI), Game of goal
+Two-way Engagement NA
+al [65], 2019 aiming to integrate human cards
+• Emotional
+operator opinions with
+state
+robot consensus to improve
+• Frustration
+cooperation efficiency in
+multi-robot systems.
+Yamagami To develop individualized Bio-signal, • User-centered
+Two-way 12
+Momona [67], adaptive algorithms using EMG, HMI design-
+
+Application Cognitive
+Study, year, place Sample
+Objective theories and
+of Publication size, n
+frameworks
+2022 multi-channel biosignals usceodn troller
+for improving accessibility
+and health outcomes
+through human-machine
+interfaces (HMIs).
+To explore
+the complementarity
+Ren Yuqing et al between human and AI Human and AI • Metal
+[68], 2023, United capabilities and identify complementari Two-way knowledge NA
+States optimal ways to structure ty • Human skills
+and coordinate their
+collaboration
+It proposes a hybrid
+Humans and
+learning system that
+artificial
+facilitates collaborative
+intelligence • Enhancing
+Ogiso Takaya et al learning between humans
+systems for Two-way skills 20
+[69], 2015, Japan and artificial intelligence
+color design • Accuracy
+systems to accelerate
+task smart-grid
+learning in unknown
+game
+environments
+• Decision
+To develop and evaluate an
+Healthcare making
+interactive AI-based
+Min Hun Lee et al information • Decision
+system that collaborates
+[70], 2021, United systems, task Two-way support system 26
+with therapists for more
+States oriented upper • Mental model
+accurate rehabilitation
+limb exercises • Trust
+assessments
+• Attention
+To understand how Phycology-
+technology-enabled, Transactive
+distributed, and dynamic Systems
+Woolley Anita collectives can be designed Model of • Attention
+Williams et al [71], to solve complex problems Collective Two-way • Reasoning NA
+2023, United States over time, focusing on the Intelligence • Memory
+Transactive Systems (TSM-CI),
+Model of Collective emergence and
+Intelligence (TSM-CI). maintenance
+FAIT system:
+To present the FATE
+Fair,
+system for decision support
+Transparent • Explainable AI
+de Boer Maaike using human-AI co-
+and • Decision
+H.T. et al [72], learning, explainable AI, Two-way 200
+Explainable making
+2022, Netherland and privacy-preserving
+Decision • Trust
+data usage in various real-
+Making in a
+world applications.
+Juridical Case
+Kirill Krinkin et al Discusses an alternative Concept/ Two-way • Decision NA
+
+Application Cognitive
+Study, year, place Sample
+Objective theories and
+of Publication size, n
+frameworks
+[73], 2023, Russia approach to developing Summary: usmeda k ing
+artificial intelligence Applied • Cognition
+systems through human- medicine, MIS
+machine hybridization and
+their co-evolution.
+To investigate the impact
+• Effort
+of a robot teacher's
+Alessia Vignolo et YARP (Yet • Effectiveness
+effortful adaptation on
+al [74], 2019, Italy, Another Robot Two-way • Rapport 21
+human learning and
+Scottland Platform) • Performance
+rapport in a skill-teaching
+• Perception
+scenario.
+To explore the concept of
+co-adaptation between a
+Human
+human operator and a
+centered
+machine interface,
+design for
+Gallina Paolo et al emphasizing its application • Usability
+interface, Two-way NA
+[75], 2015 in teleoperation and • Performance
+Telemanipulati
+assistive technology, with a
+on, Active
+focus on incorporating
+Vision,
+temporal evolution of co-
+adaptation parameters.
+To present a mutual
+shaping approach to the
+social robots in • Sharing and
+design of socially assistive
+therapy, user- shaping of
+Winkle Katie et al robots, focusing on their
+centered and Two-way knowledge 19
+[76], 2020 use in therapy and
+participatory • Ideas
+emphasizing mutual
+design • Acceptance
+learning and societal
+factors.
+To develop a
+computational model to
+study the dyadic
+interaction between • Decision
+humans and robots using making
+Ehrlich Stefan K.
+error-related potentials Neuroscience Two-way • Performance 16
+et al [77], 2019
+(ErrPs), focusing on how • Perception
+variations in ErrP-decoder • Learning rates
+performance affect co-
+adaptation in human-robot
+interaction (HRI).
+To establish a human-robot homeostatic
+interaction setup where motivational
+• Empathy
+Markelius Alva et both entities learn a grounding of
+Two-way • Affective 6
+al [78], 2024 symbolic language for the robot’s
+experience
+identifying robot language,
+homeostatic needs, using a Socially
+
+Application Cognitive
+Study, year, place Sample
+Objective theories and
+of Publication size, n
+frameworks
+differential outcomes Assistive used
+training (DOT) protocol. robots
+To develop an intelligent
+agent for robotic
+Edutainment,
+edutainment and
+Chang-Shing Lee, Go players, • Learning 5+classr
+humanized co-learning,
+et al [79], 2020, OpenGo Two-way Performance oom
+integrating brain-computer
+Tiawan, Japan darkforest, • Attention (NA)
+interface technology with
+Brainwaves
+AI bots for real-world
+applications.
+To explore the concept of
+Boundary-Crossing
+Robots, focusing on their Boundary-
+Jokinen Kristiina
+interaction capabilities and crossing robot,
+and Watanabe Two-way • Trust NA
+their role in symbiotic symbiotic
+Kentaro [80], 2019
+interactions with human interactions
+users in everyday
+activities.
+To develop and evaluate
+Learning Design Patterns • Decision
+Schoonderwoerd et Ontology-
+(LDPs) to facilitate human- making
+al [81], 2022, based AI- Two-way 35
+AI co-learning in a • Trust
+Netherlands model
+simulated urban-search- • Mental model
+and-rescue task.
+To explore how two
+individuals adapt their
+motor behavior while
+• Human-robot
+physically interacting physically
+interaction
+Petric Tadej et al through an object, and to interactive
+Two-way • Motor 20
+[82], 2017 propose a novel control manipulation
+behavior
+algorithm for robots in task
+• Performance
+human-robot cooperative
+setups based on these
+findings.
+Table 1 shows that about 89.61% (69/77) of the studies have focused on promoting co-learning
+and mutual adaptation in recent years. Additionally, many of these studies have observed
+cognitive behaviors such as decision-making, trust, mental models, and improved performances
+(76.62%) when completing tasks as part of a human-agent team. For example, the collaboration
+between humans and AI has helped improve healthcare information systems by developing a
+decision support system, thus enhancing trust and decision-making and analyzing different
+mental models for patients' upper limb exercises [70]. There has also been improved efficiency
+and decision-making through a shared control framework in human-multi-robot foraging
+collaboration with the Brain-computer interface (BCI) [58], providing a more comprehensive
+perception during co-learning interactions. Table 2 provides the intelligent agent/artificial
+
+intelligence (AI) methods used in the selected studies for co-learning/co-adaptation, along with
+performance measures if reported (with "NA" indicating not available).
+Table 2. Intelligent Agent/Artificial intelligence (AI) methods used in and performance measures
+for co-learning/co-adaptation.
+Intelligent Agent/AI method or
+Study, year Team Performance Metric
+Algorithm
+• Remotely controlled robot with
+Emma M. et al [1], 2021 NA
+leash
+• Task Completion
+Stefanos Nikolaidis et al • Mixed Observability Markov
+• Satisfaction
+[2], 2017 Decision Process (MOMDP)
+• WAITER (Waiter Agent Interactive
+Training Experimental Restaurant) • Effectiveness
+Xu Yong et al [3], 2009
+- software simulation system
+• Instruction based system
+• Effectiveness
+Xu Yong et al [4], 2011 • WAITER
+• Response behavior
+Xu Yong et al [5], 2009 • WAITER
+• WAITER- Matlab based computer
+Yong Xu et al [6], 2012 game NA
+• Bayesian network model
+• Transfer Learning
+Ramya Ramakrishnan et • RL
+NA
+al [7], 2017 • Policy Reuse in Q-Learning
+(PRQL) algorithm
+• The artifact for unit load device in
+Döppner et al [8], 2019 NA
+Air Cargo Industry
+Burke C. S. et al [9],
+• NA NA
+2006
+Hendrik Buschmeier and • Effectiveness
+• Bayesian Network
+Stefan Kopp [10], 2013
+• Robot/Agent- Markov Decision • Human-Robot fluency
+Guy Hoffman [11], 2019
+Process (MDP)
+• Accuracy
+• Efficiency
+Lygerakis Fotios et al • Soft Actor-Critic agent
+• Effectiveness
+[12], 2021 • RL framework
+• Total Training Time
+• Effectiveness
+• Task completion efficiency
+Zhao Michelle et al [13],
+• POMDP • Subjective evaluation of the human-AI
+2022
+interaction quality
+
+Study, year Intelligent Agent/AI method or Team Performance Metric
+Nikolaidis et al [14], Algorithm • Effectiveness
+• MOMDP
+2016
+• Effectiveness of communication protocols
+established between the human and the
+dish robot
+Youssef Khaoula et al • Dish Robot
+• Adaptation accuracy to individual
+[15], 2014 • Actor-critic architecture
+preferences
+• Overall efficiency and satisfaction
+Damian Dana D. et al • Effectiveness
+• Simulated Robotic Hand
+[16], 2009
+• Cognitive load
+Zhou Hua et al [17], • UR5 Robot
+• Satisfaction
+2021 • Virtual Fixtures
+• Humanoid Robot- Robovie
+• Effectiveness, efficiency, accuracy
+Ogata T et al [18], 2005 • FFNN
+• RNN for robot control
+De Santis Dalia [19], • Efficiency
+• Unsupervised learning
+2021
+• Microsoft agent
+Yamada S and
+• Nearest Neighbor (NN) method, NA
+Yamaguchi T [20], 2002
+• SONY pet robot AIBO
+• Learning rates
+Madduri Maneeshika M. • Decoder adaptation used a
+• Effectiveness
+et al [21], 2022 supervised learning algorithm.
+Sciutti Alessandra and
+• Efficiency
+Sandini Giulio [22], • Humanoid Robot-iCub
+2017
+• Learning process
+Gao Yuan [23], 2020 • Deep RL
+• Dual Expert Algorithm (DEA)
+• Stability
+Young Carol et al [24], • Human Aware Dual Expert
+• Accuracy
+2019 Algorithm
+(HADEA)
+O'Meara Sarah M. et al • Accuracy
+• K Nearest Neighbors (KNN)
+[25], 2021
+Warrier Rahul B. and • Tracking error
+Devasia Santosh [26], • Robot-arm • Output tracking
+2017
+Damiano Luisa and
+Dumouchel Paul [27], NA NA
+2018
+
+Study, year Intelligent Agent/AI method or Team Performance Metric
+Cress Ulrike and Algorithm
+Kimmerle Joachim, [28], Generative AI NA
+2023
+Ahtinen Aino et al [29], • Effectiveness
+• Alpha mini robot
+2023
+Kitagawa Masahiro et al • Robovie-R ver3 • Effectiveness
+[30], 2016 • Humanoid Robots- Pepper
+Mohammad Yasser and • Effectiveness
+Nishida Toyoaki [32], • E-puck designed by EPFL • Feedback
+2008
+• Effectiveness
+Stefan K Ehrlich and
+• NOA Robot • Efficacy
+Gordon Cheng [33],
+• ErrP • Efficiency
+2018
+Dimova-Edeleva et al • Accuracy
+• Support Vector Machines (SVM)
+[34], 2022
+• Adaptive Fuzzy Neural Agent
+Lee Chang-Shing et al (AFNA) with a Patch Learning • Regression Model
+[35], 2022 Mechanism
+• Fuzzy Markup Language (FML)
+• Completion time
+• Biofeedback in an interactive
+Hu Xuhui et al [36], • Efficiency
+interface
+2023 • Robustness
+• Intent recognition model
+• Fuzzy Markup Language(FML)-
+Lee Chang-Shing et al • Learning progress
+based RL Agent with Fuzzy
+[37], 2020
+Ontology
+Karel van den Bosch et
+NA NA
+al [38], 2019
+van Zoelen et al [39], • Reinforcement Learning (RL)
+NA
+2021 Virtual ROBOT
+• Collaboration Pattern
+van Zoelen et al [41], • Drag-and-Drop Graphical User
+• Usability
+2023 Interface (GUI)
+Ahlberg Sofie et al [42], • RL
+NA
+2022 • LTL
+• Universal Robots UR10- robotic • Success Rate of solving the collaborative
+Shafti Ali et al [43],
+manipulator maze game
+2020
+• RL
+Azevedo Carlos R. B. et
+• Autonomous systems NA
+al [44], 2017
+
+Study, year Intelligent Agent/AI method or Team Performance Metric
+Krinkin Kirill et al [45], Algorithm
+• AI NA
+2023
+Yao Yiyu [46], 2023 • Summary of recent works NA
+• Learning outcomes
+Ansari Fazel et al [47], • AUTODIDACT
+• Learning curves
+2018 • Machine Digital Twin
+• Success rate
+Liu Yizhi and Jebelli • Masonry robot
+• Effectiveness
+Houtan [49], 2022 • Adaptive Neural Network
+• Effectiveness
+• Task completion efficiency
+Izadi Vahid et al [50], • RL-based Model Predictive • Accuracy of steering
+2023 Controller (MPC) • Subjective evaluations of collaboration
+quality
+• ROS
+Tsitos Athanasios C [51], • Deep RL-Soft actor-critic • Effectiveness
+2022 algorithm
+• Universal Robot UR3
+• Deep Learning based on emotion
+recognition
+Xie Baijun and Park
+• Humanoid Robot-Pepper NA
+Chung Hyuk [53], 2023
+• Convolution Neural Network
+(CNN)
+• Fuzzy control
+• MOBiMac
+• Steady-State Genetic
+Yorita Akihiro et al [54], • Effectiveness
+Algorithm (SSGA)
+2013
+• Spiking Neural Networks (SNN)
+• Self-Organizing Map (SOM)
+• RL
+Ahtinen Aino et al [55], • Effectiveness
+• Nao robot
+2023
+• Effectiveness
+van Zoelen et al [56], • Experiment 1- Robot on a leash • Learning Outcomes
+2021 • Experiment 2- RL • Interactive Patterns
+• Task completion accuracy
+• Child–robot with biomimetic body • Efficiency
+Ikemoto Shuhei et al
+• ML-Gaussian mixture models • Subjective perception of the interaction
+[57], 2012
+(GMMs) quality
+• Multi-Robot Systems(MRS)
+• Efficiency
+Dai Wei et al [58], 2021 • Steady-State Visually Evoked
+Potentials (SSVEP)
+• Engagement
+Lee Hee Rin et al [59],
+• Socially Assistive Robots (SARs) • Effectiveness
+2017
+
+Study, year Intelligent Agent/AI method or Team Performance Metric
+Moreno J. C. et al [60], A• lNgoeurirtoh-mM usculo-Skeletal (NMS)
+NA
+2014 simulator
+• Factory Productivity
+Peruzzini Margherita et
+• SMSD framework • Workers well being
+al [61], 2023
+• Tripping rate
+Hodossy Balint K and • DRL based motion controller
+• Gait patterns
+Farina Dario [63], 2023 MuJoCo
+• Mean reward for the trials
+Nikolaidis et al [64], • Mixed Observability Markov
+• Kruskal-Wallis H test
+2017 Decision Process (MOMDP)
+Yadollahi Elmira et al • Efficiency
+• NAO robot
+[65], 2019
+Yamagami Momona
+• Game theory to model NA
+[67], 2022
+Ren Yuqing et al [68],
+• Summary of recent works NA
+2023
+Ogiso Takaya et al [69], • General Regression Neural • Accuracy using Euclidean distance
+2015 Network (GRNN)
+• Transactive Systems Model of
+Woolley Anita Williams
+Collective Intelligence (TSM-CI) NA
+et al [71], 2023
+framework (review)
+de Boer Maaike H.T. et
+• FAIT system NA
+al [72], 2022
+• AI based Intelligent systems
+considered example of applied
+Kirill Krinkin et al [73],
+medicine to describe the stages of NA
+2023
+CHI
+• Summary of the concept
+• Effectiveness of Human Teacher
+Alessia Vignolo et al • Perception of Robot Teacher
+• Humanoid robot iCub,
+[74], 2019 • Rapport of Both
+• Task completion rate
+• Error rates
+Gallina Paolo et al [75], • Efficiency of interaction
+• User interface
+2015 • User Feedback on usability and
+adaptability
+• Effectiveness
+Winkle Katie et al [76],
+• SARs • Learning process
+2020
+• Effectiveness
+Ehrlich Stefan K. et al • Efficacy
+• RL- Actor critic architecture
+[77], 2019 • Efficiency
+
+Study, year Intelligent Agent/AI method or Team Performance Metric
+Markelius Alva et al A• lDgoifrfietrhemnt ial outcomes training • Learning efficiency
+[78], 2024 • SDK-version of the Reachy robot
+• Learning Performances
+Chang-Shing Lee, et al • Robot Palro with an intelligent
+• Feedback
+[79], 2020 agent
+Jokinen Kristiina and
+Watanabe Kentaro [80], • Social Robots NA
+2019
+Schoonderwoerd et al
+• Learning Design Patterns (LDPs) NA
+[81], 2022
+• Efficiency
+Petric Tadej et al [82], • ML-Dynamic
+• Accuracy
+2017 Movement Primitives (DMPs)
+• Partially Observable Markov
+Li Huao et al 2021, [40] NA
+Decision Process (POMDP)
+• Markov Decision Process- Q-
+• Precision
+Min Hun Lee et al 2021, network with Double Q-learning
+• Recall
+[70] • Machine Learning (ML)
+• Rule based
+* NA- Not Available
+Human-Agent/AI Teams
+The concept of Human-Agent/Robot/AI has been there for over a decade in the field of Human-
+Robot Collaboration. However, the research has primarily focused on one-sided adaptation,
+either by the robot or the human, such as in medical robotics and assistive technology [62], [66].
+Thus, to answer RQ1, our review explicitly focuses on two-sided adaption, where team members
+can learn from each other and adapt to any task. For this reason, we have depicted the two
+adaptation styles in Figure 3 in this review, showcasing the major adaptation characteristics and
+the commonly analyzed cognitive frameworks observed. We found that, among 82 papers
+reviewed, 69 (84.14%) focused on the two-way adaptation style, 5 (6.09%) on one-way, 4
+(4.87%) described both, and 4 (4.87%) did not report any style explicitly. The first-ever study on
+mutual adaptation was published in 2002, in which a Microsoft agent and a human played a
+game of mutual mind reading, where they could predict each other's mind state on a GUI [66].
+Since then, research in this field has been limited, with an average of one paper per year until
+2017. These mutual adaption applications mostly revolved around WAITER robots [3-5],
+boundary memory adaptation, rehabilitation robotics, and language education [14], [16], [54].
+The term co-learning was first introduced by authors of [69] in 2015, proposing a hybrid learning
+system for human AI to accelerate learning in an unknown environment through a color-designed
+smart-grid game. It wasn't until 2021 that the concept of Human-Agent/Robot/AI collaboration
+gained significant traction and piqued the interest of researchers. This shift was further propelled
+by Zoelen et al., who were the first to define and popularize co-learning, co-adaptation, and co-
+evolution properly. They did so by drawing inspiration from a real-life earthquake scenario and
+
+virtually designing an experiment for a search and rescue operation, where humans and robots
+work together to complete a task [39].
+With the recent surge in AI and robotics, we have witnessed a significant upsurge in the trend of
+Human-Agent teaming to co-learn and co-adapt. Figure 4 provides a snapshot of the highest
+number of contributions in 2023. Notably, the foundation of this research area was laid back in
+2002 by Yamada and Yamaguchi [20]. However, it took twenty significant years to see the
+growth of 64.93% (50/77) in the last five years, marking a significant leap in the field.
+Moreover, the applications of Human-agent teams were observed to be widespread throughout
+various locations. What's particularly significant is the interest in studying human-agent teaming
+systems, both academically and in the industries. Primary authors and universities from the
+United States (18/77, 23.37%), Japan (14/77, 18.18% ), Netherlands, and Germany (7/77, 9.09%)
+each, United Kingdom (5/77, 6.49%), Italy and China (3/77, 3.89%) each, Finland, Russia, and
+Sweden (2/77, 2.59%), Austria, Brazil, Canada, Greece, Portugal, Singapore, Slovenia,
+Switzerland, (1/77, 1.29%) each, have all contributed to this interest. These countries have also
+worked collaboratively (11/77, 14.28%), further emphasizing the global significance and impact
+of the research.
+Figure 3. Comparing different adaptation styles for Human-Agent Teams.
+Human-Agent
+Teams
+Cognitive
+One-side Theories and Two-side
+adaptation framework adaptation
+(N=5) (N=62) (N= 69)
+• Hybrid • Decision • Co-learning
+Intelligence Making • Co-adaptation
+• Human-robot • Trust • Co-evolution
+collaboration • Mental model • Mutual learning
+• Mutual • Performance • Mutual
+adaptation adaptation
+
+Figure 4. The rising trend of co-learning and co-adaptation in Human-Agent Teams.
+Cognitive frameworks used by Human-Agent team members
+In the 77 studies reviewed on human-agent co-learning and co-adaptation systems that reported
+participants' data, a wide array of cognitive theories and frameworks were explored. Most studies
+(61/77, 79.22%) focused on cognitive theories related to decision-making, trust, performance,
+and mental state. Other cognitive theories investigated include socio-cognitive engineering,
+perspective and learning, empathy and feelings, shared space and knowledge, completion time
+and learning experience, and communication. This diverse range of cognitive theories adds depth
+and richness to the research. Some studies quantitatively measured attitudes using instruments
+such as the Negative Attitude toward Robots Scale (NARS) [53], NASA TLX [18], or the 5-point
+Likert scale [6], [13], [14], [31], [64], [76], [81]. In contrast, a few studies (10/77, 12.98%)
+collected data through qualitative methods such as interviews, verbal feedback, think-aloud
+methods, and video recordings [1], [10], [39], [40].
+Additionally, in this review, collaborative approaches were found to have a positive impact on
+various cognitive behaviors related to task completion. Human agents demonstrated
+improvements in task completion satisfaction [7], factory productivity and work well-being [61],
+success rate of task completion [43], [75], and learning rates and processes [21], [24], [37].
+Additionally, there were reports of improved performance (32/77, 41.55%), decision-making
+(29/77, 37.66%), building better trust (18/77, 23.37%), and enhancing mental models (13/77,
+16.88%). Furthermore, a few studies highlighted the significance of perspective and learning
+(3/77, 3.89%), empathy, feelings, shared space and knowledge, and socio-cognitive engineering
+(2/77 each) in co-learning and co-adaptation. For instance, social robots in therapy, designed
+with a user-centered and participatory approach, were observed to facilitate the effective sharing
+and shaping of knowledge, ideas, and acceptance [76]. Another study indicated the relevance of
+analyzing the impact of robots' frustration on children's perspectives, interactions, engagement,
+and emotional states to enhance co-learning [65]. The sample size of the studies can be found in
+Table 1.
+
+The sample size ranged from 1 to 200 participants. Approximately half (15/77, 19.48%) of the
+collected studies had <10 participants and 29.87% of the studies (23/77) had no participants
+available. For example, Jokinen discussed applications and the societal impacts of boundary-
+crossing robot interactions with autonomous agents capable of social interactions to build trust
+[80]. The average sample size was 20.04 (SD 30.93) participants in the studies conducted from
+2002 to 2019 and 31.59 (SD 43.10) participants from 2020 to 2024. This clearly indicates the
+increase in the trust and importance of successfully utilizing the human-agent teams for co-
+learning and co-adaptation for various critical applications.
+Concept and functions of Human-Agent/AI Teams
+Concept of mutual adaptation and co-learning
+Human-agent teaming, a dynamic and evolving partnership, is a concept that heavily relies on
+mutual adaptation, co-adaptation, co-learning, mutual learning, and co-evolution. The studies in
+this review present systems based on this concept, with mutual adaptation (26/77, 33.76%), co-
+adaptation (19/77, 24.67%), co-learning (17/77, 22.07%), mutual learning (13/77, 16.88%), and
+co-evolution (9/77, 11.68%) being the key elements. This relationship not only emphasizes the
+functionality and efficiency of task completion but also the intricate dynamics of two-way
+learning and adaptation that emerge from continuous interaction. However, Yong describes the
+mutual adoption of gesture-based human-robot interfaces based on the Wizard of Oz experiment,
+which is a one-sided approach [19]. Similarly, in [48] and [66], the authors describe mutual
+learning and mutual adaptation of a hierarchical ad hoc agent (HAHA) that adapts to the human
+and an assistive device for restoration of motor function through EMG-based prosthetic hand that
+recognizes motion patterns, are both one-sided approaches, respectively.
+Types of Agents and AI Algorithms
+In the selected studies, various agents in the form of physical robots and AI algorithms were
+used, as presented in Table 2. The studies considered humanoid robots such as NOA robot [33],
+Parlo [79], iCub [74], Dish robot [15], Pepper [53], Robovie [18], Sony pet robot ABIO [20],
+Socially Assistive Robots [59], Alpha mini robot [29], robotic arms such as UR5 robotic
+manipulator [17], KUKA LWR [31], as well as UAVs and UGVs [52] were physically deployed
+in these studies. The most widely used AI-based algorithms included Reinforcement Learning
+(21/77, 28.57%) and Bayesian Networks (4/77, 5.19%). It's worth noting that most of the studies
+(15/21) that implemented reinforcement learning were conducted recently due to the recent
+development in AI, explainable AI, and exceptional performance [38]. The wide range of
+applications of reinforcement learning, from navigation to healthcare, as shown in Table 2, is a
+testament to its potential. Nonetheless, reinforcement learning in these systems aims to
+accurately predict and assist humans with different tasks and initiate an atmosphere of mutual
+adaptation, learning, and understanding.
+The second most used algorithm in the reviewed studies was Bayesian network algorithms. The
+studies using Bayesian networks focused on restaurant-based WAITER systems [2-5], with a
+primary focus on mutual decision-making, trust, and mental models. However, these studies
+consistently aimed to utilize the robot's previous behaviors or conditions to provide personalized
+suggestions, highlighting the challenge of limited adaptability in this algorithm.
+
+Other algorithms used include learning design patterns [81], general regression neural networks
+[69], adaptive fuzzy neural agents [35], adaptive neural networks [49], Gaussian mixture models
+[57], deep learning [53], unsupervised learning [19], nearest neighbors [20], supervised learning
+[21], human-aware dual expert algorithm [24], support vector machine [34], k-nearest neighbors
+[25], and Generative AI [28], ML-dynamic movement primitives [82].
+Performance metrics
+It is essential to consider the performance metrics of both human and AI agents to understand
+how effectively they collaborate. Various performance metrics used in the studies are
+effectiveness, efficiency, accuracy, and learning rates. These studies reported effectiveness was
+31.16% (24/77), efficiency was 19.48% (15/77), accuracy was 12.98% (10/77), and learning
+rates were 2.59% (2/77). These metrics indicate how well human-agent teams perform in a
+collaborative environment, where human and AI agents must adapt and learn from each other.
+Although these studies exploited various performance metrics in their research, they needed
+more clarity on the evaluating grounds. For instance, in [57], accuracy and efficiency were
+reported based on the subjective perception of the interaction quality. This disparity underscores
+the persistent challenge in human-AI collaboration: guaranteeing that human and agent/AI
+elements can function with great precision and dependability, particularly in crucial decision-
+making applications.
+Discussion
+Principal Findings
+Our scoping review, the first of its kind, delves into the intriguing realm of Human-Agent co-
+learning and co-adaptation. We explore the research questions outlined in the introduction, which
+delve into the existing collaboration patterns and interactions between human-agent team
+members, their adaptation style, and the cognitive theories and frameworks associated with their
+teaming behavior. Our findings offer crucial insights into the development of co-learning and co-
+adaptation of Human-Agent relationships, a field rapidly gaining traction among researchers. We
+also highlight the diverse applications of this research, from healthcare to assistive technologies,
+medical robotics, and search and rescue operations, all aimed at enhancing decision-making,
+trust, and performance in crucial tasks where humans and agents collaborate.
+From this review, we could also infer the geographic locations of the publications were spread
+among Europe (39/77, 50.64%), Asia (26/77, 33.76%), North America (21/77, 27.27%), and
+South America (1/77, 1.29%). These are limited because most studies are lab-based experimental
+setups, and fewer have been tested in real-life applications. However, family-based co-learning
+with a social robot in home environments is helping children, older people, and adults to
+accomplish daily tasks at home [29]. Furthermore, only 10.38% (8/77 papers have reported of
+the studies have proved to have a significant sample size. In contrast, many studies included a
+small sample size of humans and agents adapting to each other. Thus, there is a pressing need for
+more conclusive evidence to validate the two-way learning and adapting approaches from the
+outcomes, highlighting the current gaps in the research and guiding future studies.
+
+While most studies we identified focused on a two-way approach, the future holds even more
+promising opportunities. We emphasize the importance of conducting future studies to
+investigate the adoption and sustainable use of co-learning for humans and agents over an
+extended period. Such studies will not only improve performance but also enhance the trust and
+decision-making capabilities of the team. We have also noticed among the AI agents that
+reinforcement learning (RL) based agents are the top choice of the researchers, as most of its
+algorithms work on the principle of Q-learning and the Markov decision process. Nevertheless,
+advancements in AI have led to the involvement of deep reinforcement learning (DRL) agents
+and generative AI methods to learn in real-time and solve shared tasks through efficient
+collaboration, which are still in their exploratory phase.
+Moreover, this review found that 12% of the study focused on accuracy. Still, it was unclear
+whether the accuracy of task completion, any specific parameter, or the algorithm's performance
+was being measured. Nonetheless, this limiting factor was challenging to report and investigate.
+Implications and Future Work
+A team becomes skilled by adapting and learning together, referred to as co-learning. In human
+teams, partners naturally adjust to each other and learn while working together. However, this
+only sometimes happens in human-robot teams [56]. So, the need arises to describe and support
+co-learning in human-robot partnerships. To address this challenge, it is essential to implement a
+system that enhances human and machine learning to support various industries, including
+manufacturing, healthcare, robotics, and assistive technology. In this review, we have
+emphasized the importance of a two-way approach to learning and adaptation in the context of
+advancing AI technology. Teams equipped with this approach can enhance collaborative
+performance and contribute to developing a mental model of the human partner's learning
+process. This, in turn, can help the robot effectively learn and adapt to the human partner.
+Ultimately, this collaborative work dynamic can improve decision-making, trust, and overall
+performance within human-agent teams, underscoring the integral role of the proposed system in
+supporting and advancing various industries.
+Our future work will be centered on developing learning profiles and trajectories for both human
+and machine workforce, with a specific focus on human-robot collaboration, maintenance, and
+assembly use cases as mentioned in TU Wien's Pilot Factory Industry 4.0 [47]. This will involve
+outlining system specifications for modeling and measuring mutual learning, establishing an
+ontological knowledge base to specify shared conceptualization of tasks and associated domain
+knowledge, and defining rules for optimal task sharing and measuring learning outcomes.
+Furthermore, the need encompasses research areas including XAI, co-learning, fairness and bias,
+and secure learning, demonstrating its general applicability, for instance, refining the FATE
+systems through various domain-specific use cases [72].
+Limitations
+Due to our evaluation of publications up to January 2024, this review only covers publications
+before that date, which is a limitation of this study. We focused on the two-way adaptation styles
+and corresponding cognitive behaviors between humans and agents. As a result, some
+applications involving one-sided human-robot interactions were not included in the review. In
+
+future studies, it's essential to prioritize research areas such as explainable AI, fairness and bias,
+and secure learning while also considering co-learning and co-adaptation. For instance, the FATE
+system is a general decision support system that addresses bias and fair AI, explainable AI, co-
+learning, and secure learning in domains like diabetes and the judiciary [72].
+Conclusions
+Our review found studies on human-agent co-learning and co-adaptation, exploring different
+definitions of "co-" and "mutual" learning and adaptation. These studies reflect two styles of
+adaptation and cognitive theories applied across various fields. We compared two perspectives
+on co-adaptation and highlighted the need for more research. With the advancement of AI and
+robotics, human-machine interactions have significantly expanded since 2020. Studies have
+shown that human-agent teamwork is increasing worldwide and has the potential to solve real-
+life problems more efficiently while increasing trust among team members. However, many
+studies had small sample sizes. In the future, research should focus on identifying challenges,
+including the black box issue of AI and sustainable use of this approach, and seek solutions
+identified in related fields.
+Conflicts of Interest
+None declared.
+Multimedia Appendix 1
+PRISMA (Preferred Reporting Items for Systematic Reviews and Meta-Analyses) guidelines.
+P R IS M A _ D
+o
+O
+c x
+C X _ file .d
+[DOCX File , 31 KB-Multimedia Appendix 1]
+References
+[1] E. M. van Zoelen, K. van den Bosch, M. Rauterberg, E. Barakova, and M. Neerincx,
+“Identifying Interaction Patterns of Tangible Co-Adaptations in Human-Robot Team
+Behaviors,” Front Psychol, vol. 12, Jul. 2021, doi: 10.3389/fpsyg.2021.645545.
+[2] S. Nikolaidis, D. Hsu, and S. Srinivasa, “Human-robot mutual adaptation in collaborative
+tasks: Models and experiments,” International Journal of Robotics Research, vol. 36, no. 5–7,
+pp. 618–634, Jun. 2017, doi: 10.1177/0278364917690593.
+[3] Y. Xu et al., “A Platform System for Developing a Collaborative Mutually Adaptive Agent.”
+[4] Y. Xu et al., “Active adaptation in human-agent collaborative interaction,” J Intell Inf Syst, vol.
+37, no. 1, pp. 23–38, Aug. 2011, doi: 10.1007/s10844-010-0135-2.
+[5] 2009 IEEE International Conference on Intelligent Computing and Intelligent Systems. I E E E,
+2009.
+
+[6] Y. Xu et al., “Formation conditions of mutual adaptation in human-agent collaborative
+interaction,” Applied Intelligence, vol. 36, no. 1, pp. 208–228, Jan. 2012, doi:
+10.1007/s10489-010-0255-y.
+[7] R. Ramakrishnan, L. D. Co, / Lme, and A. Kolodziejski, “Perturbation Training for Human-
+Robot Teams F-C CI A uthor Signature redacted Signature redacted Chair, Department
+Committee on Graduate Students,” 2015.
+[8] D. A. Döppner, P. Derckx, and D. Schoder, “Symbiotic Co-Evolution in Collaborative Human-
+Machine Decision Making: Exploration of a Multi-Year Design Science Research Project in
+the Air Cargo Industry.” [Online]. Available: https://hdl.handle.net/10125/59467
+[9] C. S. Burke, K. C. Stagl, E. Salas, L. Pierce, and D. Kendall, “Understanding team adaptation:
+A conceptual analysis and model,” Journal of Applied Psychology, vol. 91, no. 6, pp. 1189–
+1207, Nov. 2006, doi: 10.1037/0021-9010.91.6.1189.
+[10] H. Buschmeier and S. Kopp, “Co-constructing Grounded Symbols—Feedback and
+Incremental Adaptation in Human–Agent Dialogue,” KI - Kunstliche Intelligenz, vol. 27, no. 2,
+pp. 137–143, May 2013, doi: 10.1007/s13218-013-0241-8.
+[11] G. Hoffman, “Evaluating Fluency in Human-Robot Collaboration,” IEEE Trans Hum Mach
+Syst, vol. 49, no. 3, pp. 209–218, Jun. 2019, doi: 10.1109/THMS.2019.2904558.
+[12] F. Lygerakis, M. Dagioglou, and V. Karkaletsis, “Accelerating Human-Agent Collaborative
+Reinforcement Learning,” in ACM International Conference Proceeding Series, Association
+for Computing Machinery, Jun. 2021, pp. 90–92. doi: 10.1145/3453892.3454004.
+[13] M. Zhao, R. Simmons, and H. Admoni, “The Role of Adaptation in Collective Human–AI
+Teaming,” Top Cogn Sci, 2022, doi: 10.1111/tops.12633.
+[14] S. Nikolaidis, A. Kuznetsov, D. Hsu, and S. Srinivasa, “Formalizing Human-Robot Mutual
+Adaptation: A Bounded Memory Model.”
+[15] K. Youssef, P. R. S. De Silva, and M. Okada, “Sociable dining table: Incremental meaning
+acquisition based on mutual adaptation process,” in Lecture Notes in Computer Science
+(including subseries Lecture Notes in Artificial Intelligence and Lecture Notes in
+Bioinformatics), Springer Verlag, 2014, pp. 206–216. doi: 10.1007/978-3-319-11973-1_21.
+[16] D. D. Damian, A. Hernandez-Arieta, M. Lungarella, and R. Pfeifer, “An Automated Metrics Set
+for Mutual Adaptation between Human and Robotic Device.”
+[17] H. Zhou, D. Wei, Y. Chen, and F. Wu, “Promoting mutual adaptation in haptic negotiation
+using adaptive virtual fixture,” Industrial Robot, vol. 48, no. 2, pp. 313–326, 2020, doi:
+10.1108/IR-07-2020-0142.
+[18] T. Ogata, S. Sugano, and J. Tani, “Open-end human-robot interaction from the dynamical
+systems perspective: mutual adaptation and incremental learning,” 2005.
+[19] D. De Santis, “A Framework for Optimizing Co-adaptation in Body-Machine Interfaces,” Front
+Neurorobot, vol. 15, Apr. 2021, doi: 10.3389/fnbot.2021.662181.
+
+[20] S. Yamada, “lnt. Workshop on Robot and Human lnteractive Communication Mutual
+Adaptation to Mind Mapping in Human-Agent Interaction.”
+[21] M. M. Madduri et al., “Co-Adaptive Myoelectric Interface for Continuous Control∗,” in IFAC-
+PapersOnLine, Elsevier B.V., Dec. 2022, pp. 95–100. doi: 10.1016/j.ifacol.2023.01.109.
+[22] A. Sciutti and G. Sandini, “Interacting with robots to investigate the bases of social
+interaction,” IEEE Transactions on Neural Systems and Rehabilitation Engineering, vol. 25,
+no. 12, pp. 2295–2304, Dec. 2017, doi: 10.1109/TNSRE.2017.2753879.
+[23] Y. Gao, “Machine Behavior Development and Analysis using Reinforcement Learning,” 1983.
+[Online]. Available: http://urn.kb.se/resolve?urn=urn:nbn:se:uu:diva-423434
+[24] IEEE Control Systems Society, 2019 IEEE 58th Conference on Decision and Control (CDC).
+[25] S. M. O’Meara, S. K. Robinson, and S. S. Joshi, “Classifiers and adaptable features improve
+myoelectric command accuracy in trained users,” in International IEEE/EMBS Conference on
+Neural Engineering, NER, IEEE Computer Society, May 2021, pp. 924–927. doi:
+10.1109/NER49283.2021.9441256.
+[26] R. B. Warrier and S. Devasia, “Data-based Iterative Human-in-the-loop Robot-Learning for
+Output Tracking,” Elsevier B.V., Jul. 2017, pp. 12113–12118. doi:
+10.1016/j.ifacol.2017.08.2142.
+[27] L. Damiano and P. Dumouchel, “Anthropomorphism in human-robot co-evolution,” Front
+Psychol, vol. 9, no. MAR, Mar. 2018, doi: 10.3389/fpsyg.2018.00468.
+[28] U. Cress and J. Kimmerle, “Co-constructing knowledge with generative AI tools: Reflections
+from a CSCL perspective,” Int J Comput Support Collab Learn, vol. 18, no. 4, pp. 607–614,
+Dec. 2023, doi: 10.1007/s11412-023-09409-w.
+[29] A. Ahtinen, N. Beheshtian, and K. Väänänen, “Robocamp at home: Exploring families’ co-
+learning with a social robot: Findings from a one-month study in the wild,” in ACM/IEEE
+International Conference on Human-Robot Interaction, IEEE Computer Society, Mar. 2023,
+pp. 331–340. doi: 10.1145/3568162.3576976.
+[30] M. Kitagawa, B. L. Evans, N. Munekata, and T. Ono, “Mutual adaptation between a human
+and a robot based on timing control of ‘Sleep-time,’” in HAI 2016 - Proceedings of the 4th
+International Conference on Human Agent Interaction, Association for Computing
+Machinery, Inc, Oct. 2016, pp. 353–354. doi: 10.1145/2974804.2980502.
+[31] IEEE Robotics and Automation Society and Institute of Electrical and Electronics Engineers,
+ICRA2017 : IEEE International Conference on Robotics and Automation : program : May 29-
+June 3, 2017, Singapore.
+[32] Institute of Electrical and Electronics Engineers, IEEE International Symposium on Robot
+and Human Interactive Communication 17 2008.08.01-03 Munich, and RO-MAN 17
+2008.08.01-03 Munich, The 17th IEEE International Symposium on Robot and Human
+Interactive Communication, 2008 RO-MAN 2008 ; 1-3 Aug. 2008, Technische Universität
+München, Munich, Germany.
+
+[33] S. K. Ehrlich and G. Cheng, “Human-agent co-adaptation using error-related potentials,” J
+Neural Eng, vol. 15, no. 6, Sep. 2018, doi: 10.1088/1741-2552/aae069.
+[34] V. Dimova-Edeleva, S. K. Ehrlich, and G. Cheng, “Brain computer interface to distinguish
+between self and other related errors in human agent collaboration,” Sci Rep, vol. 12, no. 1,
+Dec. 2022, doi: 10.1038/s41598-022-24899-8.
+[35] C. S. Lee, Y. L. Tsai, M. H. Wang, S. H. Huang, M. Reformat, and N. Kubota, “Adaptive Fuzzy
+Neural Agent for Human and Machine Co-learning,” International Journal of Fuzzy Systems,
+vol. 24, no. 2, pp. 778–798, Mar. 2022, doi: 10.1007/s40815-021-01188-6.
+[36] X. Hu, A. Song, H. Zeng, Z. Wei, H. Deng, and D. Chen, “Bridging Human-Robot Co-
+Adaptation via Biofeedback for Continuous Myoelectric Control,” IEEE Robot Autom Lett, vol.
+8, no. 12, pp. 8573–8580, Dec. 2023, doi: 10.1109/LRA.2023.3330053.
+[37] C. S. Lee et al., “FML-Based Reinforcement Learning Agent with Fuzzy Ontology for Human-
+Robot Cooperative Edutainment,” International Journal of Uncertainty, Fuzziness and
+Knowldege-Based Systems, vol. 28, no. 6, pp. 1023–1060, Dec. 2020, doi:
+10.1142/S0218488520500440.
+[38] K. van den Bosch, T. Schoonderwoerd, R. Blankendaal, and M. Neerincx, “Six Challenges for
+Human-AI Co-learning,” in Lecture Notes in Computer Science (including subseries Lecture
+Notes in Artificial Intelligence and Lecture Notes in Bioinformatics), Springer Verlag, 2019,
+pp. 572–589. doi: 10.1007/978-3-030-22341-0_45.
+[39] E. M. van Zoelen, K. van den Bosch, and M. Neerincx, “Becoming Team Members: Identifying
+Interaction Patterns of Mutual Adaptation for Human-Robot Co-Learning,” Front Robot AI,
+vol. 8, Jul. 2021, doi: 10.3389/frobt.2021.692811.
+[40] H. Li et al., “Individualized Mutual Adaptation in Human-Agent Teams,” IEEE Trans Hum
+Mach Syst, vol. 51, no. 6, pp. 706–714, Dec. 2021, doi: 10.1109/THMS.2021.3107675.
+[41] E. M. van Zoelen, K. van den Bosch, D. Abbink, and M. Neerincx, “Ontology-Based Reflective
+Communication for Shared Human-AI Recognition of Emergent Collaboration Patterns,” in
+Lecture Notes in Computer Science (including subseries Lecture Notes in Artificial
+Intelligence and Lecture Notes in Bioinformatics), Springer Science and Business Media
+Deutschland GmbH, 2023, pp. 621–629. doi: 10.1007/978-3-031-21203-1_40.
+[42] S. Ahlberg et al., “Co-adaptive Human-Robot Cooperation: Summary and Challenges,” 2022.
+[43] A. Shafti, J. Tjomsland, W. Dudley, and A. A. Faisal, “Real-World Human-Robot Collaborative
+Reinforcement Learning,” Mar. 2020, [Online]. Available: http://arxiv.org/abs/2003.01156
+[44] IEEE Communications Society, M. IEEE Systems, and Institute of Electrical and Electronics
+Engineers, 2017 IEEE Conference on Cognitive and Computational Aspects of Situation
+Management (CogSIMA) : 27-31 March 2017.
+[45] K. Krinkin and Y. Shichkina, “Cognitive Architecture for Co-Evolutionary Hybrid Intelligence,”
+Sep. 2022, [Online]. Available: http://arxiv.org/abs/2209.12623
+
+[46] Y. Yao, “Human-machine co-intelligence through symbiosis in the SMV space,” Applied
+Intelligence, vol. 53, no. 3, pp. 2777–2797, Feb. 2023, doi: 10.1007/s10489-022-03574-5.
+[47] F. Ansari, P. Hold, W. Mayrhofer, S. Schlund, and W. Sihn, AUTODIDACT: INTRODUCING THE
+CONCEPT OF MUTUAL LEARNING INTO A SMART FACTORY INDUSTRY 4.0. 2018.
+[48] S. Barrett, A. Rosenfeld, S. Kraus, and P. Stone, “Making friends on the fly: Cooperating with
+new teammates,” Artif Intell, vol. 242, pp. 132–171, Jan. 2017, doi:
+10.1016/j.artint.2016.10.005.
+[49] Y. Liu and H. Jebelli, “Human-Robot Co-Adaptation in Construction: Bio-Signal Based
+Control of Bricklaying Robots,” in Computing in Civil Engineering 2021 - Selected Papers
+from the ASCE International Conference on Computing in Civil Engineering 2021, American
+Society of Civil Engineers (ASCE), 2021, pp. 304–312. doi: 10.1061/9780784483893.038.
+[50] V. Izadi and A. H. Ghasemi, “Learning and Leveraging Conventions in the Design of Haptic
+Shared Control Paradigms for Steering a Ground Vehicle,” Int J Control Autom Syst, vol. 21,
+no. 10, pp. 3324–3335, Oct. 2023, doi: 10.1007/s12555-022-0509-6.
+[51] A. C. Tsitos, “Improving Human-Robot Collaborative Reinforcement Learning through
+Probabilistic Policy Reuse,” 2022.
+[52] E. Van Zoelen et al., “Developing Team Design Patterns for Hybrid Intelligence Systems,” in
+Frontiers in Artificial Intelligence and Applications, IOS Press BV, Jun. 2023, pp. 3–16. doi:
+10.3233/FAIA230071.
+[53] B. Xie and C. H. Park, “‘Can You Guess My Moves?’ Playing Charades with a Humanoid Robot
+Employing Mutual Learning with Emotional Intelligence,” in ACM/IEEE International
+Conference on Human-Robot Interaction, IEEE Computer Society, Mar. 2023, pp. 667–671.
+doi: 10.1145/3568294.3580170.
+[54] IEEE Robotics and Automation Society, IEEE Industrial Electronics Society, Nihon Robotto
+Gakkai, Annual IEEE Computer Conference, IEEE/RSJ International Conference on Intelligent
+Robots and Systems 2013.11.03-07 Tokyo, and IROS 2013.11.03-07 Tokyo, 2013 IEEE/RSJ
+International Conference on Intelligent Robots and Systems (IROS) 3-7 Nov. 2013, Tokyo,
+Japan ; conference digest.
+[55] A. Ahtinen, A. Chowdhury, V. Ramírez Millan, C. H. Wu, and G. Menon, “Co-Learning around
+Social Robots with School Pupils and University Students - Focus on Data Privacy
+Considerations,” in ACM International Conference Proceeding Series, Association for
+Computing Machinery, Dec. 2023, pp. 115–123. doi: 10.1145/3623809.3623816.
+[56] E. M. Van Zoelen, K. Van Den Bosch, and M. Neerincx, “Human-robot Co-learning for fluent
+collaborations,” in ACM/IEEE International Conference on Human-Robot Interaction, IEEE
+Computer Society, Mar. 2021, pp. 574–576. doi: 10.1145/3434074.3446354.
+[57] S. Ikemoto, H. Ben Amor, T. Minato, B. Jung, and H. Ishiguro, “Physical human-robot
+interaction: Mutual learning and adaptation,” IEEE Robot Autom Mag, vol. 19, no. 4, pp. 24–
+35, 2012, doi: 10.1109/MRA.2011.2181676.
+
+[58] W. Dai, Y. Liu, H. Lu, Z. Zheng, and Z. Zhou, “A Shared Control Framework for Human-
+Multirobot Foraging with Brain-Computer Interface,” IEEE Robot Autom Lett, vol. 6, no. 4, pp.
+6305–6312, Oct. 2021, doi: 10.1109/LRA.2021.3092290.
+[59] H. R. Lee et al., “Steps Toward Participatory Design of Social Robots: Mutual Learning with
+Older Adults with Depression,” in ACM/IEEE International Conference on Human-Robot
+Interaction, IEEE Computer Society, Mar. 2017, pp. 244–253. doi: 10.1145/2909824.3020237.
+[60] R. Murray-Smith, “Models and Measures of Human–Computer Symbiosis,” Lecture Notes in
+Computer Science (including subseries Lecture Notes in Artificial Intelligence and Lecture
+Notes in Bioinformatics), vol. 8820, 2014, doi: 10.1007/978-3-319-13500-7.
+[61] M. Peruzzini, E. Prati, and M. Pelicciari, “A framework to design smart manufacturing systems
+for Industry 5.0 based on the human-automation symbiosis,” Int J Comput Integr Manuf,
+2023, doi: 10.1080/0951192X.2023.2257634.
+[62] Y. Xu, M. Guillemot, and T. Nishida, “An experiment study of gesture-based human-robot
+interface.”
+[63] B. K. Hodossy and D. Farina, “Shared Autonomy Locomotion Synthesis with a Virtual
+Powered Prosthetic Ankle,” IEEE Transactions on Neural Systems and Rehabilitation
+Engineering, vol. 31, pp. 4738–4748, 2023, doi: 10.1109/TNSRE.2023.3336713.
+[64] S. Nikolaidis, S. Nath, A. D. Procaccia, and S. Srinivasa, “Game-Theoretic Modeling of
+Human Adaptation in Human-Robot Collaboration,” in ACM/IEEE International Conference
+on Human-Robot Interaction, IEEE Computer Society, Mar. 2017, pp. 323–331. doi:
+10.1145/2909824.3020253.
+[65] Institute of Electrical and Electronics Engineers, 2019 8th International Conference on
+Affective Computing and Intelligent Interaction Workshops and Demos (ACIIW).
+[66] K. Kita, R. Kato, H. Yokoi, and T. Arai, “Development of Autonomous Assistive Devices-
+Analysis of change of human motion patterns.”
+[67] M. Yamagami, “Modeling and Enhancing Human-Machine Interaction for Accessibility and
+Health.”
+[68] Y. Ren, X. Deng, and K. Joshi, “Unpacking Human and AI Complementarity: Insights from
+Recent Works.”
+[69] M. Köppen, Machine Intelligence Research Labs, Kyūshū Daigaku. Research Center for
+Applied Perceptual Science, M. IEEE Systems, Kyūshū Daigaku, and Institute of Electrical
+and Electronics Engineers, Proceedings of the 2015 Seventh International Conference of Soft
+Computing and Pattern Recognition (SoCPaR 2015) : Fukuoka, Japan, November 13-15,
+2015.
+[70] M. H. Lee, D. P. Siewiorek, and A. Smailagic, “A human-ai collaborative approach for clinical
+decision making on rehabilitation assessment,” in Conference on Human Factors in
+Computing Systems - Proceedings, Association for Computing Machinery, May 2021. doi:
+10.1145/3411764.3445472.
+
+[71] A. W. Woolley and P. Gupta, “Understanding Collective Intelligence: Investigating the Role of
+Collective Memory, Attention, and Reasoning Processes.”
+[72] M. H. T. De Boer et al., “The FATE System Iterated: Fair, Transparent and Explainable Decision
+Making in a Juridical Case,” 2022. [Online]. Available: http://ceur-ws.org
+[73] K. Krinkin, Y. Shichkina, and A. Ignatyev, “Co-evolutionary hybrid intelligence.”
+[74] A. Vignolo, H. Powell, L. Mcellin, F. Rea, A. Sciutti, and J. Michael, “An adaptive robot teacher
+boosts a human partner’s learning performance in joint action.”
+[75] P. Gallina, N. Bellotto, and M. Di Luca, “Progressive Co-adaptation in Human-Machine
+Interaction.”
+[76] K. Winkle, P. Caleb-Solly, A. Turton, and P. Bremner, “Mutual Shaping in the Design of Socially
+Assistive Robots: A Case Study on Social Robots for Therapy,” Int J Soc Robot, vol. 12, no. 4,
+pp. 847–866, Aug. 2020, doi: 10.1007/s12369-019-00536-9.
+[77] Institute of Electrical and Electronics Engineers, 2019 IEEE International Conference on
+Systems, Man and Cybernetics (SMC) : Bari, Italy. October 6-9, 2019.
+[78] A. Markelius et al., “A Human-Robot Mutual Learning System with Affect-Grounded
+Language Acquisition and Differential Outcomes Training,” Oct. 2023, [Online]. Available:
+http://arxiv.org/abs/2310.13377
+[79] C. S. Lee et al., “Intelligent agent for real-world applications on robotic edutainment and
+humanized co-learning,” J Ambient Intell Humaniz Comput, vol. 11, no. 8, pp. 3121–3139,
+Aug. 2020, doi: 10.1007/s12652-019-01454-4.
+[80] K. Jokinen and K. Watanabe, “Boundary-Crossing Robots: Societal Impact of Interactions
+with Socially Capable Autonomous Agents,” in Lecture Notes in Computer Science
+(including subseries Lecture Notes in Artificial Intelligence and Lecture Notes in
+Bioinformatics), Springer, 2019, pp. 3–13. doi: 10.1007/978-3-030-35888-4_1.
+[81] T. A. J. Schoonderwoerd, E. M. van Zoelen, K. van den Bosch, and M. A. Neerincx, “Design
+patterns for human-AI co-learning: A wizard-of-Oz evaluation in an urban-search-and-rescue
+task,” International Journal of Human Computer Studies, vol. 164, Aug. 2022, doi:
+10.1016/j.ijhcs.2022.102831.
+[82] 2017 IEEE-RAS 17th International Conference on Humanoid Robotics (Humanoids). IEEE,
+2017.

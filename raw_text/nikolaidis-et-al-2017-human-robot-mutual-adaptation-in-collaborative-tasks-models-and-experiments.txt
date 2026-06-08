@@ -1,0 +1,1093 @@
+Article
+TheInternationalJournalof
+Human-robot mutual adaptation in RoboticsResearch
+2017,Vol.36(5–7)618–634
+©TheAuthor(s)2017
+collaborative tasks: Models and
+Reprintsandpermissions:
+sagepub.co.uk/journalsPermissions.nav
+experiments
+DOI:10.1177/0278364917690593
+journals.sagepub.com/home/ijr
+StefanosNikolaidis1,DavidHsu2 andSiddharthaSrinivasa1
+Abstract
+Adaptationiscriticalforeffectiveteamcollaboration.Thispaperintroducesacomputationalformalismformutualadap-
+tationbetweenarobotandahumanincollaborativetasks.WeproposetheBounded-MemoryAdaptationModel,which
+is a probabilistic finite-state controller that captures human adaptive behaviors under a bounded-memory assumption.
+We integrate the Bounded-Memory Adaptation Model into a probabilistic decision process, enabling the robot to guide
+adaptable participants towards a better way of completing the task. Human subject experiments suggest that the pro-
+posed formalism improves the effectiveness of human-robot teams in collaborative tasks, when compared with one-way
+adaptationsoftherobottothehuman,whilemaintainingthehuman’strustintherobot.
+Keywords
+Human-robotcollaboration,mutual-adaptation,planningunderuncertainty
+1. Introduction though sub-optimally. If the robot insists on its own pref-
+erence,GoalA,itmaylosethehuman’strust,leadingtoa
+Robots are entering our homes and workplaces, comple-
+deterioratingteamperformanceorevendisuseoftherobot
+menting human abilities and skills in many application
+(Hancocketal.,2011;Leeetal.,2013;Salemetal.,2015).
+domains, including manufacturing, health-care, etc. They
+The challenge is that when encountering a new human
+co-existinthesamephysicalspacewithhumansandaimto
+partner,therobotmaynotknowhisorheradaptabilityand
+becometrustworthypartnersinateam.Researchonhuman
+mustlearnitontheflythroughinteraction.
+teams shows that mutual adaptation, which requires all
+In this work, we propose a computational model for
+team-members involved to adapt their behaviors to fulfill
+human-robot mutual adaptation in collaborative tasks. We
+common team goals, significantly improves team perfor-
+buildamodelofhumanadaptivebehaviorsandintegratethe
+mance (Mathieu et al., 2000). We believe that the same
+model into a probabilistic decision process. One key idea
+holds for human-robot teams. Our main goal in this work
+here is the Bounded-Memory Adaptation Model (BAM),
+is to develop a computational framework for human-robot
+which is a probabilistic finite-state controller that captures
+mutualadaptation.
+human adaptive behaviors. The BAM assumes that the
+Consider, for example, the table-carrying task in
+human operates in one of several collaboration “modes”
+Figure1. A human and HERB (Srinivasa et al., 2010), an
+andadaptsthebehaviorbyswitchingamongthemodes.To
+autonomous mobile manipulator, work together to carry
+chooseanewmode,thehumanmaintainsafinitehistoryof
+a table out of a room. There are two strategies: the robot
+pastinteractionsandswitchestothenewmodeprobabilisti-
+facing the door (Goal A) or the robot facing away from
+callyaccordingtotheadaptabilitylevel.Thehuman’sadapt-
+the door (Goal B). Assume that the robot prefers Goal A,
+ability level is a BAM model parameter unknown to the
+as the robot’s forward-facing sensor has a clear view of
+the door, leading to better task performance. Not aware of
+this, an inexperienced human partner may prefer Goal B.
+1TheRoboticsInstitute,CarnegieMellonUniversity,USA
+2DepartmentofComputerScience,NationalUniversityofSingapore,
+Intuitively,ifthehumanisadaptableandwillingtoaccom-
+Singapore
+modate the robot, the robot guides the human towards
+Goal A, which provides a better task performance overall. Correspondingauthor:
+StefanosNikolaidis,CarnegieMellonUniversityRoboticsInstitute,5000
+Ifthehumanisnotadaptableandinsistsonhisownprefer-
+ForbesAvePittsburgh,PA15213,USA.
+ence,therobotthencompliesinordertocompletethetask, Email:snikolai@andrew.cmu.edu
+
+Nikolaidisetal. 619
+Fig.1. Ahumanandarobotcollaboratetocarryatablethroughadoor.(a)Therobotprefersfacingthedoor(GoalA),asithasafull
+viewofthedoor.(b)Therobotfacesawayfromthedoor(GoalB).
+robotapriori.Toworkwithsuchanadaptablehumaneffec- wanttoemphasizeherethattherobotexecutesasinglepol-
+tively, the robot must consider two sometimes conflicting icythatadaptstodifferenthumanbehaviors.Ifthehumanis
+objectives: non-adaptable,therobotcompliestothehuman’spreferred
+strategy. Otherwise, the robot guides the human towards a
+• gather information on the unknown parameter through
+betterstrategy.
+interaction,inordertodecidebetweencomplyingwith
+We are interested in studying whether a robot, under
+thehuman’spreferenceandguidingthehumantowards
+our proposed approach, is able to guide human partners
+abettercooperationmodefortaskcompletion;
+towards a better collaboration strategy, sometimes against
+• choose actions towards the goal, e.g. moving the table
+their initial preference, while still retaining their trust. We
+outoftheroom.
+conducted a human subject experiment online via video
+Wetreattheunknownmodelparameterasalatentvariable playback (n = 69) on the simulated table carrying task
+and embed the BAM in a probabilistic decision process, (Figure1).Intheexperiment,participantsweresignificantly
+called the Mixed Observability Markov Decision Process morelikelytoadapt,whenworkingwiththerobotutilizing
+(MOMDP) (Ong et al., 2010), for choosing robot actions. our mutually adaptive approach, when compared with the
+The computed MOMDP policy optimally balances the robotthatcross-trainedwiththeparticipants.Additionally,
+tradeoff between gathering information on human adapt- theparticipantsfoundthatthemutuallyadaptiverobothas
+ability and moving towards the goal. Since the MOMDP performancenotworsethanthecross-trainedrobot.Finally,
+model has the BAM embedded within, the chosen actions theparticipantsfoundthatthemutuallyadaptiverobotwas
+enable the robot to adapt to an adaptive human, thus more trustworthy than the robot in executing a fixed strat-
+achievingmutualadaptationasaresult. egy optimal in task performance, but ignoring the human
+Our work contrasts with earlier approaches that rely on preference.
+one-wayadaptationoftherobottothehuman,suchascross- We are also interested in how adaptability and trust
+training (Nikolaidis and Shah, 2013), a state-of-the-art change over time. We hypothesized that trust in the mutu-
+methodforhuman-robotteamtraining.One-wayadaptation ally adaptive robot increases over time for non-adaptable
+focuses on computing a robot policy aligned with human participants, as previous work suggests that robot adap-
+preference.Itignoresthatthehumanpreferencemayresult tation significantly improves perceived robot trustworthi-
+insuboptimaltaskperformance,asourexampleshows.Fur- ness(Shahetal.,2011),andthattheincreaseintrustresults
+ther,wecannotresolvethisissuebyhavingtherobotinsist inasubsequentincreasedlikelihoodofhumanadaptationto
+on executing an optimal policy against the human’s pref- the robot. A human subject experiment on repeated table-
+erence. This may erode the human’s trust in the robot and carryingtasks(n=43)didnotsupportthishypothesis.
+leadtodeterioratingteamperformanceovertime(Hancock To study the generality of our model, we hypothesized
+etal.,2011;Leeetal.,2013;Salemetal.,2015). that non-adaptable participants in the table-carrying task
+Figure 2 shows examples of human and robot behav- would be less likely to adapt in a different collabora-
+iors for three simulated humans in the table-carrying task tive task. A follow-up human subject experiment with a
+(Figure1).Therobotestimatestheunknownhumanadapt- hallway-crossingtask(n=58)confirmedthehypothesis.
+ability through interaction. User 1 is fully non-adaptable Inthefollowing,Section2reviewsrelatedwork.Section
+withα =0.Therobotinfersthisaftertwostepsofinterac- 3 formally describes the problem setting. Section 4 and 5
+tionandswitchesitsactiontocomplywiththehumanpref- presents BAM, the proposed model of human adaptation,
+erence.User3isfullyadaptablewithα =1andswitchesto and the integration of BAM in the robot decision making
+accommodatetherobotpreferenceafteronestepofinterac- process using an MOMDP formulation. Section 6 and 7
+tion.User2isadaptablewithα =0.75.Afterseveralsteps, describes our human subject experiments and presents
+the robot gets a good estimate on the human adaptability the main findings that suggest significant improvement
+level and guides the human to the preferred strategy. We in human-robot team effectiveness, while human subject
+
+620 TheInternationalJournalofRoboticsResearch36(5–7)
+Fig.2. Samplerunsonthehuman-robottable-carryingtask,withthreesimulatedhumansofadaptabilitylevelα = 0,0.75,and1.A
+fullyadaptablehumanhasα = 1,whileafullynon-adaptablehumanhasα = 0.Ineachcase,theupperrowshowstheprobabilistic
+estimateonαovertime.Thelowerrowshowstherobotandhumanactionsovertime.Redcolorindicateshuman(whitedot)androbot
+(blackdot)disagreementintheiractions,inwhichcasethetabledoesnotmove.Thecolumnsindicatesuccessivetimesteps.User1is
+non-adaptable,andtherobotcomplieswithhispreference.Users2and3areadaptabletodifferentextent.Therobotsuccessfullyguides
+themtowardsabetterstrategy.
+ratings on the robot performance and trust are compara- applications.Onesuchstudy(Nguyenetal.,2011)focused
+ble to those achieved by cross-training, a state-of-the-art on inferring the intentions of a human player, allowing a
+human-robotteamtrainingpractice.Finally,wediscussthe non-player character (NPC) to assist the human. Alterna-
+effects of repeated trials on participants’ adaptability over tively,Macindoeetal.(2012)proposedthepartiallyobserv-
+time in Section 8 and the transfer of adaptability across able Monte-Carlo cooperative planning system, in which
+tasksinSection9. human intention is inferred for a turn-based game. Niko-
+laidis et al. (2015) proposed a formalism to learn human
+types from joint-action demonstrations, infer online the
+2. Relevantwork
+type of a new user and compute a robot policy aligned
+Therehasbeenextensiveworkonone-wayrobotadaptation to their preferences. Simultaneous intent inference and
+to humans. Approaches involve a human expert providing robot adaptation has also been achieved through propaga-
+demonstrations to teach the robot a skill or a specific task tionofstateandtemporalconstraints(Karpasetal.,2015).
+(Argalletal.,2009;AtkesonandSchaal,1997;Abbeeland Anotherapproachhasbeenthehuman-robotcross-training
+Ng,2004;Akgunetal.,2012;ChernovaandVeloso,2008; algorithm, where the human demonstrates their preference
+Nicolescu and Mataric, 2003). Robots have also been able byswitchingroleswiththerobot,shapingtherobotreward
+to infer the human preference online through interaction. function (Nikolaidis and Shah, 2013). Although it is pos-
+Inparticular,partiallyobservableMarkovdecisionprocess siblethatthehumanchangesstrategiesduringthetraining,
+(POMDP) models have allowed reasoning over the uncer- the algorithm does not use a model of human adaptation
+tainty on the human intention (Broz et al., 2011; Doshi thatcanenabletherobottoactivelyinfluencetheactionsof
+andRoy,2007;LemonandPietquin,2012).TheMOMDP itshumanpartner.
+formulation (Ong et al., 2010) has been shown to achieve There have also been studies in human adaptation to
+significant computational efficiency and has been used in the robot. Previous work has focused on operator train-
+motionplanningapplications(Bandyopadhyayetal.,2013). ingformilitary,space,andsearch-and-rescueapplications,
+Recent work has also inferred human intention through with the goal of reducing the operator workload and oper-
+decomposition of a game task into subtasks for game AI ational risk (Goodrich and Schultz, 2007). Additionally,
+
+Nikolaidisetal. 621
+researchers have studied the effects of repeated interac-
+tions with a humanoid robot on the interaction skills of
+children with autism (Robins et al., 2004), on language
+skills of elementary school students (Kanda et al., 2004),
+aswellasonusers’spatialbehavior(GreenandHÃ¼tten-
+rauch,2006).Humanadaptationhasalsobeenobservedin
+anassistivewalkingtask,wheretherobotuseshumanfeed-
+back to improve its behavior, which in turn influences the
+Fig. 3. Integration of BAM (Bounded-Memory Adaptation
+physical support provided by the human (Ikemoto et al.,
+Model) into MOMDP (Mixed Observability Markov Decision
+2012). While the changes in the human behavior are an
+Process)formulation.
+essential part of the learning process, the system does not
+explicitlyreasonoverthehumanadaptationthroughoutthe
+interaction.Ontheotherhand,DraganandSrinivasa(2013)
+assume that the human acts according to an adaptive
+proposed a probabilistic model of the inference made by
+stochastic policy πH : Xworld × H → 5(AH), which
+t
+a human observer over the robot goals, and introduced a
+chooses the next action stochastically based on the cur-
+motion generating algorithm to maximize this inference
+rent world state xworld and the history of interactions h =
+t
+towardsapredefinedgoal.
+xworld(0),aR(0),aH(0),...,xworld(t−1),aR(t−1),aH(t−
+(cid:0)
+Theproposedformalismofhuman-robotmutualadapta-
+1) . Specifically, BAM, our proposed model of human
+(cid:1)
+tion is an attempt to close the loop between the two lines
+adaptation,definesasetM ofmodalpoliciesormodesand
+ofresearch.Therobotleveragesahumanadaptationmodel
+assumesthatthehumanswitchesamongthemodesstochas-
+parameterizedbyhumanadaptability.Itreasonsprobabilis-
+tically. A mode µ: Xworld × H × AR × AH → {0,1} is a
+t
+tically over the different ways that the human may change
+deterministic policy that maps the current world state and
+thestrategyandadaptsitsownactionstoguidethehuman
+historytojointhuman-robotactions.Ateachtimestep,the
+towardsamoreeffectivestrategywhenpossible.
+humanfollowsamodeµH ∈M andobservesthattherobot
+Mutual adaptation between agents has been studied
+followsamodeµR ∈ M.Tocollaboratewiththerobot,the
+extensively in game theory (Fudenberg and Tirole, 1991).
+humanmayswitchtoµR atthenexttimestep,withproba-
+Game theory often relies on strong assumptions on the
+bilityα.Ifα = 1,thehumanswitchestoµR almostsurely.
+rationalityofagentsandtheknowledgeofpayofffunctions.
+If α = 0, the human insists on the original mode µH and
+These assumptions may not be suitable when agents are
+does not adapt at all. Intuitively, α captures the human’s
+unable or unwilling to reason about optimal strategies for
+inclinationtoadapt.
+themselvesorothers(FudenbergandLevine,1998).Thisis
+If the human is not adaptable, the robot must switch to
+particularlytrueinthehuman-robotteamsetting,whenthe
+µH eventually in order to complete the task. If the human
+human is unsure about how the robot will act and has lit-
+is adaptable and µR provides higher total reward than µH,
+tletimetorespond.Weproposeamodelofhumanadaptive
+the robot then stays with µR, expecting the human to fol-
+behaviorsbasedonaboundedmemoryassumption(Powers
+low.Therobotmayinteractwithdifferenthumans,andthe
+andShoham,2005;Monte,2014;AumannandSorin,1989)
+adaptabilitylevelα ofanewhumanteammateisunknown
+andintegrateitintorobotdecisionmaking.
+in advance. What shall the robot do? To compute a policy
+Thispaperisanextensionofourearlierwork(Nikolaidis
+fortherobot,wetreatα asalatentvariableandembedthe
+etal.,2016),withanewcollaborativetaskwhereahuman
+BAMforthehumaninanMOMDP(Figure3),whichisa
+and a robot cross a corridor and with additional human
+structured version of the more common Partially Observ-
+subjectexperimentsonhumanadaptability.
+ableMarkovDecisionProcess(POMDP)(Kaelblingetal.,
+1998).ThesolutiontotheMOMDPisarobotpolicyπRthat
+estimatesthevalueofαthroughthehistoryofinteractions,
+3. Problemsetting
+and uses the estimate to predict future human actions and
+Ahuman-robotteamcanbetreatedasamulti-agentsystem, choosethebestrobotactionstowardstaskcompletion.The
+with world state xworld ∈ Xworld, robot action aR ∈ AR, and policyisoptimalinthesensethatitachievesthemaximum
+humanactionaH ∈ AH.Thesystemevolvesaccordingtoa expected total reward among all policies for the human-
+stochasticstatetransitionfunctionT: Xworld×AR×AH → robot team, under the assumed human adaptive behavior
+5(Xworld).Ateachtimestep,thehuman-robotteamreceives model.
+areal-valuedrewardR(xworld,aR,aH).Itsgoalistomaximize Moredetailsaregiveninthenexttwosections.
+theexpectedtotalrewardovertime: ∞ γtR(t),wherethe
+Pt=0
+discountfactorγ ∈[0,1)giveshigherweighttoimmediate
+4. Theboundedmemoryadaptation model
+rewardsthantofutureones.
+The robot and the human choose their actions inde- WemodelthehumanpolicyπHasaprobabilisticfinite-state
+pendently. To compute the robot actions that maximize automaton(PFA),withasetofstatesQ:Xworld×H.Ajoint
+t
+the total reward, we first model the human behavior. We human-robotactionaH,aR triggersanemissionofahuman
+
+622 TheInternationalJournalofRoboticsResearch36(5–7)
+androbotmodalpolicyf :Q×M×M →{0,1},aswellas
+atransitiontoanewstateP:Q→5(Q).
+4.1. Boundedmemoryassumption
+Herbert Simon proposed that people often do not have the
+Fig.4. TheBAMhumanadaptationmodel.
+time and cognitive capabilities to make perfectly rational
+decisions, in what he described as “bounded rationality”
+4.3. Humanadaptability
+(Simon, 1979). This idea has been supported by studies
+inpsychologyandeconomics(Kahneman,2003).Ingame We define the adaptability as the probability of the human
+theory,boundedrationalityhasbeenmodeledbyassuming switching from their mode to the robot mode. It would be
+thatplayershavea“boundedmemory”or“boundedrecall” unrealistic to assume that all users are equally likely to
+andbasetheirdecisionsonrecentobservations(Powersand adapt to the robot. Instead, we account for individual dif-
+Shoham,2005;Monte,2014;AumannandSorin,1989).In ferencesbyparameterizingthetransitionfunctionPbythe
+this work, we introduce the bounded memory assumption adaptabilityα ofanindividual.Then,atstateqthehuman
+inahuman-robotcollaborationsetting.Underthisassump- willtransitiontoanewstatebychoosinganactionspecified
+tion,humanswillchoosetheiractionbasedonahistoryof byµR withprobabilityα,oranactionspecifiedbyµH with
+k-stepsinthepast,sothatQ:Xworld×H k . probability1−α(Figure4).
+In order to account for unexpected human behavior, we
+assign uniformly a small, non-zero probability (cid:15) for the
+4.2. Featureselection humantakingarandomactionofsomemodeotherthanµR,
+µH. The parameter (cid:15) plays the role of probability smooth-
+The size of the state-space in the PFA can be
+ing.Inthetime-stepthatthisoccurs,therobot’sbeliefonα
+quite large (|Xworld|k+1|AR|k|AH|k|). Therefore, we approx-
+willnotchange.Inthenexttime-step,therobotwillinclude
+imate it using a set of features, so that φ(q)=
+the previous human action in its inference of the human
+{φ (q),φ (q),...,φ (q)}.Wecan choose asfeatures the
+1 2 N modeµH.
+frequencycountsφH,φR ofthemodalpoliciesfollowedin
+µ µ WenotethattheFiniteStateMachineinFigure4shows
+theinteractionhistory,sothat
+the human mode transition in one time-step only. For
+instance,ifthehumanswitchesfromµH toµR andk = 1,
+k k
+inthenexttime-stepthenewhumanmodeµH willbewhat
+φ
+µ
+H =X[µH
+i
+=µ] φ
+µ
+R =X[µR
+i
+=µ] ∀µ∈M (1)
+waspreviouslyµR.Inthatcase,oscillationbetweenµRand
+i=1 i=1
+µHcanoccur.WediscussthisinSection7.3.
+µH andµR isthemodalpolicyofthehumanandtherobot
+i i
+i time-steps in the past. We note that k defines the history 4.4. Characterizingmodalpolicies
+length,withk = 1implyingthatthehumanwillactbased
+At each time-step, the human and robot modes are not
+only on the previous interaction. Drawing upon insights
+directlyobserved,butmustbeinferredfromthehumanand
+from previous work which assumes maximum likelihood
+robotactions.Thiscanbeachievedbycharacterizingaset
+observations for policy computation in belief-space (Platt
+ofmodalpoliciesthroughoneofthefollowingways:
+et al., 2010), we used as features the modal policies with
+themaximumfrequencycount Manualspecification.Insomecasesthemodalpoliciescan
+beeasilyspecified.Forinstance,iftwoagentsarecrossing
+a corridor (Section 9), there are two deterministic policies
+µH =argmaxφH µR =argmaxφR (2)
+µ µ leadingtotaskcompletion,oneforeachside.Therefore,we
+µ µ
+caninferamodedirectlyfromtheactiontaken.
+The proposed model does not require a specific feature Learning from demonstration. In previous work, joint-
+representation. For instance, we could construct features actiondemonstrationsonahuman-robotcollaborativetask
+by combining modal policies µH, µR using an arbitration were clustered into groups and a reward function was
+i i
+function(DraganandSrinivasa,2012). learnedforeachcluster(Nikolaidisetal.,2015),whichwe
+For the case of fully observable modes, it is sufficient canthenassociatewithamode.
+to retain only the k-length mode history, rather than H , Planning-based prediction. Previous work assumes that
+k
+simplifying the problem. In the general case of partially peoplemoveefficientlytoreachdestinationsbyoptimizing
+observablemodes,though,thehumanwouldneedtomain- a cost-function, similarly to a goal-based planner (Ziebart
+tainaprobabilitydistributionoverrobotmodes,andH may et al., 2009). Given a set of goal-states and a partial tra-
+k
+be required to model the human inference. We leave this jectory, we can associate modes with predictive models of
+caseforfuturework. futureactionstowardsthemostlikelygoal.
+
+Nikolaidisetal. 623
+Thepolicyexecutionisperformedonlineinrealtimeand
+consists of two steps (Figure 3). First, the robot uses the
+currentbelieftoselecttheactionaRspecifiedbythepolicy.
+Second,itusesthehumanactionaHtoupdatethebeliefonα
+(equation(3)).Figure5presentsthepathsontheMOMDP
+policytreethatcorrespondtothesimulateduserbehaviors
+presented in Figure 2. Figure 6 shows instances of actual
+user behaviors in the human subject experiment described
+inSection6.
+6. Humansubjectexperiment
+We conducted a human subject experiment on a simulated
+table-carryingtask(Figure1)toevaluatetheproposedfor-
+Fig.5. DifferentpathsonMOMDPpolicytreeforhuman-robot
+malism. We were interested in showing that integrating
+(white/blackdot)table-carryingtask.Thecirclecolorrepresents
+BAMintotherobotdecisionmakingcanleadtomoreeffi-
+thebeliefonα,withdarkershadesindicatinghigherprobability
+cient policies than the state-of-the-art human-robot team
+for smaller values (less adaptability). The white circles denote a
+training practices, while maintaining human satisfaction
+uniformdistributionoverα.User1isinferredasnon-adaptable,
+andtrust.
+whereasUsers2and3areadaptable.
+Ononeextreme,wecan“fix”therobotpolicysothatthe
+robot always moves towards the optimal —with respect to
+someobjectiveperformancemetric—goal,ignoringhuman
+Computation of nash equilibria. Following a game-
+adaptability.Thiswillforcealluserstoadapt,sincethisis
+theoreticapproach,wecanviewtheinteractionasastochas-
+the only way to complete the task. However, we hypothe-
+ticgameandrestrictthesetofmodalpoliciestotheequilib-
+size that this will significantly impact human satisfaction
+riumstrategies.Forinstance,wecanformulatetheexample
+and trust in the robot. On the other extreme, we can effi-
+of human and robot crossing a corridor as a coordination
+ciently learn the human preference (Nikolaidis and Shah,
+game, where strategies of both agents moving on opposite
+2013). This can lead to the human-robot team following a
+sidesstrictlydominatestrategieswheretheycollide.
+sub-optimal policy, if the human has an inaccurate model
+of the robot capabilities. We have, therefore, two control
+5. Robotplanning
+conditions: one where participants interact with the robot
+In this section we describe the integration of BAM in the executingafixedpolicy,alwaysactingtowardstheoptimal
+robotdecisionmakingprocessusinganMOMDPformula- goal,andonewheretherobotlearnsthehumanpreference.
+tion.AnMOMDPusesproperfactorizationoftheobserv- We show that the proposed formalism achieves a trade-
+ableandunobservablestatevariablesS : X ×Y withtran- off between the two: When the human is non-adaptable,
+sitionfunctionsT andT ,reducingthecomputationalload the robotfollowsthe human strategy. Otherwise,therobot
+x y
+(Ong et al., 2010). The set of observable state variables is insistsontheoptimalwayofcompletingthetask,leadingto
+X :Xworld×Mk ×Mk,whereXworld isthefinitesetoftask- significantlybetterpoliciescomparedtolearningthehuman
+stepsthatsignifytheprogresstowardstaskcompletionand preference.
+M is the set of modal policies followed by the human and
+therobotinahistorylengthk.Thepartiallyobservablevari-
+6.1. Independentvariables
+ableyisidenticaltothehumanadaptabilityα.Weassume
+finite sets of human and robot actions AH and AR, and we Wehadthreeexperimentalconditions,whichwerefertoas
+denote as πH the stochastic human policy. The latter gives “Fixed,”“Mutual-adaptation”,and“Cross-training.”
+theprobabilityofahumanactionaHatstates,basedonthe Fixedsession.Therobotexecutesafixedpolicy,alwaysact-
+BAMhumanadaptationmodel. ingtowardstheoptimalgoal.Inthetable-carryingscenario,
+GivenaR ∈ARandaH ∈AH,thebeliefupdatebecomes therobotkeepsrotatingthetableintheclockwisedirection
+towardsGoalA,whichweassumetobeoptimal(Figure1).
+b0(y0)=ηO(s0,aR,o)X T
+x
+(s,aR,aH,x0) Theonlywaytofinishthetaskisforthehumantorotatethe
+y∈Y (3) tableinthesamedirectionastherobot,untilitisbroughtto
+T (s,aR,aH,s0)πH(s,aH)b(y) thehorizontalconfigurationofFigure1a.
+y
+Mutual-adaptation session. The robot executes the
+We use a point-based approximation algorithm to solve MOMDP policy computed using the proposed formalism.
+the MOMDP for a robot policy πR that takes into account The robot starts by rotating the table towards the optimal
+therobotbeliefonthehumanadaptability,whilemaximiz- goal(GoalA).Therefore,adaptingtotherobotstrategycor-
+ingtheagent’sexpectedtotalreward. respondstorotatingthetabletotheoptimalconfiguration.
+
+624 TheInternationalJournalofRoboticsResearch36(5–7)
+withtherobot.WenotethatintheFixedconditionallpar-
+ticipantsendedupchangingtotherobotstrategy,asthiswas
+theonlywaytocompletethetask.
+H3 The robot’s performance as a teammate, as perceived
+bytheparticipantsintheMutual-adaptationcondition,will
+not be worse than in the Cross-training condition. The
+learned MOMDP policy enables the robot to follow the
+preference of participants that are less adaptable, while
+guidingtowardstheoptimalgoalparticipantsthatarewill-
+ingtochangetheirstrategy.Therefore,wepositedthatthis
+behaviorwouldresultinaperceivedrobotperformancenot
+Fig. 6. Instances of different user behaviors in the first trial of
+inferiortothatachievedintheCross-trainingcondition.
+the Mutual-adaptation session of the human-subject experiment
+described in Section 6. A horizontal/vertical line segment indi-
+cateshumanandrobotdisagreement/agreementontheiractions. 6.3. Experimentsetting:Atable-carryingtask
+A solid/dashed line indicates a human rotation towards the sub-
+We first instructed participants in the task and asked them
+optimal/optimal goal. The numbers denote the most likely esti-
+tochooseoneofthetwogoalconfigurations(Figure1),as
+matedvalueofα.
+their preferred way of accomplishing the task. To prompt
+users to prefer the sub-optimal goal, we informed them
+about the starting state of the task, where the table was
+Cross-training session. Human and robot train together
+slightlyrotatedinthecounter-clockwisedirection,making
+usingthehuman-robotcross-trainingalgorithm(Nikolaidis
+thesub-optimalGoalBappearcloser.Oncethetaskstarted,
+andShah,2013).Thealgorithmconsistsofaforwardphase
+theuserchosetherotationactionsbyclickingonbuttonson
+and a rotation phase. In the forward phase, the robot exe-
+a user interface (Figure 7). If the robot executed the same
+cutes an initial policy, which we choose to be the one that
+action, a video played showing the table rotation. Other-
+leads to the optimal goal. Therefore, in the table-carrying
+wise, the table did not move and a message appeared on
+scenario,therobotrotatesthetableintheclockwisedirec-
+the screen notifying the user that they tried to rotate the
+tion towards Goal A. In the rotation phase, human and
+tableinadifferentdirectionthantherobot.IntheMutual-
+robotswitchroles,andthehumaninputsareusedtoupdate
+adaptation and Fixed conditions participants executed the
+the robot reward function. After the two phases, the robot
+tasktwice.Eachtrialendedwhentheteamreachedoneof
+policyisrecomputed.
+thetwogoalconfigurations.IntheCross-trainingcondition,
+participantsexecutedtheforwardphaseofthealgorithmin
+thefirsttrialandtherotationphase,wherehumanandrobot
+6.2. Hypotheses
+switched roles, in the second trial. We found that in this
+H1 Participants will agree more strongly that HERB is task one rotation phase was enough for users to success-
+trustworthy, and will be more satisfied with the team per- fully demonstrate their preference to the robot. Following
+formance in the Mutual-adaptation condition, when com- NikolaidisandShah(2013),therobotexecutedtheupdated
+pared to working with the robot in the Fixed condition. policy with the participant in a task-execution phase that
+Weexpecteduserstotrustmoretherobotwiththelearned succeededtherotationphase.
+MOMDP policy, when compared with the robot that exe- We asked all participants to answer a post-experimental
+cutes a fixed strategy ignoring the user’s willingness to questionnaire that used a five-point Likert scale to assess
+adapt. In prior work, a task-level executive that adapted to their responses to working with the robot (Table 2). We
+the human partner significantly improved perceived robot usedthecompositemeasuresproposedbyHoffman(2013).
+trustworthiness (Shah et al., 2011). Additionally, working Questions 1 and 3 are from Hoffman’s measure of
+with a human-aware robot that adapted its motions had a “Robot Teammate Traits”, while questions 4-6 are
+significantimpactonhumansatisfaction(LasotaandShah, from Hoffman’s adaptation of the “Working Alliance
+2015). Index” for human-robot teams. Items 7-8 were proposed
+H2Participantsaremorelikelytoadapttotherobotstrat- by Gombolayetal.(2014) as additional metrics of team-
+egytowardstheoptimalgoalintheMutual-adaptationcon- fluency. We added questions 9-10 were based on our intu-
+dition, when compared to working with the robot in the ition. Participants also responded to open-ended questions
+Cross-training condition. The computed MOMDP policy abouttheirexperience.
+enables the robot to infer online the adaptability of the
+human and guides adaptable users towards more effective
+6.4. Subjectallocation
+strategies. Therefore, we posited that more subjects would
+change their strategy when working with the robot in the Wechoseabetween-subjectsdesigninordertonotbiasthe
+Mutual-adaptationcondition,comparedwithcross-training userswithpoliciesfrompreviousconditions.Werecruited
+
+Nikolaidisetal. 625
+Table 1. Participants’ response to question “Did you complete 6.5. MOMDPmodel
+the hallway task following your initial preference? Justify your
+The observable state variables x of the MOMDP formula-
+answer”.
+tion were the discretized table orientation and the human
+Justification Examplequote
+androbotmodesforeachofthethreeprevioustime-steps.
+We specified two modal policies, each deterministically
+J1 Expectation on robot “I knew that the robot
+behavior would change if I stood my selectingrotationactionstowardseachgoal.Thesizeofthe
+ground.” observable state-space X was 734 states. We set a history
+J2 Simplicity “Ithoughtitwouldbeeasier lengthk = 3inBAM.Weadditionallyassumedadiscrete
+thatIswitched.” setofvaluesoftheadaptabilityα:{0.0,0.25,0.5,0.75,1.0}.
+J3 Task-specificfactors “I was on the correct side Although a higher resolution in the discretization of α
+(you should walk on the is possible, we empirically verified that five values were
+righthandside).”
+enoughtocapturethedifferentadaptivebehaviorsobserved
+J4 Robotbehavior “HERB decided to go the
+inthistask.ThetotalsizeoftheMOMDPstate-spacewas
+samewayasIdid.”
+5 × 734 = 3670 states. The human and robot actions
+J5 Taskcompletion “To finish the task in the
+aH, aR were deterministic discrete table rotations. We set
+otherendofthehall.”
+the reward function R to be positive at the two goal con-
+J6 Other “Itendtostickwithmyini-
+tialchoices.” figurations based on their relative cost, and 0 elsewhere.
+We computed the robot policy using the SARSOP solver
+(Kurniawatietal.,2008),apoint-basedapproximationalgo-
+rithmwhich,combinedwiththeMOMDPformulation,can
+scaleuptohundredsofthousandsofstates(Bandyopadhyay
+etal.,2013).
+7. Resultsanddiscussion
+7.1. Subjectivemeasures
+We consider hypothesis H1, that participants will agree
+more strongly that HERB is trustworthy, and will be
+more satisfied with the team performance in the Mutual-
+adaptation condition, compared to working with the robot
+in the Fixed condition. A two-tailed Mann–Whitney–
+Wilcoxontestshowedthatparticipantsindeedagreedmore
+strongly that the robot utilizing the proposed formalism
+is trustworthy (U = 180,p = 0.048). No statistically
+significant differences were found for responses to state-
+mentselicitinghumansatisfaction:“Iwassatisfiedwiththe
+robotandmyperformance”and“HERBandIcollaborated
+Fig.7. UIwithinstructions.UI:UserInterface.
+welltogether”.Onepossibleexplanationisthatparticipants
+interactedwiththerobotthroughauserinterfaceforashort
+period of time, therefore the impact of the interaction on
+usersatisfactionwaslimited.
+We were also interested in observing how the ratings
+participants through Amazon’s Mechanical Turk service,
+in the first two conditions varied, depending on the par-
+all from the United States, aged 18–65 and with approval
+ticipants’ willingness to change their strategy. Therefore,
+rates higher than 95%. Each participant was compensated
+weconductedapost-hocexperimentalanalysisofthedata,
+$0.50. Since we are interested in exploring human-robot
+groupingtheparticipantsbasedontheiradaptability.Since
+mutual adaptation, we disregarded participants that had as
+thetrueadaptabilityofeachparticipantisunknown,weesti-
+initial preference the robot goal. To ensure reliability of
+mateditbythemodeofthebeliefformedbytherobotatthe
+theresults,weaskedallparticipantsacontrolquestionthat
+endofthetaskontheadaptabilityα
+testedtheirattentiontothetaskandeliminateddataassoci-
+atedwithwronganswerstothisquestion,aswellasincom-
+αˆ =argmaxb(α) (4)
+pletedata.TotesttheirattentiontotheLikertquestionnaire,
+α
+we included a negative statement with the opposite mean-
+ing to its positive counterpart and eliminated data associ- We considered only users whose mode was larger than a
+ated with positive or negative ratings to both statements, confidence threshold and grouped them as very adaptable
+resultinginatotalof69samples. if αˆ > 0.75, moderately adaptable if 0.5 < αˆ ≤ 0.75,
+
+626 TheInternationalJournalofRoboticsResearch36(5–7)
+Fig.8. Beliefupdateandtableconfigurationsforthe1-step(top)and3-step(bottom)boundedmemorymodelsatsuccessivetime-steps.
+(T =1)Afterthefirstdisagreementandintheabsenceofanyprevioushistory,thebeliefremainsuniformoverα.Thehuman(white
+dot)followstheirmodalpolicyfromtheprevioustime-step,thereforeatT = 2thebeliefbecomeshigherforsmallervaluesofα in
+bothmodels(loweradaptability).(T =2)Therobot(blackdot)adaptstothehumanandexecutesthehumanmodalpolicy.Atthesame
+time,thehumanswitchestotherobotmode,thereforeatT =3theprobabilitymassmovestotheright.(T =3)Thehumanswitches
+backtotheirinitialmode.Inthe3-stepmodeltheresultingdistributionatT =4hasapositiveskewness:therobotestimatesthehuman
+tobenon-adaptable.Inthe1-stepmodeltherobotincorrectlyinfersthatthehumanadaptedtotherobotmodeoftheprevioustime-step,
+andtheprobabilitydistributionhasanegativeskewness.(T = 4,5)Therobotinthe3-steptrialswitchestothehumanmodalpolicy,
+whereasinthe1-steptrialitdoesnotadapttothehuman,whoinsistsontheirmode.
+and non-adaptable if αˆ ≤ 0.5. Figure 10b shows the par- Table2. Post-experimentalquestionnaire.
+ticipants’ rating of their agreement on the robot trustwor-
+Q1:“HERBistrustworthy.”
+thiness,asafunctionoftheparticipants’groupforthetwo Q2:“ItrustedHERBtodotherightthingattherighttime.”
+conditions.IntheFixedconditiontherewasatrendtowards Q3:“HERBisintelligent.”
+positive correlation between the annotated robot trustwor- Q4:“HERBperceivedaccuratelywhatmygoalsare.”
+thiness and participants’ inferred adaptability (Pearson’s Q5:“HERBdidnotunderstandhowIwantedtodothetask.”
+r = 0.452, p = 0.091), whereas there was no correlation Q6:“HERBandIworkedtowardsmutuallyagreedupongoals.”
+between the two for participants in the Mutual-adaptation Q7:“IwassatisfiedwithHERBandmyperformance.”
+Q8:“HERBandIcollaboratedwelltogether.”
+condition (r = −0.066). We attribute this to the MOMDP
+Q9:“HERBmademechangemymindduringthetask.”
+formulationallowingtherobottoreasonoveritsestimateon
+Q10:“HERB’sactionswerereasonable.”
+theadaptabilityofitsteammateandchangeitsownstrategy
+wheninteractingwithnon-adaptableparticipants,therefore
+maintaininghumantrust.
+Inthiswork,weelicitedtrustattheendofthetaskusing other hand, 26% of users in the Mutual-adaptation condi-
+participants’ rating of their agreement to the statement tionnotedthattherobot“attemptedtoanticipatemymoves”
+“HERB is trustworthy”, which has been used in previous and “understood which way I wanted to go” (C2). Several
+workinhuman-robotcollaboration(Shahetal.,2011;Hoff- adaptable participants in both conditions commented that
+man,2013).WereferthereadertoDesai(2012),Kaniarasu “[HERB] was programmed to move this way” (C5), while
+etal.(2013),XuandDudek(2015)andYancoetal.(2016) some of them attempted to justify HERB’s actions, stating
+forapproachesonmeasuringtrustinreal-time. thatit“wasprobablyunabletomovebackwards”(C4).
+Weadditionallycodedtheparticipants’open-endedcom- Recall hypothesis H3: that the robot’s performance as a
+ments about their experience with working with HERB, teammateintheMutual-adaptationcondition,asperceived
+and grouped them based on the content and the sentiment by the participants, would not be worse than in the Cross-
+(positive,negative, orneutral).Table3showsthedifferent trainingcondition.Wedefine“notworsethan”similarlyto
+comments and associated sentiments, and Figure 9 illus- Draganetal.(2013)usingtheconceptof“non-inferiority”
+tratestheparticipants’ratioforeachcomment.Wenotethat (Lesaffre, 2008). A one-tailed unpaired t-test for a non-
+20% of participants in the Fixed condition had a negative inferioritymargin1 = 0.5andalevelofstatisticalsignif-
+opinionabouttherobotbehavior,notingthat“[HERB]was icance α = 0.025 showed that participants in the Mutual-
+poorly designed”, and that probably “robot development adaptationconditionratedtheirsatisfactiononrobotperfor-
+hadnotbeenmasteredbyengineers”(C8inTable3).Onthe mance (p = 0.006), robot intelligence (p = 0.024), robot
+
+Nikolaidisetal. 627
+Table3. Participants’commentsandassociatedsentiments. 7.3. Selectionofhistorylength
+Description Sentiment Thevalueofk inBAMindicatesthenumberoftime-steps
+in the past that we assume humans consider in their deci-
+C1 “Therobotfollowedmyinstructions.” Positive
+sionmakingonaparticulartask,ignoringallotherhistory.
+C2 “Therobotadaptedtomyactions.” Positive
+C3 “Therobotwantedtobeefficient.” Positive Increasing k results in an exponential increase of the state
+C4 “Therobotwasunabletomove.” Neutral space size, with large values reducing the robot’s respon-
+C5 “Therobotwasprogrammedthisway.” Neutral siveness to changes in the human behavior. On the other
+C6 “Therobotwantedtofacethedoor.” Neutral hand,verysmallvaluesresultinunrealisticassumptionson
+C7 “Therobotwasstubborn.” Negative thehumandecisionmakingprocess.
+C8 “Therobotwaspoorlyprogrammed.” Negative To illustrate this, we set k = 1 and ran a pilot study of
+30participantsthroughAmazon-Turk.Whereasmostusers
+ratedhighlytheiragreementtoquestionsassessingtheirsat-
+isfactionandtrustintherobot,someparticipantsexpressed
+their strong dissatisfaction with the robot behavior. This
+occurred when human and robot oscillated back and forth
+betweenmodes,similarlytowhentwopedestriansonanar-
+rowstreetfaceeachotherandswitchsidessimultaneously
+untiltheyreachanagreement.Inthiscase,whichoccurred
+in 23% of the samples, when the human switched back to
+their initial mode, which was also the robot mode of the
+previous time-step, the robot incorrectly inferred them as
+adaptable. However, the user in fact resumed their initial
+Fig. 9. Ratio of participants per comment for the Mutual-
+modefollowedbeforetwotime-steps,implyingatendency
+adaptationandFixedconditions.
+fornon-adaptation.Thisisacasewherethe1-stepbounded
+memoryassumptiondidnothold.
+In the human subject experiment of Section 6, we used
+trustworthiness (p < 0.001), quality of robot actions (p <
+k =3,sincewefoundthistodescribeaccuratelythehuman
+0.001),andqualityofcollaboration(p = 0.002)notworse
+behaviorinthistask.Figure8showsthebeliefupdateand
+thanparticipantsintheCross-trainingcondition.WithBon-
+robot behavior for k = 1 and k = 3, in the case of mode
+ferroni corrections for multiple comparisons, robot trust-
+oscillation.
+worthiness, quality of robot actions, and quality of collab-
+orationremainsignificant.ThissupportshypothesisH3of
+Section6.2.
+7.4. Discussion
+Thisonlinestudyinthetable-carryingtaskseemstosuggest
+that the proposed formalism enables a human-robot team
+7.2. Quantitative measures
+to achieve more effective policies, compared to state-of-
+TotesthypothesisH2,weconsidertheratioofparticipants the-art human-robot team training practices, while achiev-
+thatchangedtheirstrategytotherobotstrategytowardsthe ing subjective ratings on robot performance and trust that
+optimal goal in the Mutual-adaptation and Cross-training are comparable to those achieved by these practices. It is
+conditions. A change was detected when the participant importanttonotethatthecomparisonwiththehuman-robot
+startedasapreferredstrategyatablerotationtowardsGoal cross-training algorithm is done in the context of human
+B(Figure1b),butcompletedthetaskintheconfigurationof adaptation.Previouswork(NikolaidisandShah,2013)has
+GoalA(Figure1a)inthefinaltrialoftheMutual-adaptation shown that switching roles can result in significant bene-
+session,orinthetask-executionphaseoftheCross-training fits in team fluency metrics, such as human idle time and
+session.AsFigure10ashows,57%ofparticipantsadapted concurrent motion (Hoffman and Breazeal, 2007), when a
+to the robot in the Mutual-adaptation condition, whereas human executes the task with an actual robot. Addition-
+26%adaptedtotherobotintheCross-trainingcondition.A ally, the proposed formalism assumes as input a set of
+Pearson’s chi-square test showed that the difference is sta- modalpolicies,aswellasaqualitymeasureassociatedwith
+tistically significant (χ2(1,N = 46)= 4.39,p = 0.036). eachpolicy.Ontheotherhand,cross-trainingrequiresonly
+Therefore,participantsthatinteractedwiththerobotofthe an initialization of a reward function of the state space,
+proposedformalismweremorelikelytoswitchtotherobot which is then updated in the rotation phase through inter-
+strategy towards the optimal goal, than participants that action. It would be very interesting to explore a hybrid
+cross-trainedwiththerobot,whichsupportsourhypothesis. approach between learning the reward function and guid-
+InSection7.3,wediscusstherobot’sbehaviorfordiffer- ingthehumantowardsanoptimalpolicy,butweleavethis
+entvaluesofhistorylengthkinBAM. forfuturework.
+
+628 TheInternationalJournalofRoboticsResearch36(5–7)
+Fig.10. (a)NumberofparticipantsthatadaptedtotherobotfortheMutual-adaptationandCross-trainingconditions.(b)Ratingof
+agreementtostatement“HERBistrustworthy”.Notethatthefiguredoesnotincludeparticipants,whosemodeofthebeliefontheir
+adaptabilitywasbelowaconfidencethresholdandthereforewerenotclusteredintoanyofthethreegroups.
+7.5. Information-seeking behavior 3. While we assumed that the modal policies are fully
+observable, an assumption that enables the human and
+Weobservethatintheexperiments,therobotalwaysstarts
+the robot to infer a mode by observing an action, in
+moving towards the optimal goal, until it is confident that
+thegeneralcasedifferentmodalpoliciesmaysharethe
+the human is non-adaptable, in which case it adapts to the
+sameactionselectioninsomestates,whichwouldmake
+human. The MOMDP chooses whether the robot should
+them undeterminable. In this case, the proposed for-
+adaptornot,basedontheestimateofthehumanadaptabil-
+malismcanbegeneralizedtoincludethehumanmodal
+ity,therewardsoftheoptimalandsuboptimalgoalandthe
+policyasadditionallatentvariableintheMOMDP.Sim-
+discountfactor.
+ilarly, we can model the human as inferring a proba-
+In the general case, information-seeking actions can
+bility distribution over modes from the recent history,
+occuratanypointduringthetask.Forinstance,inamulti-
+insteadofinferringtherobotmodewiththemaximum
+staged task, where information gathering costs differently
+frequencycount(equation(2)inSection4.2).Weleave
+in different stages (i.e. moving a table out of the room /
+thisforfuturework.
+through a narrow corridor), the robot might choose to dis-
+agreewiththehumaninastagewhereinformation-seeking Finally, we note that the presented formalism assumes
+actionsarecheap,evenifthehumanfollowsanoptimalpath that the world-state, representing the current task-step, is
+inthatstage. fully observable, and that human and robot have a known
+setofactions.Thisassumptionholdsfortaskswithclearly
+defined objectives anddistincttask-steps.InSection9,we
+7.6. Generalization tocomplextasks applyourformalisminthecasewhereahumanandarobot
+cross a hallway and coordinate to avoid collision, and the
+Thepresentedtable-carryingtaskcanbegeneralizedwith-
+robot guides the human towards one side of the corridor.
+out significant modifications in the proposed mathemat-
+Applicable scenarios include also a wide range of manu-
+ical model, with the cost of increasing the size of the
+facturingtasks(e.g.assemblyofairplanespars),wherethe
+state-space and action-space. In particular, we made the
+goal and important concepts, such as tolerances and com-
+assumptions: (1) discrete time-steps, where human and
+pletiontimes,aredefinedinadvance,butthesequencingof
+robotapplytorquescausingafixedtable-rotation,(2)binary
+subtasks is flexible and can vary based on the individual-
+human-robot actions, (3) fully observable modal policies.
+izedstyleofthemechanic(Nikolaidisetal.,2015).Inthese
+Wediscusshowwecanrelaxtheseassumptions;
+scenarios,therobotcouldleadthehumantostrategiesthat
+requirelesstimeorresources.
+1. We can approximate a continuous-time setting by
+increasing the resolution of the time discretization.
+8. Adaptabilityinrepeatedtrials
+Assuming a constant displacement per unit time v and
+a time-step dt, the size of the state-space increases Previous work by Shah et al. (2011) has shown that robot
+linearly with (1/dt): O(|Xworld||M|2k)= O((θ − adaptationsignificantlyimprovesperceivedrobottrustwor-
+max
+θ )∗(1/v)∗(1/dt)∗|M|2k), where θ is the rotation thiness.Therefore,wehypothesizedthattrustinthemutu-
+min
+angleofthetable. allyadaptationconditionwouldincreaseovertimefornon-
+2. Theproposedformalismisnotlimitedtobinaryactions. adaptableparticipants,andthatthisincreaseintrustwould
+For instance, we can allow torque inputs of different resultinasubsequentincreasedlikelihoodofhumanadap-
+magnitudes.Theaction-spaceoftheMOMDPincreases tationtotherobot.Weconductedfourrepeatedtrialsofthe
+linearlywiththenumberofpossibleinputs. table-carryingtask.Resultsdidnotconfirmourhypothesis:
+
+Nikolaidisetal. 629
+eventhoughtrustincreasedfornon-adaptableparticipants, robot adaptation can significantly improve perceived robot
+a large majority of them remained non-adaptable in the trustworthiness(Shahetal.,2011).
+secondtaskaswell. H6Participantsaremorelikelytofollowtherobotoptimal
+policyinthesecondpartoftheexperiment,comparedtothe
+first part. We hypothesized that if, according to hypothe-
+8.1. Experimentsetting
+sesH4andH5,trustisassociatedwithincreasedlikelihood
+Thetaskhastwoparts,eachconsistingoftwotrialsoftask of adapting to the robot in the first part of the experiment,
+execution. At the end of the first part, we reset the robot andnon-adaptableparticipantstrusttherobotmoreafterthe
+belief on participants’ adaptability to a uniform distribu- first part, a significant ratio of these participants would be
+tionoverα.Therefore,inthebeginningofthesecondpart, willing to change their strategy in the second part. Addi-
+therobotattemptedagaintoguideparticipantstowardsthe tionally,weexpectedparticipantsthatswitchedtotherobot
+optimal goal, identically to the first part of the task. We optimal policy in the first part to continue following that
+recruited participants through Amazon’s Mechanical Turk policyinthesecondpart,resultinginanoverallincreasein
+service,usingthesameinclusioncriteriaasinSection6.4. thenumberofsubjectsthatfollowtheoptimalgoal.
+Each participant was compensated $1. Following the data
+collectionprocessdescribedinSection6.4,wedisregarded
+participants that had as initial preference the robot goal,
+resulting in a total of 43 samples. All participants inter- 8.3. Resultsanddiscussion
+acted with the robot following the MOMDP policy com-
+WeconsiderHypothesisH4,thattheperceivedrobottrust-
+putedusingtheproposedformalism.Afterinstructingpar-
+worthiness and the participants’ self-confidence on their
+ticipants in the task, as well as after each trial, we asked
+abilitytocompletethetask,asmeasuredinthebeginningof
+themtorateonafive-pointLikertscaletheiragreementto
+theexperiment,willhaveasignificanteffectontheirlikeli-
+thefollowingstatements:
+hoodtoadapttotherobotinthefirstpartoftheexperiment.
+• “HERBistrustworthy”; We performed a logistic regression to ascertain the effects
+• “Iamconfidentinmyabilitytocompletethetask”. of the participants’ ratings on these two factors on the
+likelihoodthattheyadapttotherobot.Thelogisticregres-
+We used the ratings as direct measurements of partici- sionmodelwasstatisticallysignificantχ2(2)= 13.58,p =
+pants’self-confidenceandtrustintherobot. 0.001.Themodelexplained36.2%(NagelkerkeR2)ofthe
+varianceintheparticipant’sadaptabilityandcorrectlyclas-
+sified74.4%ofthecases.Participantsthattrustedtherobot
+8.2. Hypotheses
+more in the beginning of the task (β = 1.528,p = 0.010)
+and were less-confident (β = −1.610,p = 0.008) were
+H4 The perceived initial robot trustworthiness and the morelikelytoadapttotherobotinpart1oftheexperiment
+participants’ starting self-confidence on their ability to (Figure11).ThissupportshypothesisH4ofSection8.2.
+complete the task will have a significant effect on their RecallHypothesisH5,thattherobottrustworthiness,as
+likelihoodtoadapttotherobotinthefirstpartoftheexper- perceivedbynon-adaptableparticipants,willincreasedur-
+iment.Wehypothesizedthatthemoretheparticipantstrust ingthefirstpartoftheexperiment.Weincludedinthenon-
+the robot in the beginning of the task, and the less confi- adaptable group all participants that did not change their
+dent they are on their ability, the more likely they would strategy when working with the robot in the first part of
+be to adapt to therobot. In previous work, Lee and Moray the experiment. The mean estimated adaptability for these
+found that control allocation in a supervisory control sys- participantsattheendofthefirstpartwasαˆ = 0.16[SD=
+tem is dependent on the difference between the operator’s 0.14].AWilcoxonsigned-ranktestindeedshowedthatnon-
+trustofthesystemandtheirownself-confidencetocontrol adaptable participants agreed more strongly that HERB is
+thesystemundermanualcontrol(LeeandMoray,1991). trustworthyafterthefirstpartoftheexperiment,whencom-
+H5 The robot’s trustworthiness, as perceived by non- paredtothebeginningofthetask(Z =−3.666,p<0.001),
+adaptable participants, will increase during the first part as shown in Figure 11a). In the same figure we see that
+of the experiment. We hypothesized that working with a adaptable participants rated highly their agreement on the
+robot that reasons over its estimate on participants’ adapt- robottrustworthinessinthebeginningofthetask,andtheir
+ability and changes its own strategy accordingly would ratings remained relatively similar through the first part
+increase the non-adaptable participants’ trust in the robot. of the task. The results above confirm our hypothesis that
+We base this hypothesis by observing in Figure 10b that workingwiththerobotfollowingtheMOMDPpolicyhada
+non-adaptableparticipantsintheMutual-adaptationcondi- significanteffectonthenon-adaptableparticipants’trustin
+tion agreed strongly to the statement “HERB is trustwor- therobot.
+thy” at the end of the task. We focus on non-adaptable To test Hypothesis H6, we consider the ratio of partic-
+participants,sincetheyobservetherobotchangingitspol- ipants that followed the robot optimal policy in the first
+icy to their preference, and previous work has shown that part of the experiment, compared to the second part of
+
+630 TheInternationalJournalofRoboticsResearch36(5–7)
+Fig.11. (a)Ratingofagreementtothestatement“HERBistrustworthy”.forthefirstpartoftheexperimentdescribedinSection8.The
+twogroupsindicateparticipantsthatadapted/didnotadapttotherobotduringthefirstpart.(b)Ratingofagreementtothestatement
+“Iamconfidentinmyabilitytocompletethetask”.
+the experiment. In the second part, 53% of the partici- generalize across multiple tasks, we conducted an experi-
+pantsfollowedtherobotgoal,comparedto47%inthefirst mentwithtwodifferentcollaborativetasks:atable-carrying
+part. A Pearson’s chi-square test did not find the differ- task followed by a hallway-crossing task. Results showed
+ence between the two ratios to be statistically significant that non-adaptable participants in the table-carrying task
+(χ2(1,N = 43)= 0.42,p = 0.518). We observed that wouldbelesslikelytoadaptinthehallway-crossingtask.
+all participants that adapted to the robot in the first part,
+continued following the optimal goal in the second part,
+9.1. Hallway-crossingtask
+as expected. However, only 13% of non-adaptable partici-
+pantsswitchedstrategyinthesecondpart.Weobservethat Weintroducedanewhallway-crossingtask,whereahuman
+eventhoughtrustincreasedfornon-adaptableparticipants, and a robot cross a hallway (Figure 12). As in the table-
+alargemajorityofthemremainednon-adaptableinthesec- carrying task, we instructed participants of the task and
+ondtaskaswell.Weattributethistothefactthatusers,who askedthemfortheirpreferredsideofthehallway.Wethen
+successfully completed the task in the first part with the setthesamesideastheoptimalgoalfortherobot,inorder
+robot adapting to their preference, were confident that the toensurethattherobot’soptimalpolicywouldconflictwith
+sameactionsequencewouldresultinsuccessfulcompletion the human preference. The user chose moving actions by
+inthesecondpart,aswell.Infact,aWilcoxonsigned-rank clicking on buttons on a user interface (left / right). If the
+testshowedthatnon-adaptableparticipantsratedtheirself- human and robot ended up in the same side, a message
+confidenceontheirabilitytocompletethetasksignificantly appeared on the screen notifying the user that they moved
+higherafterthefirstpart,comparedtothebeginningofthe in the same direction as the robot. The participant could
+task (Z = −2.132,p = 0.033, Figure 11b). It would be thenchoosetoremainonthatside,orswitchsides.Thetask
+interesting to assess the adaptability of participants after endedwhenhumanandrobotendedupinoppositesidesof
+inducingdropsintheirself-confidence,forinstancebypro- thecorridor.
+viding limited explanation about the task or introducing
+task“failures”,andweleavethisforfuturework. 9.2. MOMDPmodelofhallway-crossingtask
+This experiment showed that non-adaptable participants
+The observable state variables x of the MOMDP formu-
+remained unwilling to adapt to the robot in repeated trials
+lation were the discretized position of the human and the
+of the same task. Can this result generalize across multi-
+robot, as well as the human and robot modes for each
+pletasks?Thisisanimportantquestion,sinceinreal-world
+of the three previous time-steps. We specified two modal
+applications such as home environments, domestic robots
+policies, each deterministically selecting moving actions
+are expected to perform a variety of household chores.
+towards each side of the corridor. The size of the observ-
+We conducted a follow-up experiment, where we explored
+ablestate-spaceX was340states.Asinthetable-carrying
+whethertheadaptabilityofparticipantsinonetaskisinfor-
+task,wesetahistorylengthk = 3andassumedadiscrete
+mativeoftheirwillingnesstoadapttotherobotatadifferent
+setofvaluesoftheadaptabilityα:{0.0,0.25,0.5,0.75,1.0}.
+task.
+Therefore, the total size of the MOMDP state-space was
+5×340 = 1700 states. The human and robot actions aH,
+aRweredeterministicdiscretemotionstowardseachsideof
+9. Transferofadaptabilityacrosstasks
+thecorridor.WesettherewardfunctionRtobepositiveat
+Thepreviousexperimentshowedthatnon-adaptablepartic- thetwogoalstatesbasedontheirrelativecost,and0else-
+ipantsremainedunwillingtoadapttotherobotinrepeated where. We computed the robot policy using the SARSOP
+trials of the same task. To test whether this result can solver(Kurniawatietal.,2008).
+
+Nikolaidisetal. 631
+Fig. 12. (a) Hallway-crossing task. The robot’s optimal goal is to move to the right side (top), compared to moving to the left side
+(bottom).(b)Theuserfacestherobot.Theycanchoosetostayonthesamesideorswitchsides.
+9.3. Experimentsetting
+Wefirstvalidatedtheefficacyoftheproposedformalismby
+doingauserstudy(n=65)thatincludedonlythehallway-
+crossing task. We recruited participants through Amazon’s
+MechanicalTurkservice,usingthesameinclusioncriteria
+asinSection6.4.Eachparticipantwascompensated$0.50.
+48%ofparticipantsadaptedtotherobotbyswitchingsides,
+aratiocomparabletothatofthetable-carryingtaskexper-
+iment (Section 7.2). The mean estimated adaptability for
+participantsthatadaptedtotherobot,whichwecall“adapt-
+able”,wasαˆ = 0.85 [SD=0.25],andforparticipantsthat
+didnotadapt(“non-adaptable”)wasαˆ =0.07[SD=0.13]. Fig.13. Adaptationrateofparticipantsfortwoconsecutivetasks.
+We then conducted a new human subject experiment, Thelinesillustratetransitions,withthenumbersindicatingtran-
+having users do two trials of the table-carrying task sitionrates.Thethicknessofthelinesisproportionaltothetran-
+describedin 6.3(part1),followedbythehallway-crossing sition rate, whereas the area of the circles is proportional to the
+task (part 2). Similarly to the repeated table-carrying task numberofparticipants.Whereas79%oftheusersthatinsistedin
+experiment (Section 8), we reset the robot belief on the theirstrategyinthefirsttaskremainednon-adaptableinthesec-
+humanadaptabilityattheendofthefirstpart.Werecruited ond task, only 50% of the users that adapted to the robot in the
+participants through Amazon’s Mechanical Turk service, table-carrying task, adapted to the robot in the hallway-crossing
+using the same inclusion criteria as in Section 6.4, and task.
+following the same data collection process, resulting in a
+totalofn=58samples.Eachparticipantwascompensated
+$1.30.Wemakethefollowinghypothesis:
+therobotinthefirsttaskremainednon-adaptableinthesec-
+H7Participantsthatdidnotadapttotherobotinthetable-
+ondtask,only50%oftheusersthatadaptedtotherobotin
+carrying task are less likely to adapt to the robot in the
+thetable-carryingtask,adaptedtotherobotinthehallway
+hallway task, compared to participants that changed their
+task(Figure13).
+strategyinthefirsttask.
+We interpret this result by observing that all partici-
+pantsthatwerenon-adaptableinthefirsttasksawtherobot
+changing its behavior to their preferred strategy. A large
+9.4. Resultsanddiscussion
+majorityexpectedtherobottobehaveinthesamewayinthe
+Inlinewithourhypothesis,alogisticregressionmodelwas secondtask,aswell:disagreeinthebeginningbuteventu-
+statistically significant (χ2(1)= 5.30,p = 0.021), with allyadapttotheirpreference,andthisencouragedthemto
+participants’ adaptability in the first task being a signifi- insist on their preference also in the second task. In fact,
+cantpredictoroftheiradaptabilityinthesecondtask(β = intheiranswerstotheopen-endedquestion“Didyoucom-
+1.335,p = 0.028). The model explained 11.9% (Nagelk- plete the hallway task following your initial preference?”,
+erke R2) of the variance and correctly classified 62.5% of theymentionedthat“Therobotswitchedinthelast[table-
+thecases.ThesmallvalueofR2indicatesaweakeffectsize. carrying] task, and I thought it would this time too”, and
+Interestingly,whereas79%oftheusersthatdidnotadaptto that“Iknewfromthetable-turningtaskthatHERBwould
+
+632 TheInternationalJournalofRoboticsResearch36(5–7)
+be notworse than the performance of therobot that cross-
+trained with the participants. Finally, the robot was found
+tobemoretrustworthywiththelearnedpolicy,whencom-
+pared with executing an optimal strategy while ignoring
+humanadaptability(p=0.048).Theseresultsindicatethat
+theproposedformalismcansignificantlyimprovetheeffec-
+tiveness of human-robot teams, whileachieving subjective
+ratingsonrobotperformanceandtrustcomparabletothose
+ofstate-of-the-arthuman-robotteamtrainingstrategies.
+Fig.14. Ratioofparticipantsperjustificationtothetotalnumber WehaveshownthatBAMcanadequatelycapturehuman
+ofparticipantsineachcondition.Wegrouptheparticipantsbased behaviorintwocollaborativetaskswithwell-definedtask-
+onwhethertheyadaptedinbothtasks(Adapted-both),inthefirst steps on a relatively fast-paced domain. However, in
+[table-carrying]taskonly(Adapted-first),inthesecond[hallway- domains where people typically reflect on a long history
+crossing]taskonly(Adapted-second)andinnoneofthetasks(Did ofinteractions,oronthebeliefsoftheotheragents,suchas
+notadapt). in a poker game (Von Neumann and Morgenstern, 2007),
+peoplearelikelytodemonstratemuchmorecomplexadap-
+tive behavior. Developing sophisticated predictive models
+eventually figure it out and move in the opposite direc- for such domains and integrating them into robot decision
+tion,soIstoodmyground” (J1inTable1,Figure14).On making in a principled way, while maintaining computa-
+theother hand, adaptable participants didnothave enough tionaltractability,isanexcitingareaforfuturework.
+informationontherobotabilitytoadapt,sincetheyaligned
+their own strategy with the robot policy, and they were
+evenlydividedbetweenadaptableandnon-adaptableinthe Acknowledgements
+second task. 47% of participants that remained adaptable
+We thank Michael Koval, Henny Admoni, Shervin Javdani, and
+in both tasks attributed the change in their strategy to the
+LauraHerlantforveryhelpfuldiscussionsandadvice.
+robot’sbehavior(J4).Interestingly,29%ofparticipantsthat
+adapted to the robot in the table-carrying task but insisted
+ontheirstrategyinthehallwaytaskstatedthattheydidso, Funding
+“because I was on the correct side (you should walk on
+The author(s) disclosed receipt of the following financial sup-
+therighthandside)andIkneweventuallyhewouldmove”
+port for the research, authorship, and/or publication of this arti-
+(J3).Weseethattask-specificfactors,suchassocialnorms,
+cle:ThisworkwassupportedbytheDARPASIMPLEXprogram
+affected the expectation of some participants on the robot
+through ARO contract number 67904LSDRP, National Institute
+adaptabilityforthehallwaytask.Wehypothesizethatthere
+of Health R01 (#R01EB019335), National Science Foundation
+isaninverserelationshipbetweenparticipants’adaptability,
+CPS (#1544797), and the Office of Naval Research. We also
+as it evolves over time, and their belief on the robot’s own
+acknowledgetheOnassisFoundationasasponsor.
+adaptability,andweleavethetestingofthishypothesisfor
+futurework.
+References
+Abbeel P and Ng A (2004) Apprenticeship learning via
+10. Conclusion inversereinforcementlearning.In:Internationalconferenceon
+machinelearning,Banff,Alberta,Canada,July04–082004,p.
+Wepresentedaformalismforhuman-robotmutualadapta-
+1.NewYork,USA:AMC.
+tion, which enables guiding the human teammate towards
+Akgun B, Cakmak M, Yoo JW, et al. (2012) Trajectories and
+moreefficientstrategies,whilemaintaininghumantrustin keyframesforkinestheticteaching:Ahuman-robotinteraction
+therobot.First,weproposedBAM,amodelofhumanadap- perspective.In:Internationalconferenceonhuman-robotinter-
+tationbasedonaboundedmemoryassumption.Themodel action.Boston,Massachusetts,USA,05–08March2012,pp.
+is parameterized by the adaptability of the human team- 391–398.NewYork,NY,USA:ACM.
+mate, which takes into account individual differences in Argall BD, Chernova S, Veloso M, et al. (2009) A survey of
+people’s willingness to adapt to the robot. We then inte- robotlearningfromdemonstration.RoboticsandAutonomous
+Systems.57(5):469–483.
+grated BAM into an MOMDP formulation, wherein the
+Atkeson CG and Schaal S (1997) Robot learning from demon-
+adaptabilitywasapartiallyobservablevariable.Inahuman
+stration.In:ProceedingsoftheFourteenthInternationalCon-
+subjectexperiment(n=69),participantsweresignificantly
+ferenceonMarhineLearning,MorganKaufmann,ICML‘97,
+morelikelytoadapttotherobotstrategytowardstheopti-
+08–12July1997,pp.12–20.
+malgoalwhenworkingwitharobotutilizingourformalism
+AumannRJandSorinS(1989)Cooperationandboundedrecall.
+(p = 0.036), compared to cross-training with the robot. GamesandEconomicBehavior.1(1):5–39.Elsevier.
+Additionally,participantsfoundtheperformanceasateam- Bandyopadhyay T, Won KS, Frazzoli E, et al. (2013) Intention-
+mateoftherobotexecutingthelearnedMOMDPpolicyto awaremotionplanning.In:Proceedingsofthetenthworkshop
+
+Nikolaidisetal. 633
+on the algorithmic foundations of robotics. Springer, vol. 86, Kaelbling LP, Littman ML and Cassandra AR (1998) Planning
+pp.475–491.Berlin,Heidelberg:Springer. andactinginpartiallyobservablestochasticdomains.Artificial
+BrozF,NourbakhshIandSimmonsR(2011)DesigningPOMDP Intelligence.vol.101,Issue102,May1998,pp.99–134.Essex,
+modelsofsociallysituatedtasks.In:IEEEinternationalwork- UK:ElsevierSciencePublishersLtd.
+shop on robot and human interactive communication, 2011, Kahneman D (2003) Maps of bounded rationality: Psychology
+Atlanta,UnitedStates,31July–3August,pp.39–46. forbehavioraleconomics.AmericanEconomicReview.vol.93,
+ChernovaSandVelosoM(2008)Teachingmulti-robotcoordina- Issue5,pp.1449–1475.
+tionusingdemonstrationofcommunicationandstatesharing. Kanda T, Hirano T, Eaton D, et al. (2004) Interactive robots
+In: Proceedings of the 7th International joint conference on as social partners and peer tutors for children: A field trial.
+Autonomousagentsandmultiagentsystems,vol.3,Estoril,Por- Human-ComputerInteraction.19(1):61–84.
+tugal, 12–16 May 2008. pp. 1183–1186. Richland, SC: Inter- KaniarasuP,SteinfeldA,DesaiM,etal.(2013)Robotconfidence
+nationalFoundationforAutonomousAgentsandMulti-agent and trust alignment. In: Proceedings of the 8th ACM/IEEE
+Systems. internationalconferenceonhuman-robotinteraction,pp.155–
+Desai M (2012) Modeling trust to improve human-robot 156.IEEEPress.
+interaction. PhD Thesis, Lowell, MA: University of Mas- KarpasE,LevineSJ,YuP,etal.(2015)Robustexecutionofplans
+sachusettsLowell. forhuman-robotteams.In:Internationalconferenceonauto-
+Doshi F and Roy N (2007) Efficient model learning for dialog matedplanningandscheduling7–11June2015,pp.342–346.
+management.In:ProceedingsoftheACM/IEEEInternational AAAIPress.
+Conference of Human-Robot Interaction, Arlington, Virinia, KurniawatiH,HsuDandLeeWS(2008)Sarsop:Efficientpoint-
+USA,10–12March2007,pp.65–72.NY,USA. based pomdp planning by approximating optimally reachable
+Dragan A and Srinivasa S (2012) Formalizing assistive teleop- beliefspaces.In:Internationalconferenceonrobotics:Science
+eration.In:Internationalconferenceonrobotics:Scienceand andsystemsZurich,Switzerland,2009.pp.65–72.
+systems.Sydney,NSW,Australia,July,2012. LasotaPAandShahJA(2015)Analyzingtheeffectsofhuman-
+Dragan A and Srinivasa S (2013) Generating legible motion. aware motion planning on close-proximity human–robot col-
+In:Internationalconferenceonrobotics:Scienceandsystems. laboration.HumanFactors.57(1):21–33.
+Berlin,Germany,June2013. LeeJandMorayN(1991)Trust,self-confidenceandsupervisory
+DraganAD,SrinivasaSandLeeKCT(2013)Teleoperationwith control in a process control simulation. In: 1991 IEEE inter-
+intelligent and customizable interfaces. Journal of Human- nationalconferenceonsystems,man,andcybernetics.‘Deci-
+RobotInteraction.1(3) sion aiding for complex systems’, conference proceedings,
+FudenbergDandLevineDK(1998)TheTheoryofLearningin volume1,pp.291–295.
+Games.Cambridge,MA:MITPress. LeeJJ,KnoxWB,WormwoodJB,etal.(2013)Computationally
+FudenbergDandTiroleJ(1991)GameTheory.Cambridge,MA: modelinginterpersonaltrust.FrontiersinPsychology.4(893).
+MITPress. LemonOandPietquinO(2012)Data-DrivenMethodsforAdap-
+GombolayMC,GutierrezRA,SturlaGF,etal.(2014)Decision- tive Spoken Dialogue Systems: Computational Learning for
+makingauthority,teamefficiencyandhumanworkersatisfac- Conversational Interfaces. New York City, USA: Springer
+tioninmixedhuman-robotteams.In:Internationalconference PublishingCompany.
+on robotics: Science and systems. Berkeley, California, July LesaffreE(2008)Superiority,equivalence,andnon-inferioritytri-
+2014. als. Bulletin of the NYU Hospital for Joint Diseases. 66(2):
+Goodrich MA and Schultz AC (2007) Human-robot interac- 150–154.
+tion: A survey. Foundations and Trends in Human-Computer Macindoe O, Kaelbling LP and Lozano–Pérez T (2012) POM-
+Interaction.1(3):203–275.Boston-Delft. COP:Beliefspaceplanningforsidekicksincooperativegames.
+Green A and H´’uttenrauch H (2006) “Making a case for spa- In: Conference on artificial intelligence and interactive digi-
+tialpromptinginhuman-robotcommunication,”inmultimodal tal entertainment. Stanford, California, USA, 08–12 October
+corpora: From multimodal behaviour theories to usable mod- 2012.pp.38–43.
+els. In: Workshop at LREC. Genova, May 2016, Stockholm, Mathieu JE, et al. (2000) The influence of shared mental mod-
+Sweden:RoyalInstituteofTechnology. els on team process and performance. Journal of Applied
+Hancock PA, Billings DR, Schaefer KE, et al. (2011) A meta- Psychology.85(2):273–283.
+analysis of factors affecting trust in human-robot interaction. Monte D (2014) Learning with bounded memory in games.
+HumanFactors.October2011.vol.5.pp.517–527.LosAnge- GamesandEconomicBehavior87:204–223.
+les,USA:SAGE. Nguyen THD, Hsu D, Lee WS, et al. (2011) Capir: Collabora-
+Hoffman G (2013) Evaluating fluency in human-robot col- tive action planning with intention recognition. In: Artificial
+laboration. In: International conference on human-robot intelligence and interactive digital entertainment conference.
+interaction.Tokyo,Japan.NewYork,NY:ACM. Stanford,California.
+HoffmanGandBreazealC(2007)Effectsofanticipatoryaction Nicolescu MN and Mataric MJ (2003) Natural methods for
+on human-robot teamwork efficiency, fluency, and percep- robottasklearning:Instructivedemonstrations,generalization
+tion of team. In: International conference on human-robot and practice. In: International conference on autonomous
+interaction.Arlington,Virginia,USA,10–12March2007.pp. agents and multiagent systems. Melbourne, Australia,
+1–8.NewYork,NY,USA:ACM. pp.241–248.
+Ikemoto S, Amor HB, Minato T, et al. (2012) Physical human- Nikolaidis S, Kuznetsov A, Hsu D, et al. (2016) Formaliz-
+robot interaction: Mutual learning and adaptation. IEEE ing human-robot mutual adaptation via a bounded memory
+Robotics&AutomationMagazine.vol.19,issue4,pp.24–35, based model. In: International conference on human-robot
+WashingtonDC,USA:IEEE. interaction.Christchurch,NewZealand,pp.75–82.
+
+634 TheInternationalJournalofRoboticsResearch36(5–7)
+Nikolaidis S,LasotaP,Ramakrishnan R,et al.(2015) Improved ShahJ,WikenJ,WilliamsB,etal.(2011)Improvedhuman-robot
+human–robot team performance through cross-training, an team performance using chaski, a human-inspired plan exe-
+approachinspiredbyhumanteamtrainingpractices.TheInter- cution system. In: International conference on human-robot
+nationalJournalofRoboticsResearch34(14):1711–1730. interaction.LausanneSwitzerland.pp.29–36.NewYork,NY,
+NikolaidisS,RamakrishnanR,GuK,etal.(2015)Efficientmodel USA:ACM.
+learningfromjoint-actiondemonstrationsforhuman-robotcol- Simon HA (1979) Rational decision making in business organi-
+laborativetasks.In:Internationalconferenceonhuman-robot zations. American Economic Review 493–513. vol. 69, issue
+interaction.Portland,Oregon,USA,March2015,pp.189–196. 4, pp. 493–513. Nashville, TN, USA: American Economic
+Nikolaidis S and Shah J (2013) Human-robot cross-training: Association.
+Computational formulation, modeling and evaluation of a SrinivasaSS,FergusonD,HelfrichCJ,etal.(2010)Herb:Ahome
+humanteamtrainingstrategy.In:Internationalconferenceon exploringroboticbutler.AutonomousRobots28(1):5–20.
+human-robotinteraction.Tokyo,Japan,pp.33–40. VonNeumannJandMorgensternO(2007)TheoryofGamesand
+Ong SCW, Png SW, Hsu D, et al. (2010) Planning under uncer- EconomicBehavior.PrincetonUniversityPress.
+taintyforrobotictaskswithmixedobservability.TheInterna- Xu A and Dudek G (2015) Optimo: Online probabilistic trust
+tionalJournalofRoboticsResearch29(9). inference model for asymmetric human-robot collaborations.
+PlattR,TedrakeR,KaelblingL,etal.(2010)Beliefspaceplan- In: Proceedings of the 10th annual ACM/IEEE international
+ningassumingmaximumlikelihoodobservations.In:Interna- conference on human-robot interaction, New York, USA,
+tionalconferenceonrobotics:Scienceandsystems.Zaragoza, pp.221–228.Princeton,NewJersey:ACM.
+Spain,June2010. YancoHA,DesaiM,DruryJL,etal.(2016)Methodsfordevelop-
+PowersRandShohamY(2005)Learningagainstopponentswith ingtrustmodelsforintelligentsystems.In:RobustIntelligence
+boundedmemory.In:Internationaljointconferenceonartifi- andTrustinAutonomousSystems.pp.219–254,NewYorkCity:
+cialintelligence.Edinburgh,Scotland,July30-August52005, Springer.
+pp.817–822. ZiebartBD,RatliffN,GallagherG,etal.(2009)Planning-based
+RobinsB,DautenhahnK,BoekhorstRT,etal.(2004)Effectsof predictionforpedestrians.In:IEEE/RSJinternationalconfer-
+repeatedexposuretoahumanoidrobotonchildrenwithautism. ence on intelligent robots and systems. St. Louis, MO, USA,
+In:DesigningaMoreInclusiveWorld.pp.225–236.NewYork 10–15 October 2009, pp. 3931–3936. Piscataway, NJ, USA:
+City,USA:Springer. IEEEPress.
+SalemM,LakatosG,AmirabdollahianF,etal.(2015)Wouldyou
+trusta(faulty)robot?Effectsoferror,tasktypeandpersonality
+onhuman-robotcooperationandtrust.In:Internationalconfer-
+ence on human-robot interaction. Portland, Oregon USA, pp.
+141–148.NewYork,NY,USA:ACM.

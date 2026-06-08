@@ -1,0 +1,1434 @@
+PublishedasaconferencepaperatICLR2026
+EXPLAINING AND IMPROVING INFORMATION COMPLE-
+MENTARITIES IN MULTI-AGENT DECISION-MAKING
+ZiyangGuo YifanWu
+NorthwesternUniversity MicrosoftResearch
+ziyang.guo@northwestern.edu yifan.wu2357@gmail.com
+JasonHartline JessicaHullman
+NorthwesternUniversity NorthwesternUniversity
+hartline@northwestern.edu jhullman@northwestern.edu
+ABSTRACT
+Multiple agents are increasingly combined to make decisions with the expecta-
+tion of achieving complementary performance, where the decisions they make
+togetheroutperformthosemadeindividually. However,knowinghowtoimprove
+theperformanceofcollaboratingagentsrequiresknowingwhatinformationand
+strategieseachagentemploys. Withafocusonhuman-AIpairings,wecontributea
+decision-theoreticframeworkforcharacterizingthevalueofinformation. Bydefin-
+ingcomplementaryinformation,ourapproachidentifiesopportunitiesforagentsto
+betterexploitavailableinformationinAI-assisteddecisionworkflows. Wepresent
+a novel explanation technique (ILIV-SHAP) that adapts SHAP explanations to
+highlighthuman-complementinginformation. Wevalidatetheeffectivenessofour
+frameworkandILIV-SHAPthroughastudyofhuman-AIdecision-making,and
+demonstratetheframeworkonexamplesfromchestX-raydiagnosisanddeepfake
+detection. WefindthatpresentingILIV-SHAPwithAIpredictionsleadstoreliably
+greaterreductionsinerrorovernon-AIassisteddecisionsmorethanvanillaSHAP1.
+1 INTRODUCTION
+As the performance of artificial intelligence (AI) models continues to improve across domains,
+workflows in which human experts and AI models are paired for decision-making are sought in
+medicine, finance, and law, among others. Statistical models can often exceed the accuracy of
+human experts on average (Ægisdóttir et al., 2006; Grove et al., 2000; Meehl, 1954). However,
+whenever humans have access to additional information over an AI model, there is potential to
+achieve complementary performance by pairing the two, i.e., better performance than either the
+humanorAIalone. Forexample,aphysicianmayhaveaccesstoinformationthatisnotcapturedin
+structuredhealthrecords(Aluretal.,2024).
+Many empirical studies, however, have found that human-AI teams underperform the AI
+alone(Buçincaetal.,2020;Bussoneetal.,2015;Green&Chen,2019;Jacobsetal.,2021;Lai&
+Tan,2019;Vaccaro&Waldo,2019;Kononenko,2001). Twosourcesofambiguitycomplicatesuch
+results. Oneconcernstheroleofmeasurement: performanceisoftenscoredagainstpost-hocdecision
+accuracy(Passi&Vorvoreanu,2022)ratherthanaccountingforthebestachievableperformance
+given information available at the time of the decision (Kleinberg et al., 2015; Guo et al., 2024;
+Rambachan,2024). Additionally,itoftenremainsunclearhowagentsdifferedintheirinformation
+accessoruse,makingitdifficulttodesigninterventionstoimprovetheseaspects.
+Imagineonecouldidentifyinformationcomplementaritiesthatcanbeexploited,suchaswhenoneof
+theagentshasaccesstoinformationnotcontainedintheother’sjudgments,orhasnotfullyintegrated
+contextually-availableinformation(e.g.,instancefeatures)intheirjudgments. Thiswouldmotivate
+interventionstoimprovedecision-making. Forexample,ifwecanidentifyhowmuchcomplementary
+1The code to calculate the main quantities in our framework and reproduce the experimental results is
+availableathttps://osf.io/p2qzy/?view_only=bf39de5d96f047f69e45ffd42689ebf9.
+1
+6202
+beF
+3
+]IA.sc[
+6v25160.2052:viXra
+
+PublishedasaconferencepaperatICLR2026
+informationAIpredictionsprovideoverhumanjudgments,wecanusethisknowledgetoguidemodel
+selectionormotivatefurtherdatacollectiontoimprovethemodel. Conversely,findingevidencethat
+modelpredictionscontaindecision-relevantinformationthathumansdonotexploitcanmotivatethe
+designofexplanationscommunicatingcomplementaryinformation.
+Wecontributeadecision-theoreticframeworkforcharacterizingthevalueofinformationavailable
+in an AI-assisted decision workflow. In our framework, information is considered valuable to a
+decision-maker to the extent that it is possible, in theory, to incorporate it into their decisions to
+improveperformance. Specifically,ourapproachanalyzestheexpectedmarginalpayoffgainfrom
+bestcase(Bayesrational)useofadditionalinformationoverbestcaseuseoftheinformationalready
+encodedinagentdecisions. Therationalframeworkallowsustoupperboundtheexpectedpayoff
+thatisachievablebyanystrategiesinthesameexperiment,andidentifiessub-optimalityinagent
+useofinformationbycomparingtorationalbehavior. Theupperboundourframeworkestimates
+holdsregardlessofthehuman’sdecision-makingprocess,whichmaydeviatefromrationality,given
+aspecifieddecisionproblem. Further,ourmethodscanbeusedevenwhenthedecisionproblem
+definition is ambiguous, by using a robustness analysis over all possible proper scoring rules to
+identifytheupperboundofperformanceintheworstcase.
+Weintroducetwometricsforevaluatinginformationvalueinhuman-AIcollaboration. Thefirst—
+globalhuman-complementaryinformationvalue—calculatesthevalueofanewpieceofinformation
+to an agent over all of its possible realizations among all instances. The second—instance-level
+human-complementaryinformationvalue—identifiesopportunitiesfordecision-makerstobetteruse
+instance-levelinformationsuchasspecificAIpredictions. Applyingthesecondmetric,wederive
+a new explanation technique (ILIV-SHAP) that reveals how data features influence the value of
+complementaryinformationforanindividualprediction.
+Toevaluatethesetools,wecontributetheresultsofacrowdsourcedbetween-subjectsexperiment
+inwhichhumansmakedecisionswithandwithoutAImodelswithvaryinghuman-complementary
+information and different explanation approaches. We find that an AI model with more human-
+complementaryinformationleadstogreaterimprovementsinhuman-AIteamperformanceoverthe
+human-alonebaseline. WealsofindthataddinganILIV-SHAPexplanationtoatraditionalSHAP
+explanationleadstogreaterimprovementsinhuman-AIperformanceoverthehuman-alonebaseline
+thanonlytheSHAPexplanationornoexplanation. Wedemonstratefurtherusesoftheframeworkin
+real-worlddecision-makingtasks,includingchestX-raydiagnosis(Rajpurkaretal.,2018;Johnson
+etal.,2019)anddeepfakedetection(Dolhanskyetal.,2020;Grohetal.,2022)2.
+2 RELATED WORK
+Human-AIcomplementarity. Manyempiricalstudiesofhuman-AIcollaborationfocusonAI-
+assistedhumandecision-makingforlegal,ethical,orsafetyreasons(Boetal.,2021;Boskemperetal.,
+2022;Bondietal.,2022;Schemmeretal.,2022). However,arecentmeta-analysisbyVaccaroetal.
+(2024)findsthat,onaverage,human–AIteamsperformworsethanthebetterofthetwoagentsalone.
+Inresponse,agrowingbodyofworkseekstoevaluateandenhancecomplementarityinhuman–AI
+systems (Bansal et al., 2021b; 2019; 2021a; Wilder et al., 2021; Rastogi et al., 2023; Mozannar
+etal.,2024b). Thepresentworkdiffersfrommuchofthesepriorworksbyapproachinghuman-AI
+complementarityfromtheperspectiveofinformationvalueanduse,includingaskingwhetherthe
+humanandAIdecisionsprovideadditionalinformationthatisnotusedbytheother.
+Evaluationofhumandecision-makingwithmachinelearning. Ourworkcontributesmethods
+forevaluatingthedecisionsofhuman-AIteams(Kleinbergetal.,2015;2018;Lakkarajuetal.,2017;
+Mullainathan&Obermeyer,2022;Rambachan,2024;Guoetal.,2024;Ben-Michaeletal.,2024;
+Shreekumar,2025). Kleinbergetal.(2015)proposedthatevaluationsofhuman-AIcollaboration
+shouldbebasedontheinformationthatisavailableatthetimeofthedecision. Accordingtothis
+view,ourworkdefinesBayesianbest-attainable-performancebenchmarkssimilartoseveralprior
+works(Guoetal.,2024;Wuetal.,2023;Agrawaletal.,2020;Fudenbergetal.,2022). Closestto
+ourwork,Guoetal.(2024)modeltheexpectedperformanceofarationalBayesianagentfacedwith
+decidingbetweenthehumanandAIrecommendationsasthetheoreticalupperboundontheexpected
+2WealsoincludeanobservationalstudyonthedatasetfromVodrahallietal.(2022)whichidentifiedtheAI
+modelwithmorehuman-complementaryinformationhelpshuman-AIteamsachievegreaterimprovementsin
+performanceoverthehuman-alonebaseline.SeeSectionC.
+2
+
+PublishedasaconferencepaperatICLR2026
+performanceofanyhuman-AIteam. Thisbenchmarkprovidesabasisforidentifyingexploitable
+informationwithinadecisionproblem.
+Complementarity by design. Some approaches focus on automating the decision pipeline by
+explicitly incorporating human expertise in developing machine learning models or human-AI
+collaborationpipeline,suchasbylearningtodefer(Mozannaretal.,2024a;Madrasetal.,2018;
+Raghuetal.,2019;Keswanietal.,2022;2021;Okatietal.,2021;Chenetal.,2022). CorveloBenz
+&Rodriguez(2023)proposemulticalibrationoverhumanandAImodelconfidenceinformationto
+guaranteetheexistenceofanoptimalmonotonicdecisionrule. Otherapproachesexploitinformation
+asymmetry(i.e.,caseswherehumanshaveadditionalcontextualknowledge)andofferprincipled
+methodswithprovableguaranteestoimproveteamdecisionperformance(Straitourietal.,2023;
+De Toni et al., 2024; Arnaiz-Rodriguez et al., 2025). Alur et al. (2024) propose a framework to
+incorporatehumandecisionsintomachinelearningalgorithmswhenthestateisindistinguishable
+fromthealgorithmalonebutcanbediscriminatedbyhumans. Ourworkalsoconcernsinformation
+asymmetry,butprovidesaninterpretableanalyticalframeworkforquantifyingtheinformationvalue
+of all available signals and agent decisions in human–AI decision tasks, enabling the design of
+information-basedinterventions.
+3 FRAMEWORK
+Ourframeworktakesasinputadecisionproblemassociatedwithaninformationmodel,including
+decisionsfromoneormoreagents. Itoutputsthevalueofinformationofavailablesignalstothe
+agents,conditioningontheexistinginformationintheirdecisions. Understandingthepossiblevalue
+ofasignaltoadecision-makerrequiresdefiningthebestattainabledecisionperformancewiththat
+signal. WethereforeadoptaBayesiandecisiontheoreticframework.
+Ourframeworkprovidestwoseparatefunctionstoquantifythevalueofinformation: oneglobally
+acrossthedata-generatingprocess,andonelocallyinarealization.
+Decision Problem. A decision problem consists of three key elements. We illustrate with an
+exampleofaweatherdecision.
+• Apayoff-relevantstateωfromaspaceΩ. Forexample,ω ∈Ω={0,1}={norain,rain}.
+• AdecisiondfromthedecisionspaceDcharacterizingthedecision-maker(DM)’schoice. For
+example,d∈D={0,1}={nottakeumbrella,takeumbrella}.
+• ApayofffunctionS : D×Ω → R,usedtoassessthequalityofadecisiongivenarealization
+ofthestate. Forexample,S(d = 0,ω = 0) = 0,S(d = 0,ω = 1) = −100,S(d = 1,ω = 0) =
+−50,S(d=1,ω =1)=0,whichpunishestheDMforwronglytakingornottakingtheumbrella.
+Information Model. We cast the information available to a DM,including any available agent
+decisions, as a set of signals defined within an information model. Following the definition of
+an information model in Blackwell et al. (1951), the information model can be represented by a
+data-generatingmodelwithasetofsignals.
+• Signals. There are n “basic signals” represented as random variables Σ ,...,Σ , from the
+1 n
+signal spaces Σ ,...,Σ . Basic signals represent information available to a decision-maker as
+1 n
+theydecide,e.g.,Σ = ∆Ωforaprobabilisticpredictionofraining,Σ = {cloudy,notcloudy},
+1 2
+Σ = {0,...,100} for temperature in Celsius, Σ = D for human decisions DH on taking
+3 4
+umbrellaornot,etc. Thedecision-makerobservesasignal,whichisasubsetofthebasicsignals,
+V ⊆ 2{Σ1,...,Σn}. ThecombinationoftwosignalsV
+1
+andV
+2
+takesthesetunionV = V
+1
+∪V
+2
+. In
+thestandardhuman-AIdecisionworkflowwhereahumanmakesanindependentjudgmentbefore
+consultingtheAI,allbasicsignalsare{x,DH,DAI}–thefeaturesoftheinstance,thehuman’sinitial
+decisionsandtheAI’spredictions.
+• Data-generatingprocess. Decisionbenchmarksaredefinedrelativetoaspecificdata-generating
+process,ajointdistributionπ ∈∆(Σ ×...×Σ ×Ω)overthebasicsignalsandthepayoff-relevant
+1 n
+state. π canbeviewedasthecombinationoftwodistributions: thepriordistributionofthestate
+Pr[ω]andthesignal-generatingdistributionPr[v|ω]definingtheconditionaldistributionofsignals.
+Torepresentthebest-attainableperformanceofobservingasubsetV ofthenbasicsignals,weuse
+theBayesianposteriorbeliefuponreceivingasignalV =vas
+π(v,ω)
+π(ω|v):=Pr[ω|v]=
+π(ω)
+3
+
+PublishedasaconferencepaperatICLR2026
+whereπ(v,ω)denotesthemarginalprobabilityofthesignalrealizedtobevandthestatebeingω
+withexpectationoverothersignals,andπ(ω)denotesthepriorPr[ω]. Throughoutthepaper,we
+usecapitalletterstodenotearandomvariableofsignal, e.g., V, anduselittleletetrstodenotea
+realizationofsignal,e.g.,v.
+Information value. Our framework quantifies the value of information in a signal V as the
+expectedpayoffimprovementofanidealizedagentwhohasaccesstoV inadditiontosomebaseline
+informationset. ThiscorrespondstoarationalBayesianDMwhoknowsthepriorprobabilityof
+thestateandconditionaldistributionofsignals(i.e.,thedata-generatingprocess),observesasignal
+realization,updatestheirpriortoarriveatposteriorbeliefs,andthenchoosesadecisiontomaximize
+theirexpectedpayoffgiventheirposteriorbelief. Formally,givenadecisiontaskwithpayofffunction
+S andaninformationmodelπ,therationalDM’sexpectedpayoffgivena(setof)signal(s)V is
+R(V):=E [S(dr(v),ω)] (1)
+(v,ω)∼π
+wheredr(·):V→DdenotesthedecisionruleadoptedbytherationalDM.
+dr(v)=argmaxE [S(d,ω)] (2)
+ω∼π(ω|v)
+d∈D
+Wefurthercharacterizethemaximumexpectedpayoffthatcanbeachievedwithnoinformation. This
+canbeusedasthebaselinetoquantifytheinformationvalueofV asthepayoffimprovementof
+V over. Weuse∅torepresentanullsignalandR(∅)representstheexpectedpayoffofaBayesian
+rationalDMwhoonlyusesthepriordistributiontomakedecisions. Inthiscase,theBayesianrational
+DMtakesthebestfixedactionundertheprior,andtheirexpectedpayoffis:
+R(∅):=maxE [S(d,ω)] (3)
+ω∼π
+d∈D
+Definition 3.1. Given a decision task with payoff function S and an information model π, the
+informationvalueofV isdefinedas
+IV(V):=R(V)−R(∅) (4)
+Thefullinformationvalueinahuman-AIdecisiontaskistheinformationvalueofthesetofallbasic
+signals. Forexample, intheweatherdecisionexample, IV({Σ ,Σ ,Σ ,Σ })representsthefull
+1 2 3 4
+informationvalueoftheprobabilisticpredictionofrain, thecloudiness, thetemperature, andthe
+humandecisions. Thisdefinestheupperboundoftheinformationvalueofanysignal,includingthe
+agent-complementaryinformationvalueandinstance-levelagent-complementaryinformationvalue
+thatwewilldefineinthefollowingsections.
+3.1 AGENT-COMPLEMENTARYINFORMATIONVALUE
+Withtheabovedefinitions,itispossibletomeasurethebestcaseadditionalvaluethatnewsignals
+canprovideovertheinformationalreadycapturedbyanagent’sdecisions. Here,agentmayrefertoa
+human,anAIsystem,orahuman–AIteam. Theintuitionbehindourapproachisthatanyinformation
+thatisusedbydecision-makersshouldeventuallyrevealitselfthroughvariationintheirdecisions.
+Theorem3.2captureshowmuchcomplementaryinformationvalueisofferedbyasignaloverthe
+agentdecisionsinexpectationoverthedata-generatingprocess. Forexample,intheweatherdecision
+task,thisindicateshowmuchthepayofffromthedecision-maker’schoiceofwhethertotakethe
+umbrellaornotcanbefurtherimprovedbyincorporatingthetemperatureintheirdecisionrule.
+Definition3.2. GivenadecisiontaskwithpayofffunctionS andaninformationmodelπ,wedefine
+theagent-complementaryinformationvalue(ACIV)ofV onagentdecisionsDbas
+ACIV(V;Db):=R(Db∪V)−R(Db) (5)
+IftheACIVofasignalV issmallrelativetothebaseline(3),thismeanseitherthattheinformation
+valueofV tothedecisionproblemislow(e.g., itisnotcorrelatedwithω), orthattheagenthas
+alreadyexploitedtheinformationinV (e.g.,theagentreliesonV orequivalentinformationtomake
+theirdecisionssuchthattheirdecisionscorrelatewithω inthesamewayasV correlateswithω).
+If,however,theACIV ofV islargerelativetothebaseline,thenatleastintheory,theagentcan
+improvetheirpayoffbyincorporatingV intheirdecisionmaking.
+Furthermore,ACIVcanrevealcomplementaryinformationbetweendifferenttypesofagents. For
+instance,ifweviewAIpredictionsasV andtreatavailablehumandecisionsastheagentsignalDb,a
+largeACIVindicatesthatAIpredictionsaddconsiderablevaluebeyondwhathumansaloneachieve.
+Inthereversescenario,ifhumandecisionsserveasV andAIpredictionsareDb,wecanmeasure
+howmuchhumanscancontributeovertheinformationcapturedintheAIpredictions.
+4
+
+PublishedasaconferencepaperatICLR2026
+Ofcourse,weareunlikelytoobserveidenticalrealizationsofthesignalsincontinuous-valuedor
+high-dimensionaldata,suchasimagesortext. Anaturalrelaxationistoconsidertherealizations
+thataresufficiently“similar”fortheperformanceofthedecision-maker. Algorithm1learnsthe
+posteriordistributionofthepayoff-relevantstatefromthesignalandthenusesthatpredictionasthe
+probabilitydistributionofthepayoff-relevantstatetochoosetheoptimalaction. Thisapproachcan
+bereadilyextendedtothecasewherethesignalismorecomplex,suchashumandecisionsinthe
+formoffreeformtext(e.g.,radiologyreports)orexplanationsoftheAIpredictionsintheformof
+images(e.g.,saliencymap). 3
+Algorithm1AmethodtocalculatetheACIVofV.
+1: Input: Observed realizations {v i ,db i ,ω i }n i=1 , a predictive algorithm A, payoff function S,
+decisionspaceD,andstatespaceΩ.
+2: Output: ACIV(V;Db)
+3: aˆ←A({v i ,db i ,ω i }n i=1 )
+4: aˆb ←A({db i ,ω i }n i=1 )
+5: fori=1tondo
+6: pˆ i ←aˆ(v i ,db i )
+7: dˆr i ←argmax d∈D E ω∼pˆi [S(d,ω)]
+8: pˆb ←aˆb(db)
+i i
+9: dˆrb ←argmax E [S(d,ω)]
+i d∈D ω∼pˆb
+i
+10: s i ←S(dˆr i ,ω i )−S(dˆr i b,ω i )
+11: endfor
+12: return n 1 (cid:80)n i=1 s i
+3.2 INSTANCE-LEVELAGENT-COMPLEMENTARYINFORMATIONVALUE
+ACIVquantifiesthevalueofthedecision-relevantinformationinasignalV acrossthedistribution
+ofallpossiblerealizationsdefinedbythedata-generatingmodel. Toprovideanalogousinstance-level
+quantification of information value, we define Instance-Level agent-complementary Information
+Value(ILIV)toquantifythevalueofthedecision-relevantinformationencodedbyasinglerealization
+ofthesignal. Thisfiner-grainedviewmakesitpossibletoanalyzehowmuchanagentcanbenefit
+intheoryfrombetterincorporatinginstance-levelinformationintheirdecision. Forexample,inthe
+weatherdecisiontask,thisindicateshowmuchthepayoffofthedecision-makercanbeimprovedby
+knowingthetemperatureis21◦C.
+Givenarealizationofsignalv ={σ ,...,σ },wewanttoknowthemaximumexpectedpayoff
+j1 jk
+gainfromtheaccesstovontheinstanceswherevisrealizedovertheexistinginformationencodedin
+agentdecisions. Intuitively,thiscaptureshowmuch“room”thereisforaspecificsignaltobebetter
+used. Formally,givenadecisiontaskwithpayofffunctionS andinformationmodelπ,theexpected
+payoffoftherationalDMgivensignalV =v′oninstanceswiththesignalrealizationV =vis
+rv(v′):=E [S(dr(v′),ω)] (6)
+ω∼π(ω|v)
+wheredr(v′)istheBayesianoptimaldecisiononreceivingv′asdefinedinEquation(2). Notethat
+we allow v′ ̸= v, i.e. the signal v′ observed by the rational DM can be different from the actual
+realizationv. TheexpectedpayoffofarationalDMwhoismisinformedisguaranteedtobelower
+thaniscorrectlyinformed,i.e.,rv(v′)≤rv(v)foranyv′. Thisnotionofflexibilityallowstoconsider
+theinformationvalueofacounterfactualrealizationofasignal. Forexample,intheweatherdecision
+task, this notation is able to describe how much payoff can change when the decision maker is
+misinformedthatthetemperatureis18◦Cwhenthetemperatureisactually21◦C.Weusethisin
+designingtheexplanationofILIV-SHAPinthenextsection.
+3Notethatthealgorithm(aˆ,aˆb)shouldbecross-validatedtoavoidoverfittingtotheobserveddataandalsobe
+evaluatedforcalibrationerrorsincetherationalDMtreatsitastheBayesianposterior.Weprovideasensitivity
+analysisinSectionHwherewecomparetheACIVestimatedundertherationalbeliefestimatorusinglinear
+regression(LR),gradientboostingmethods(GBM),andneuralnetworks(NN).
+5
+
+PublishedasaconferencepaperatICLR2026
+Ifweconsidertheagentdecisionsinadditiontotherealizationv,therationalDM’sexpectedpayoff
+oninstanceswhereV =vcanbewrittenas
+rv(v′;Db):=E [S(dr(v′∪db),ω)] (7)
+(db,ω)∼π(db,ω|v)
+Definition3.3. GivenadecisiontaskwithpayofffunctionS andaninformationmodelπ,wedefine
+theinstance-levelagent-complementaryinformationvalue(ILIV)ofsignalrealizationV =v′ on
+instanceswhereV =vas:
+ILIVv(v′;Db):=rv(v′;Db)−rv(∅;Db). (8)
+whererv(∅;Db)representstheexpectedrationalpayoffoninstancesofV =v,wheretherational
+DMonlyknowstheagentdecisionswithoutknowinganyrealizationsofV. ILIVmaximizeswhen
+thesignaldoesnotmisinform,i.e.,ILIVv(v;Db)≥ILIVv(v′;Db),forv′ ∈V.
+Algorithm2AmethodtocalculatetheILIVofv′ontheinstancesofv.
+1: Input: Observedrealizations{v i ,db i ,ω i }n i=1 ,testcounterfactualsignalrealizationv′,testsignal
+realizationv,apredictivealgorithmA,payofffunctionS,decisionspaceD,andstatespaceΩ.
+2: Output: ILIVv(v′;Db)
+3: aˆ←A({v i ,db i ,ω i }n i=1 )
+4: aˆb ←A({db i ,ω i }n i=1 )
+5: {j 1 ,...,j k }←theindicesofinstanceswherev ji =vforanyi∈[k]
+6: fori=1tokdo
+7: pˆ i ←aˆ(v′,db ji )
+8: dˆr i ←argmax d∈D E ω∼pˆi [S(d,ω)]
+9: pˆb ←aˆb(db )
+i ji
+10: dˆrb ←argmax E [S(d,ω)]
+i d∈D ω∼pˆb
+i
+11: s i ←S(dˆr i ,ω i )−S(dˆr i b,ω i )
+12: endfor
+13: return k 1 (cid:80)k i=1 s i
+4 INFORMATION-BASED EXPLANATION
+Wedefineaninformation-basedexplanation(ILIV-SHAP)tocommunicatewheretheAIprediction
+offerscomplementaryinformationovertheagentdecisions. Traditionalsaliency-basedexplanations
+communicate the average contribution of each feature to a prediction over the baseline (prior)
+prediction,whileILIV-SHAPcommunicatestheaveragecontributionofeachfeaturetotheagent-
+complementaryinformationvaluecontainedintheprediction.
+Specifically, suppose a model f that, for example, takes as input m features and outputs a real
+number. Givenaninstancex=(x ,...,x ),theimportanceofonefeaturex tothemodeloutput
+1 m i
+f(x)isencodedbytheexpecteddifferenceofmodeloutputswhenx ismarginalizedout. Thisis
+i
+quantifiedbyf(x)−E[f(X)|X =x ],whereX denotesallfeaturesexceptX . Considering
+−i −i −i i
+theinteractionbetweenfeatures,SHAP(Lundberg&Lee,2017)usestheShapleyvaluetoquantify
+theimportancescoresaveragedondifferentcombinationsoffeatures:
+(cid:88) |x′|!(m−|x′|−1)!
+ϕ (f,x)= [g (x′)−g (x′\x )]
+i m! f f i
+x′⊆x
+whereg (x′)denotestheexpectedoutputconditionedonx′,i.e.,E[f(X)|X′ =x′]foranyx′ ⊆x
+f
+wherex′isthefeaturesthatarenotmarginalizedout.
+Definition4.1(ILIV-SHAP). Givenamodelf anddatafeaturesx=(x ,...,x ),theimportance
+1 m
+scoreofthei-thfeaturebyILIV-SHAPis
+(cid:88) |x′|!(m−|x′|−1)!
+ϕILIV(f,x)= [ILIVf(x)(g (x′);Db)−ILIVf(x)(g (x′\x );Db)]
+i m! f f i
+x′⊆x
+where ILIVf(x)(g (x′);Db) denotes a counterfactual evaluation of ILIV, which quantifies the
+f
+expectedpayoffgainfromadditionallyknowingg (x′)overDbontheinstanceswheretheactual
+f
+predictionisf(x).
+6
+
+PublishedasaconferencepaperatICLR2026
+ILIV-SHAPsharesthesamepropertiesasSHAP(Lundberg&Lee,2017)bysimilarlyconstructing
+theimportancescores. Forexample,ILIV-SHAPsatisfiesthecriticalefficiencyaxiom,i.e.,thesum
+oftheimportancescoresequalstheinformationvalueofthemodeloutput,andthesymmetryaxiom,
+i.e.,theimportancescoresarethesameforanytwofeaturesthatcontributethesameamounttothe
+informationvalueofthemodeloutput.
+Sample-basedmethodsforapproximatingSHAPvalues4 canalsobeappliedtoILIV-SHAP,such
+aspermutationsampling(Strumbelj&Kononenko,2010),KernelSHAP(Lundberg&Lee,2017),
+and Partition SHAP (Lundberg et al., 2018). Because ILIV is expected to be non-decreasing in
+thenumberoffeaturesincludeding (x′)—morefeaturesmeanmoreinformation—sample-based
+f
+methodscanachievebetterstabilityacrossthepermutationsonILIV-SHAPthanonSHAP.
+5 EXPERIMENT
+Weuseapreregisteredbetween-subjectsonlineexperimenttoanswertwoquestions:
+1. CanACIVidentifywhichAImodelwillresultinthebesthuman-AIdecision-making?
+2. DoesILIV-SHAPimprovehuman-AIdecision-makingoverSHAPalone?
+OurexperimentassignsparticipantstooneoftwoAImodelswithvaryingex-anteACIV{AI1=high
+ACIV,AI2=lowACIV},andoneofthreeexplanationconditions{ILIV-SHAPandSHAP,SHAP,No
+Explanation}. WehypothesizethatthehigherACIVmodelwillleadtobetterhuman-AIdecisions,
+andthatpresentingILIV-SHAPexplanationsforthismodelwillleadtobetterhuman-AIdecisions
+thantheotherexplanationtypes.
+Taskanddata. WestudyAI-assistedhousepriceprediction,followingotherrecentcrowdsourced
+studies(e.g.,Chiang&Yin(2021);Hemmeretal.(2022);Poursabzi-Sangdehetal.(2021);Holstein
+et al. (2023)). This task does not require any domain knowledge, making it suitable for a broad
+participantpopulation. Additionally,thetaskiscomplexenoughtobenefitfromAIassistance. We
+usetheAmes,IowaHousingDataset(DeCock,2011).
+Participants and procedure. We recruited 421 US-based participants via the crowdsourcing
+platform Prolific. Each participant was randomly assigned to 12 houses out of 733 in the Ames
+IowaHousingDataset. Eachcompletedasequenceof24trials,wheretwodecisionswereelicited
+for each house: one without AI assistance and one with. In the first 12 trials, participants were
+askedtopredictthehousepriceoftheassignedhouseusingsixfeaturesofthehouse,includingyear
+built,thelivingareaabovegroundinsquarefeet,thesizeofgarageincarcapacity,thenumberof
+fireplaces,yearremodeled,andratingsofthehouse’smaterialandfinish. Weintentionallyreduced
+theinterpretabilityoftheyearremodeledandmaterialandfinishbyrelabelingthemas“FeatureX”
+and“FeatureY”andrescalingtheirvalues. Therefore,theAImodelthattakesthesetwofeatures
+asinputisexpectedtohavecomplementaryinformationoverhumanparticipants. Inthesecond12
+trials,participantswereaskedtorevisetheirguessesinthefirstroundafterseeingtheAI’sprediction
+andexplanation. Weincentivizedparticipantswithabaserewardof3.00USDandabonusbased
+onthemeansquarederror(MSE)betweentheirguessesandthetruehousepriceinthe24trials:
+bonus=3.00− MSE .
+3×109
+AImodelsandexplanations. Participantswereassignedtooneofsixexperimentalconditions
+resultingfromcrossingthetwoAImodelswiththethreeexplanationtypes.WedesignedAI1andAI2
+tohavevaryingpotentialtocomplementhumans: AI1wastrainedwiththesixfeaturesandthetrue
+houseprice,withnoiseaddedtothesixfeatures(whichismeanttobebringdowntheaccuracyofAI1
+tobecomparablewithAI2). Ontheotherhand,AI2wastrainedwiththefourhuman-interpretable
+featuresandthetruehouseprice,suchthattherewouldbelesspotentialforthepredictionstoadd
+complementaryinformationoverhumanjudgments. WeusedthesametrainingdataforbothAI
+modelsandensuredthatthetwoAImodelsachievedsimilarperformance(Figure2left),sothat
+model accuracy differences would not confound our results. In the SHAP explanation, we used
+the SHAP values of the six features to explain the AI’s prediction. To generate the ILIV-SHAP
+explanations,weusedindependenthumandecisionswecollectedonProlificforthedatasetusingthe
+sametaskandfeaturespriortorunningtheofficialstudy. WepresenttheexactILIV-SHAPvalues
+of the six features, which ranked and highlighted the features where the human-complementary
+4WenotethatILIV-SHAPdoesnotresolvethefoundationalissuesofSHAP(Huang&Marques-Silva,2024),
+butjustasademonstrationonhowtheinformationvaluesuchasILIVcanbeusedinexplanations.
+7
+
+PublishedasaconferencepaperatICLR2026
+(a)AI1withILIV-SHAPandSHAPexplanation. (b)AI2withILIV-SHAPandSHAPexplanation.
+Figure1: ThescreenshotoftheinterfaceforILIV-SHAPandSHAPexplanations. Thethirdcolumn
+istheSHAPvalueandthehighlightsarebasedontheILIV-SHAPvalue. BecauseAI2doesnothave
+accesstoFeatureX/Y,boththeirILIV-SHAPandSHAPvaluesarezeroforAI2.
+Table1: ThetwoAImodelsthatareusedintheexperiment. AI1hasaccesstoallthefeatures,while
+AI2hasaccesstoonlythehuman-interpretablefeatures.
+Inputfeatures MAPE Rsquared ACIV(inMSE) ACIV(inMAPE)
+AI1 Allfeatures 14.30% 0.81 6.5×108 4.61%
+AI2 Human-interpretablefeatures 14.51% 0.81 3.7×108 2.00%
+information(ILIV)overtheAI’spredictionexceedsathreshold.5 SeeSectionJforthescreenshotsof
+theexplanationsandinstructions.
+Evaluationmetrics. WereporttheACIVoftheAImodelsinmeansquarederror(MSE)6andmean
+absolutepercentageerror(MAPE).Tomeasurethehumanaloneandhuman-AIteamperformance,
+wefitapreregisteredBayesianhierarchicalregressionmodelwithweaklyinformedpriors7 tothe
+percentageerror(PE)betweenthehuman’spredictionandthetruehouseprice,PE = (d−ω)/ω,
+usingR’sbrmspackage(Bürkner,2017).
+PE∼student_t(µ,σ,ν)
+µ=AI∗explanation+round+(1|participant_id)
+log(σ)=AI∗explanation+round+(1|participant_id)
+ν ∼Gamma(2,0.1)
+where AI and explanation are indicators of the experimental conditions, round is an indicator
+of whether the trial is in the first or second round, and participant_id is a unique identifier for
+each participant. We evaluate human-AI team performance by the reduction in absolute per-
+centage error (APE) over human-alone predictions in the first round, i.e., ReductioninAPE =
+E[|PE||round=1]−E[|PE||round=2],wheretheexpectationistakenovertheBayesianposterior
+distributionoftheaboveBayesianmodel.
+Results. Table1confirmstheexpectedrankingofAImodelsbyACIV. AI1,whichhadaccessto
+thetwohuman-uninterpretablefeatures,achieveshigherACIVthanAI2,whichonlyhadaccessto
+thefourhuman-interpretablefeatures. NotethesimilarpredictiveperformanceofthetwoAIs.
+The posterior predictions of human-AI team performance from our regression model also align
+with expectations based on the complementary information each model provides (Figure 2 far
+right). Collapsingacrossexplanationconditions,AI1(higherACIV)reducesAPEbymorethanAI2
+(6.24%[5.99%,6.5%] vs 5.96%[5.68%,6.24%] respectively). Access to the ILIV-SHAP + SHAP
+5Wechoosethethresholdtohighlightthefeaturesthatcanleadtoaatleast$0.25boostonthebonusto
+participants,whichistranslatedinto7.5×108MSEasthethresholdforILIV-SHAPvalues.
+6WeincludedMSEsinceitisaproperscoringrulewhileMAPEisnot.
+7linktopreregistrationredactedforpeerreview
+8
+
+PublishedasaconferencepaperatICLR2026
+Reduction in APE
+10.0%
+6.94%
+7.5% [6.5%, 7.38%] 5.31% [5.47 5 % .8 , 8 6 % .28 % [5. ] 71 6 % .2 , 2 6 % .72%] [5.5 5 % .9 , 6 6 % .42% [5 ] .9 6 % .3 , 3 6 % .76%] [5.9 6 9 . % 24 , % 6.5% [5 ] .68 5 % .9 , 6 6 % .24%]
+[4.8%, 5.83%]
+5.0%
+2.5%
+AI1
+AI2
+0.0%
+ILIV−SHAP and SHAP SHAP None Collapsing all explanations
+Figure2: Reductioninthehuman-AIteam’sabsolutepercentageerror(APE)with95%confidence
+intervalsaccordingtoposteriorpredictionsofourregressionmodel.
+explanation results in a greater reduction in APE for AI1 than AI2 (6.94%[6.50%,7.38%] vs
+5.31%[4.80%,5.83%]respectively)8.
+Figure2alsoillustratestheeffectofthedifferentexplanationconditionsonhuman-AIteamper-
+formance. WhentheAIhassufficientcomplementinginformation(AI1),theILIV-SHAP+SHAP
+explanationmoreeffectivelyreducesAPEforthehuman-AIdecisionsthantheSHAPexplanationand
+baseline(noexplanation)(6.94%[6.50%,7.38%]forILIV-SHAP,5.88%[5.47%,6.28%]forSHAP,
+and5.96%[5.50%,6.42%]fornoexplanation).
+6 DEMONSTRATIONS
+6.1 CHESTX-RAYDIAGNOSIS
+WestudyachestX-raydiagnosistask. Asagentdecisions,DAIandDH,weconsiderfivepredictive
+models fine-tuned on the MIMIC-CXR database (Johnson et al., 2019) and radiologists’ textual
+reportsrecordedinMIMIC-CXR.Weusefivepretrainedimagemodelswiththesamechoicesin
+Irvinetal.(2019). Wetrainthemodelson12,228radiographs,andvalidatedon6,115randomly
+sampledradiographs. Forthepayoff-relevantstate,ω ∈Ω={0,1},weusedresultsfromtwotypes
+ofbloodtests(‘NT-proBNP’and‘troponin’cutbyage-specificthresholds). Thedecisiontaskis
+formalizedasapredictionproblemwithD=∆ΩandS(d,ω)=1−(d−ω)2.
+CantheAImodelscomplementhumanjudgment? Figure3ashowsallthemodelsoffercomple-
+mentaryinformationvaluetotheradiologists’reports(greendistributionsimproveoverthepurple
+distribution),andintheotherdirection,theradiologists’reportsoffercomplementaryinformation
+valuetothemodels(greendistributionsimproveovertheorangedistributions).
+WhichAImodeloffersthemostdecision-relevantinformationoverhumanjudgments? Fig-
+ure3ashowsthatVisionTransformercontainsslightlyhigherinformationvaluethantheothermodels,
+andInceptionv3containsslightlylowerinformationvaluethantheothermodels. Wefurtherassess
+therobustnessofVisionTransformer’ssuperiorityovertheotherAImodelsacrossmanypossible
+payofffunctionstotestifthereisaBlackwellorderingofmodelsinSectionGandFigure7.
+Asshowninthisdemonstration,doctorsmayuseourframeworktolearnhowmuchcomplementary
+informationvaluetheAImodelsofferovertheirdecisions,andwhichmodeloffersthemost.
+6.2 DEEPFAKEDETECTION
+Westudyadeepfakedetectiontask(Dolhanskyetal.,2020;Grohetal.,2022). Weselectthemodel
+intheDeepfakeDetectionChallenge(Zhangetal.,2016),withestimated65%accuracyonholdout
+data. Weusethehumandecisionsandthehuman-AIteam’sdecisionsfromGrohetal.(2022),who
+collectedjudgmentsonthevideosfromn=5,524participantsrecruitedonProlific. WeusetheBrier
+scoreasthepayofffunction,withthebinarypayoff-relatedstate:ω ∈{0,1}={genuine,fake}. This
+choicediffersfromGrohetal.(2022)’suseofmeanabsoluteerror,butagainwepreferthequadratic
+8SeeSectionDforthesignificanttestresults
+9
+
+PublishedasaconferencepaperatICLR2026
+(a)ChestX-raydiagnosisresults. (b)Deepfakedetectionresults
+Figure3: Distributionsshowinformationvalues. Fora),weplotACIVofradiologistdecisions,
+differentchoicesofAImodelsandsignalsthatcombineAIpredictionsandradiologistdecisions.
+Forb),weplottheinformationvalueofthecombinationofvideo-levelfeaturesandagentdecisions
+(includinghumandecisions,AIpredictions,andhuman-AIteams’decisions). Fullinformation
+representsalltheinformationavailabletothehumandecision-makers–theradiologyimagesforthe
+chestX-raydiagnosistaskandthesevenvideo-levelfeatures,humandecisions,andAIpredictions
+forthedeepfakedetectiontask. SeeSectionHforthesensitivityanalysisofAlgorithm1.
+scorebecauseitisaproperscoringrulewheretruthfullyreportingbeliefsmaximizesthescore. Groh
+etal.(2022)manuallylabelsevenvideo-levelfeatures,whichweuseasbinaryindicatorsinplace
+ofAlgorithm1inlightofthehighdimensionalsignals: graininess,blurriness,darkness,presence
+ofaflickeringface,presenceoftwopeople,presenceofafloatingdistraction,andthepresenceof
+anindividualwithdarkskin9. WeshowtheACIVsofthesevenfeaturesoverthedecisions,theAI
+predictions,andthehuman-AIdecisionsinFigure3b.
+How much decision-relevant information do agents’ decisions offer? We first compare the
+information value of the AI predictions to that of the human decisions. Figure 3b shows that
+AIpredictionsprovideabout65%ofthetotalpossibleinformationvalueovertheno-information
+baseline,whilehumandecisionsonlyprovideabout15%.Wenextconsiderthehuman-AIdecisions.
+GiventhattheAIpredictionscontainasignificantportionofthetotalpossibleinformationvalue,we
+mighthopethatwhenparticipantshaveaccesstotheAIpredictions,theirperformancewillbeclose
+tothefullinformationbaseline. However,theinformationvalueofthehuman-AIdecisionsonly
+achievesasmallproportionofthetotalpossibleinformationvalue(30%).
+Howmuchadditionaldecision-relevantinformationdotheavailablefeaturesofferoveragents’
+decisions? Tounderstandwhatinformationmightimprovehumandecisions,weassesstheACIVs
+ofdifferentvideo-levelfeaturesoverdifferentagents. AsshownonthefifthrowinFigure3b,the
+presence of a flickering face offers larger ACIV over human decisions than over AI predictions,
+meaningthathumandecisionscouldimprovebyagreateramountiftheyweretoincorporatethis
+information. Meanwhile, asshownonthefourthrowinFigure3b, thepresenceofanindividual
+withdarkskinofferslargerACIVoverAIpredictionsthanoverhumandecisions,suggestingthat
+humansmakegreateruseofthisinformation. ThissuggeststhattheAIandhumanrelyondiffering
+informationtomaketheirinitialpredictions.10
+7 DISCUSSION AND LIMITATIONS
+Ourdecision-theoreticframeworkquantifiestheinformationvalueofsignalsavailableinahuman-AI
+decisionsettingovertheinformationvalueofagentdecisions. Importantly,thebasisofourframe-
+workinBayesiandecisiontheorydoesnotrequirethatactual(e.g.,human)decision-makersachieve
+Bayesianrationaldecision-making. Rather,itprovidesatheoreticalbasistosupportcomparisonsto
+humanbehaviortodrivelearning(see,e.g.,(Guoetal.,2024;Hullman&Gelman,2021;Wuetal.,
+2023). Thistheoreticalbasisisnecessarytoestablishwell-definedbenchmarks. Weexperimentally
+demonstratethepoweroftheframeworkforanalyzingandimprovinghuman-AIdecision-making.
+OurproposedILIV-SHAPexplanationimprovesperformanceoveranexistingstate-of-the-artex-
+planationstrategy. Thissuggeststhatvaluinginformationvalueintermsofwhatitsaysaboutthe
+payoffrelevantstate, notjusttheAIprediction, canimprovethedesignofsignalsforhuman-AI
+9The“dark-skinindividual”labelreflectsasubjectivevisualattribute. Itisusedhereonlyforrobustness
+analysis—notforcausalinterpretationordemographicinference.
+10Forspaceconstraints,werefertothefulldescriptionsandresultsinSectionsFandG.
+10
+
+PublishedasaconferencepaperatICLR2026
+decision-making. Henceourworkofferstheoreticalsupportforattemptstodesignnewexplanations
+(e.g.,Lietal.(2025)).
+Ourworkprovidesapromisingmethodologicalframeworkforanemergingresearchagendaaround
+optimallycombiningagents’informationfordecisions(e.g.,Aluretal.(2023;2024)). Whilewe
+focusedonhuman-AIdecisions,theframeworkanbeappliedtoanycombinationofAIorhuman
+agentjudgments. Thoughmostofourdefinitionsandanalysisarefocusedondecisiontaskswith
+singlewell-definedpayofffunction,theframeworkcanbereadilyextendedtomorecomplexdecision
+taskswithanambiguoussetofpayofffunctionsortotallyunidentifiablepayofffunctions. Wepresent
+arobustnessanalysisframeworkinSectionBtocalculatetheBlackwellorderingofmodelsover
+properscoringrules. AdemonstrationoftherobustnessanalysisisshowninSectionG.
+Theexperimentisdesignedtoprovidecomplementaritybyconstructioninordertofunctionasa
+proofofconcept. WebelievefutureworkisneededtoevaluatetheimpactofILIV-SHAPinreal
+deploymentofhuman-AIdecision-makingworkflows,suchaswherethehumanorAImighthave
+additionalprivateinformationovereachother.
+11
+
+PublishedasaconferencepaperatICLR2026
+8 REPRODUCIBILITY STATEMENT
+The main results of our paper is to provide a framework guiding the analysis of complementary
+informationinhuman-AIdecision-making. Weprovideapythonlibraryinsupplementarymartialto
+calculatethequantitiesdefinedinourframework.
+Weprovidethedataandcode(whichareallputinseparateJupyternotebooks)toreproduceallthe
+resultsinourpaper,includingthedemonstrationsandtheempiricalstudyinthemaintext,andthe
+observationalstudyandrobustnessanalysisintheAppendix.
+REFERENCES
+StefaníaÆgisdóttir,MichaelJWhite,PaulMSpengler,AlanSMaugherman,LindaAAnderson,
+RobertSCook,CassandraNNichols,GeorgiosKLampropoulos,BlainSWalker,GennaCohen,
+etal. Themeta-analysisofclinicaljudgmentproject: Fifty-sixyearsofaccumulatedresearchon
+clinicalversusstatisticalprediction. TheCounselingPsychologist,34(3):341–382,2006.
+MayankAgrawal,JoshuaCPeterson,andThomasLGriffiths. Scalinguppsychologyviascientific
+regretminimization. ProceedingsoftheNationalAcademyofSciences,117(16):8825–8835,2020.
+DosovitskiyAlexey. Animageisworth16x16words: Transformersforimagerecognitionatscale.
+arXivpreprintarXiv: 2010.11929,2020.
+RohanAlur,LorenLaine,DarrickLi,ManishRaghavan,DevavratShah,andDennisShung. Auditing
+forhumanexpertise. AdvancesinNeuralInformationProcessingSystems,36:79439–79468,2023.
+RohanAlur,ManishRaghavan,andDevavratShah. Distinguishingtheindistinguishable: Human
+expertiseinalgorithmicprediction. arXivpreprintarXiv:2402.00793,2024.
+Adrian Arnaiz-Rodriguez, Nina Corvelo Benz, Suhas Thejaswi, Nuria Oliver, and Manuel
+Gomez-Rodriguez. Towards human-ai complementarity in matching tasks. arXiv preprint
+arXiv:2508.13285,2025.
+Gagan Bansal, Besmira Nushi, Ece Kamar, Daniel S Weld, Walter S Lasecki, and Eric Horvitz.
+Updatesinhuman-aiteams: Understandingandaddressingtheperformance/compatibilitytradeoff.
+InProceedingsoftheAAAIConferenceonArtificialIntelligence,volume33,pp.2429–2437,2019.
+GaganBansal,BesmiraNushi,EceKamar,EricHorvitz,andDanielSWeld. Isthemostaccurate
+aithebestteammate? optimizingaiforteamwork. InProceedingsoftheAAAIConferenceon
+ArtificialIntelligence,volume35,pp.11405–11414,2021a.
+GaganBansal,TongshuangWu,JoyceZhou,RaymondFok,BesmiraNushi,EceKamar,MarcoTulio
+Ribeiro, and Daniel Weld. Does the whole exceed its parts? the effect of ai explanations on
+complementary team performance. In Proceedings of the 2021 CHI Conference on Human
+FactorsinComputingSystems,CHI’21,NewYork,NY,USA,2021b.AssociationforComputing
+Machinery. ISBN9781450380966. doi:10.1145/3411764.3445717. URLhttps://doi.org/
+10.1145/3411764.3445717.
+EliBen-Michael,DJamesGreiner,MelodyHuang,KosukeImai,ZhichaoJiang,andSooahnShin.
+Doesaihelphumansmakebetterdecisions? astatisticalevaluationframeworkforexperimental
+andobservationalstudies. arXiv,2403:v3,2024.
+DavidBlackwelletal.Comparisonofexperiments.InProceedingsofthesecondBerkeleysymposium
+onmathematicalstatisticsandprobability,volume1,pp. 26,1951.
+Zi-HaoBo,HuiQiao,ChongTian,YuchenGuo,WuchaoLi,TiantianLiang,DongxueLi,DanLiao,
+XianchunZeng,LeileiMei,etal. Towardhumanintervention-freeclinicaldiagnosisofintracranial
+aneurysmviadeepneuralnetwork. Patterns,2(2),2021.
+Elizabeth Bondi, Raphael Koster, Hannah Sheahan, Martin Chadwick, Yoram Bachrach, Taylan
+Cemgil,UlrichPaquet,andKrishnamurthyDvijotham. Roleofhuman-aiinteractioninselective
+prediction. In Proceedings of the AAAI Conference on Artificial Intelligence, volume 36, pp.
+5286–5294,2022.
+12
+
+PublishedasaconferencepaperatICLR2026
+Melanie M Boskemper, Megan L Bartlett, and Jason S McCarley. Measuring the efficiency of
+automation-aided performance in a simulated baggage screening task. Human factors, 64(6):
+945–961,2022.
+ZanaBuçinca,PhoebeLin,KrzysztofZ.Gajos,andElenaL.Glassman. Proxytasksandsubjective
+measures can be misleading in evaluating explainable ai systems. In Proceedings of the 25th
+InternationalConferenceonIntelligentUserInterfaces,IUI’20,pp.454–464,NewYork,NY,
+USA,2020.AssociationforComputingMachinery. ISBN9781450371186. doi: 10.1145/3377325.
+3377498. URLhttps://doi.org/10.1145/3377325.3377498.
+Paul-ChristianBürkner. brms: Anrpackageforbayesianmultilevelmodelsusingstan. Journalof
+statisticalsoftware,80:1–28,2017.
+AdrianBussone,SimoneStumpf,andDympnaO’Sullivan. Theroleofexplanationsontrustand
+relianceinclinicaldecisionsupportsystems. In2015InternationalConferenceonHealthcare
+Informatics,pp.160–169,Oct2015. doi: 10.1109/ICHI.2015.26.
+Chacha Chen, Shi Feng, Amit Sharma, and Chenhao Tan. Machine explanations and human
+understanding(2022). URL:http://arxiv.org/abs/2202.04092,2022.
+YilingChenandBoWaggoner. Informationalsubstitutes. In2016IEEE57thAnnualSymposiumon
+FoundationsofComputerScience(FOCS),pp.239–247.IEEE,2016.
+Chun-Wei Chiang and Ming Yin. You’d better stop! understanding human reliance on machine
+learningmodelsundercovariateshift. InProceedingsofthe13thACMWebScienceConference
+2021,pp.120–129,2021.
+Nina Corvelo Benz and Manuel Rodriguez. Human-aligned calibration for ai-assisted decision
+making. AdvancesinNeuralInformationProcessingSystems,36:14609–14636,2023.
+DeanDeCock. Ames,iowa: Alternativetothebostonhousingdataasanendofsemesterregression
+project. JournalofStatisticsEducation,19(3),2011.
+GiovanniDeToni,NastaranOkati,SuhasThejaswi,EleniStraitouri,andManuelRodriguez. Towards
+human-ai complementarity with prediction sets. Advances in Neural Information Processing
+Systems,37:31380–31409,2024.
+BrianDolhansky,JoannaBitton,BenPflaum,JikuoLu,RussHowes,MenglinWang,andCristianCan-
+tonFerrer. Thedeepfakedetectionchallenge(dfdc)dataset. arXivpreprintarXiv:2006.07397,
+2020.
+DrewFudenberg,JonKleinberg,AnnieLiang,andSendhilMullainathan.Measuringthecompleteness
+ofeconomicmodels. JournalofPoliticalEconomy,130(4):956–990,2022.
+AryLGoldberger,LuisANAmaral,LeonGlass,JeffreyMHausdorff,PlamenChIvanov,RogerG
+Mark,JosephEMietus,GeorgeBMoody,Chung-KangPeng,andHEugeneStanley. Physiobank,
+physiotoolkit,andphysionet: componentsofanewresearchresourceforcomplexphysiologic
+signals. circulation,101(23):e215–e220,2000.
+BenGreenandYilingChen. Theprinciplesandlimitsofalgorithm-in-the-loopdecisionmaking.
+ProceedingsoftheACMonHuman-ComputerInteraction,3(CSCW):1–24,2019.
+MatthewGroh,ZivEpstein,ChazFirestone,andRosalindPicard. Deepfakedetectionbyhuman
+crowds, machines, and machine-informed crowds. Proceedings of the National Academy of
+Sciences,119(1):e2110013119,2022.
+WilliamMGrove,DavidHZald,BoydSLebow,BethESnitz,andChadNelson. Clinicalversus
+mechanicalprediction: Ameta-analysis. PsychologicalAssessment,12(1):19,2000.
+ZiyangGuo,YifanWu,JasonDHartline,andJessicaHullman. Adecisiontheoreticframeworkfor
+measuringaireliance.InThe2024ACMConferenceonFairness,Accountability,andTransparency,
+pp.221–236,2024.
+13
+
+PublishedasaconferencepaperatICLR2026
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. Deep residual learning for image
+recognition. InProceedingsoftheIEEEconferenceoncomputervisionandpatternrecognition,
+pp.770–778,2016.
+PaulAHeidenreich,BiykemBozkurt,DavidAguilar,LarryAAllen,JoniJByun,MonicaMColvin,
+AnitaDeswal,MarkHDrazner,ShannonMDunlay,LindaREvers,etal. 2022aha/acc/hfsaguide-
+lineforthemanagementofheartfailure: areportoftheamericancollegeofcardiology/american
+heartassociationjointcommitteeonclinicalpracticeguidelines. JournaloftheAmericanCollege
+ofCardiology,79(17):e263–e421,2022.
+PatrickHemmer,MaxSchemmer,NiklasKühl,MichaelVössing,andGerhardSatzger. Ontheeffect
+ofinformationasymmetryinhuman-aiteams. arXivpreprintarXiv:2205.01467,2022.
+KennethHolstein,MariaDe-Arteaga,LakshmiTumati,andYanghuidiCheng. Towardsupporting
+perceptualcomplementarityinhuman-aicollaborationviareflectiononunobservables.Proceedings
+oftheACMonHuman-ComputerInteraction,7(CSCW1):1–20,2023.
+Lunjia Hu and Yifan Wu. Predict to minimize swap regret for all payoff-bounded tasks. arXiv
+preprintarXiv:2404.13503,2024.
+GaoHuang,ZhuangLiu,LaurensVanDerMaaten,andKilianQWeinberger. Denselyconnected
+convolutionalnetworks. InProceedingsoftheIEEEconferenceoncomputervisionandpattern
+recognition,pp.4700–4708,2017.
+Xuanxiang Huang and Joao Marques-Silva. On the failings of shapley values for explainability.
+InternationalJournalofApproximateReasoning,171:109112,2024.
+JessicaHullmanandAndrewGelman. Designingforinteractiveexploratorydataanalysisrequires
+theoriesofgraphicalinference. HarvardDataScienceReview,3(3):10–1162,2021.
+JeremyIrvin,PranavRajpurkar,MichaelKo,YifanYu,SilvianaCiurea-Ilcus,ChrisChute,Henrik
+Marklund, Behzad Haghgoo, Robyn Ball, Katie Shpanskaya, et al. Chexpert: A large chest
+radiographdatasetwithuncertaintylabelsandexpertcomparison. InProceedingsoftheAAAI
+conferenceonartificialintelligence,volume33,pp.590–597,2019.
+Maia Jacobs, Melanie F Pradier, Thomas H McCoy Jr, Roy H Perlis, Finale Doshi-Velez, and
+KrzysztofZGajos. Howmachine-learningrecommendationsinfluencecliniciantreatmentselec-
+tions: theexampleofantidepressantselection. Translationalpsychiatry,11(1):108,2021.
+AlistairEWJohnson,TomJPollard,SethJBerkowitz,NathanielRGreenbaum,MatthewPLungren,
+Chih-yingDeng,RogerGMark,andStevenHorng. Mimic-cxr,ade-identifiedpubliclyavailable
+databaseofchestradiographswithfree-textreports. Scientificdata,6(1):317,2019.
+AlistairEWJohnson, LucasBulgarelli, LuShen, AlvinGayles, AyadShammout, StevenHorng,
+TomJPollard,SichengHao,BenjaminMoody,BrianGow,etal. Mimic-iv,afreelyaccessible
+electronichealthrecorddataset. Scientificdata,10(1):1,2023.
+VijayKeswani,MatthewLease,andKrishnaramKenthapadi. Towardsunbiasedandaccuratedeferral
+tomultipleexperts. InProceedingsofthe2021AAAI/ACMConferenceonAI,Ethics,andSociety,
+pp.154–165,2021.
+VijayKeswani,MatthewLease,andKrishnaramKenthapadi. Designingclosedhuman-in-the-loop
+deferralpipelines. arXivpreprintarXiv:2202.04718,2022.
+BobbyKleinberg,RenatoPaesLeme,JonSchneider,andYifengTeng. U-calibration: Forecastingfor
+anunknownagent. InTheThirtySixthAnnualConferenceonLearningTheory,pp.5143–5145.
+PMLR,2023.
+JonKleinberg,JensLudwig,SendhilMullainathan,andZiadObermeyer. Predictionpolicyproblems.
+AmericanEconomicReview,105(5):491–495,2015.
+Jon Kleinberg, Himabindu Lakkaraju, Jure Leskovec, Jens Ludwig, and Sendhil Mullainathan.
+Humandecisionsandmachinepredictions. Thequarterlyjournalofeconomics,133(1):237–293,
+2018.
+14
+
+PublishedasaconferencepaperatICLR2026
+IgorKononenko. Machinelearningformedicaldiagnosis: history,stateoftheartandperspective.
+ArtificialIntelligenceinmedicine,23(1):89–109,2001.
+VivianLaiandChenhaoTan. Onhumanpredictionswithexplanationsandpredictionsofmachine
+learningmodels:Acasestudyondeceptiondetection.InProceedingsoftheconferenceonfairness,
+accountability,andtransparency,pp.29–38,2019.
+HimabinduLakkaraju,JonKleinberg,JureLeskovec,JensLudwig,andSendhilMullainathan. The
+selectivelabelsproblem: Evaluatingalgorithmicpredictionsinthepresenceofunobservables. In
+Proceedingsofthe23rdACMSIGKDDInternationalConferenceonKnowledgeDiscoveryand
+DataMining,pp.275–284,2017.
+Yingkai Li, Jason D Hartline, Liren Shan, and Yifan Wu. Optimization of scoring rules. In
+Proceedingsofthe23rdACMConferenceonEconomicsandComputation,pp.988–989,2022.
+ZhuoyanLi,HangxiaoZhu,ZhuoranLu,ZiangXiao,andMingYin. Fromtexttotrust: Empowering
+ai-assisteddecisionmakingwithadaptivellm-poweredanalysis. InProceedingsofthe2025CHI
+ConferenceonHumanFactorsinComputingSystems,pp.1–18,2025.
+ZeLiu,YutongLin,YueCao,HanHu,YixuanWei,ZhengZhang,StephenLin,andBainingGuo.
+Swintransformer: Hierarchicalvisiontransformerusingshiftedwindows. InProceedingsofthe
+IEEE/CVFinternationalconferenceoncomputervision,pp.10012–10022,2021.
+ScottMLundbergandSu-InLee. Aunifiedapproachtointerpretingmodelpredictions. InI.Guyon,
+U.V.Luxburg,S.Bengio,H.Wallach,R.Fergus,S.Vishwanathan,andR.Garnett(eds.),Advances
+inNeuralInformationProcessingSystems30,pp.4765–4774.CurranAssociates,Inc.,2017.
+ScottMLundberg,GabrielGErion,andSu-InLee. Consistentindividualizedfeatureattributionfor
+treeensembles. arXivpreprintarXiv:1802.03888,2018.
+DavidMadras,ToniPitassi,andRichardZemel.Predictresponsibly:improvingfairnessandaccuracy
+bylearningtodefer. Advancesinneuralinformationprocessingsystems,31,2018.
+BryceMclaughlinandJannSpiess. Algorithmicassistancewithrecommendation-dependentprefer-
+ences. InProceedingsofthe24thACMConferenceonEconomicsandComputation,EC’23,pp.
+991,NewYork,NY,USA,2023.AssociationforComputingMachinery. ISBN9798400701047.
+doi: 10.1145/3580507.3597775. URLhttps://doi.org/10.1145/3580507.3597775.
+PaulEMeehl. ClinicalVersusStatisticalPrediction: ATheoreticalAnalysisandaReviewofthe
+Evidence. UniversityofMinnesotaPress,1954.
+HusseinMozannar,GaganBansal,AdamFourney,andEricHorvitz. Whentoshowasuggestion?
+integratinghumanfeedbackinai-assistedprogramming. InProceedingsoftheAAAIConference
+onArtificialIntelligence,volume38,pp.10137–10144,2024a.
+Hussein Mozannar, Jimin Lee, Dennis Wei, Prasanna Sattigeri, Subhro Das, and David Sontag.
+Effectivehuman-aiteamsvialearnednaturallanguagerulesandonboarding. AdvancesinNeural
+InformationProcessingSystems,36,2024b.
+ChristianMueller,KennethMcDonald,RudolfAdeBoer,AlanMaisel,JohnGFCleland,Nikola
+Kozhuharov,AndrewJSCoats,MarcoMetra,AlexandreMebazaa,FrankRuschitzka,etal. Heart
+failureassociationoftheeuropeansocietyofcardiologypracticalguidanceontheuseofnatriuretic
+peptideconcentrations. Europeanjournalofheartfailure,21(6):715–731,2019.
+SendhilMullainathanandZiadObermeyer.Diagnosingphysicianerror:Amachinelearningapproach
+tolow-valuehealthcare. TheQuarterlyJournalofEconomics,137(2):679–727,2022.
+NastaranOkati,AbirDe,andManuelRodriguez. Differentiablelearningundertriage. Advancesin
+NeuralInformationProcessingSystems,34:9140–9151,2021.
+SamirPassiandMihaelaVorvoreanu. Overrelianceonailiteraturereview. MicrosoftResearch,339:
+340,2022.
+15
+
+PublishedasaconferencepaperatICLR2026
+Forough Poursabzi-Sangdeh, Daniel G Goldstein, Jake M Hofman, Jennifer Wortman Wort-
+man Vaughan, and Hanna Wallach. Manipulating and measuring model interpretability. In
+Proceedingsofthe2021CHIconferenceonhumanfactorsincomputingsystems,pp.1–52,2021.
+Maithra Raghu, Katy Blumer, Greg Corrado, Jon Kleinberg, Ziad Obermeyer, and Sendhil Mul-
+lainathan. The algorithmic automation problem: Prediction, triage, and human effort. arXiv
+preprintarXiv:1903.12220,2019.
+PranavRajpurkar,JeremyIrvin,RobynLBall,KaylieZhu,BrandonYang,HershelMehta,Tony
+Duan, Daisy Ding, Aarti Bagul, Curtis P Langlotz, et al. Deep learning for chest radiograph
+diagnosis: Aretrospectivecomparisonofthechexnextalgorithmtopracticingradiologists. PLoS
+medicine,15(11):e1002686,2018.
+AsheshRambachan. Identifyingpredictionmistakesinobservationaldata. TheQuarterlyJournalof
+Economics,pp.qjae013,2024.
+Charvi Rastogi, Liu Leqi, Kenneth Holstein, and Hoda Heidari. A taxonomy of human and ml
+strengthsindecision-makingtoinvestigatehuman-mlcomplementarity. InProceedingsofthe
+AAAIConferenceonHumanComputationandCrowdsourcing,volume11,pp.127–139,2023.
+AaronRothandMirahShi. Forecastingforswapregretforalldownstreamagents. InProceedingsof
+the25thACMConferenceonEconomicsandComputation,pp.466–488,2024.
+Max Schemmer, Patrick Hemmer, Maximilian Nitsche, Niklas Kühl, and Michael Vössing. A
+meta-analysisoftheutilityofexplainableartificialintelligenceinhuman-aidecision-making. In
+Proceedingsofthe2022AAAI/ACMConferenceonAI,Ethics,andSociety,pp.617–626,2022.
+LloydSShapley. Avalueforn-persongames. ContributionstotheTheoryofGames,2,1953.
+AdvikShreekumar. X-rayingexperts: Decomposingpredictablemistakesinradiology. 2025.
+EleniStraitouri,LequnWang,NastaranOkati,andManuelGomezRodriguez. Improvingexpert
+predictions with conformal prediction. In InternationalConference onMachineLearning, pp.
+32633–32653.PMLR,2023.
+ErikStrumbeljandIgorKononenko. Anefficientexplanationofindividualclassificationsusinggame
+theory. TheJournalofMachineLearningResearch,11:1–18,2010.
+ChristianSzegedy,VincentVanhoucke,SergeyIoffe,JonShlens,andZbigniewWojna. Rethinking
+theinceptionarchitectureforcomputervision. InProceedingsoftheIEEEconferenceoncomputer
+visionandpatternrecognition,pp.2818–2826,2016.
+Yu-XingTang,You-BaoTang,YifanPeng,KeYan,MohammadhadiBagheri,BernadetteARedd,
+CatherineJBrandon,ZhiyongLu,MeiHan,JingXiao,etal. Automatedabnormalityclassification
+ofchestradiographsusingdeepconvolutionalneuralnetworks. NPJdigitalmedicine,3(1):70,
+2020.
+MichelleVaccaroandJimWaldo. Theeffectsofmixingmachinelearningandhumanjudgment.
+CommunicationsoftheACM,62(11):104–110,2019.
+MichelleVaccaro,AbdullahAlmaatouq,andThomasMalone. Whencombinationsofhumansandai
+areuseful: Asystematicreviewandmeta-analysis. NatureHumanBehaviour,pp.1–11,2024.
+KailasVodrahalli,RoxanaDaneshjou,TobiasGerstenberg,andJamesZou. Dohumanstrustadvice
+more if it comes from ai? an analysis of human-ai interactions. In Proceedings of the 2022
+AAAI/ACMConferenceonAI,Ethics,andSociety,pp.763–777,2022.
+Bryan Wilder, Eric Horvitz, and Ece Kamar. Learning to complement humans. In Proceedings
+of the Twenty-Ninth International Conference on International Joint Conferences on Artificial
+Intelligence,pp.1526–1533,2021.
+YifanWu,ZiyangGuo,MichalisMamakos,JasonHartline,andJessicaHullman. Therationalagent
+benchmark for data visualization. IEEE transactions on visualization and computer graphics,
+2023.
+16
+
+PublishedasaconferencepaperatICLR2026
+KaipengZhang,ZhanpengZhang,ZhifengLi,andYuQiao. Jointfacedetectionandalignmentusing
+multitaskcascadedconvolutionalnetworks. IEEEsignalprocessingletters,23(10):1499–1503,
+2016.
+17
+
+PublishedasaconferencepaperatICLR2026
+A THE COMBINATORIAL NATURE OF THE VALUE OF SIGNALS
+Whendecision-makersareprovidedwithmultiplesignals,thesignalshavethecombinatorialproperty
+bynature. Acknowledgdbyrecentworksindecisiontheoryandgametheory(Chen&Waggoner,
+2016), onesignalmayhavenoinformationvaluebyitself, butitcanbecomplementarytoother
+signalstoprovideinformationvalue. Forexample,twosignalsΣ andΣ areuniformlyrandom
+1 2
+bitsandthestateω = Σ ⊕Σ ,theXORofΣ andΣ . Inthiscase,neitherofthesignalsoffers
+1 2 1 2
+informationvalueonitsown,butknowingbothleadstothemaximumpayoff. Thoughwedidnot
+explicitlyobservethecomplementationbetweensignalsinoursurveyofhuman-AIdecision-making
+tasks(seetheresultsofdeepfakedetectioninsupplementarymaterials),wewanttonotethatour
+frameworkcanbeextendedtoconsiderthiscomplementationbetweensignals. WeusetheShapley
+value(Shapley,1953)tointerpretthecontributiontotheACIVofeachbasicsignal. ϕistheaverage
+ofthemarginalcontributionofasignalineverycombinationwithothersignals.
+1 (cid:88)
+(cid:18)
+(n−|V|)
+(cid:19)−1
+ϕ(V)= (ACIVπ,S(V′∪V;Db)−ACIVπ,S(V′;Db)) (9)
+n |V′|
+V′⊆{Σ1,...,Σn}/V
+Thefollowingalgorithmprovidesapolynomial-timeapproximationoftheShapleyvalueofACIV.
+Undertheassumptionofsubmodularity,itordersthesignalsthesameastheShapleyvalue.
+Algorithm3GreedyalgorithmformarginalgainofACIV
+1: V∗ ={Db}
+2: Φ∗ ={}
+3: fori=1tondo
+4: ϕ′ j =ACIV(Σ j ;V∗)foreachj
+5: j∗ =argmax js.t.Σj∈/V∗ ϕ′ j
+6
+7
+:
+:
+ϕ
+ad
+j∗
+d
+=
+Σ j
+m
+∗
+a
+to
+x j
+V
+s
+∗
+.t.Σj∈/V∗ ϕ′ j
+8: addϕ j∗ toΦ∗
+9: endfor
+10: outputϕ j∗
+B ROBUST ANALYSIS OF INFORMATION ORDER
+Our approach assumes a decision problem as input and evaluates agents’ decisions and use of
+information on this problem. However, evaluators may face ambiguity around the appropriate
+decisionproblemspecification,andinparticular,theappropriatescoringrule. Inparticular,ambiguity
+canariseinpayofffunctions;doctors,forexample,penalizefalsenegativeresultsdifferentlywhen
+diagnosingyoungerversusolderpatients(Mclaughlin&Spiess,2023). Blackwell’scomparisonof
+signals(Blackwelletal.,1951)isanidealtoolforaddressingambiguityaboutthepayofffunction,as
+itdefinesasignalV asmoreinformativethanV ifV hasahigherinformationvalueonallpossible
+1 2 1
+decisionproblems. Weidentifythispartialorderbydecomposingthespaceofdecisionproblemsvia
+abasisofproperscoringrules(Lietal.,2022;Kleinbergetal.,2023).
+DefinitionB.1(BlackwellOrderofInformation). AsignalV isBlackwellmoreinformativethanV
+1 2
+ifV achievesahigherbest-attainablepayoffonanydecisionproblems:
+1
+Rπ,S(V )≥Rπ,S(V ),∀S
+1 2
+where Rπ,S(V) denotes the expected performance of the rational DM on payoff function S and
+informationstructureπwhenobservingV.
+TheBlackwellorderisevaluatedoverallpossibledecisionproblems,whichcannotbetesteddirectly.
+Fortunately,weonlyneedtotestoverallproperscoringrulessinceanydecisionproblemcanbe
+represented by an equivalent proper scoring rule, and the space of proper scoring rules can be
+characterizedbyasetofV-shapedscoringrules. AV-shapedscoringruleisparameterizedbythe
+kinkofthepiecewise-linearutilityfunction.
+18
+
+PublishedasaconferencepaperatICLR2026
+DefinitionB.2. (V-shapedscoringrule) AV-shapedscoringrulewithkinkµ∈(0,1]isdefinedas
+2
+(cid:40)
+1 − 1 · ω−µ ifd≤µ
+S (d,ω)= 2 2 1−µ
+µ 1 + 1 · ω−µ else,
+2 2 1−µ
+Whenµ′ ∈(1,1),theV-shapedscoringrulecanbesymmetricallydefinedbyS =S (1−y,ω).
+2 µ′ 1−µ′
+Intuitively,thekinkµrepresentsthethresholdbeliefwherethedecision-makerswitchesbetweentwo
+actions. Largerµmeansthatthedecision-makerswillpreferd=1more. Thecloserµisto0.5,the
+moreindifferentthedecision-makeristod=0ord=1.
+TheoremB.3showsthatifV achievesahigherinformationvalueonthebasisofV-shapedproper
+1
+scoringrulesthanV ,thenV isBlackwellmoreinformativethanV . TheoremB.3followsfromthe
+2 1 2
+factthatanybest-respondingpayoffcanbelinearlydecomposedintothepayoffonV-shapedscoring
+rules.
+PropositionB.3(Hu&Wu2024). If∀µ∈(0,1)
+Rπ,Sµ(V )≥Rπ,Sµ(V ),
+1 2
+thenV isBlackwellmoreinformativethanV .
+1 2
+ExtendingthistoACIV,V offersahighercomplementaryvaluethanV undertheBlackwellorderif
+1 2
+ACIVπ,Sµ(V ;Db)≥ACIVπ,Sµ(V ;Db),∀µ∈(0,1)
+1 2
+Thisdefinitionallowsustoranksignals(orsetsofsignals)withoutneedingtocommittoaspecific
+payofffunction. WepresentausecaseinSectionF.
+C OBSERVATIONAL STUDY ON THE EFFECT OF ACIV ON HUMAN-AI TEAM
+PERFORMANCE
+Inthissection,wepresenttheresultsofanobservationalstudyontheeffectofACIVonhuman-AI
+teamperformanceusingthedatasetfromVodrahallietal.(2022).
+Data description. We experiment with the publicly available Human-AI Interactions dataset
+(Vodrahallietal.,2022).Thedatasetcomprises34,783uniquepredictionsfrom1,088differenthuman
+participantsonfourdifferentbinarypredictiontasks(“Art”,“Sarcasm”,“Cities”and“Census”). In
+eachofthetasks,humanparticipantsprovideconfidencevaluesabouttheirpredictionsbefore(dH)
+andafter(dH+AI)receivingAIadvicefromaclassifierintheformoftheclassifier’sconfidence
+values(dAI). dH,dH+AI anddAI areintherangeof[0,1].
+Results. We present the ACIV of the AI confidence values (dAI) over human decisions (dH)
+measuredbythepayofffunctionasthemeansquarederror(MSE)inFigure4,andshowthereduction
+ofthemeansquarederror(MSE)ofthehuman-AIteamoverthehuman-alonebaselineinTable2.We
+findthatbetweenthesefourtasks,theACIVoftheAIoverhumandecisionspredictstheimprovement
+ofthehuman-AIteamperformanceoverthehuman-alonebaseline.
+Table2: TheACIVoftheAIconfidencevaluesoverhumandecisionsandthereductionofmean
+squarederror(MSE)ofthehuman-AIteamoverthehuman-alonebaselinefordifferenttasks.
+Task Human-complementaryInfo HumanMSE Human+AIMSE ReductioninMSE
+Art 0.1772[0.1747,0.1798] 0.243 0.1847 0.0583
+Cities 0.0919[0.0860,0.0978] 0.1955 0.1615 0.034
+Sarcasm 0.1625[0.1587,0.1662] 0.2137 0.1767 0.037
+Census 0.1147[0.1077,0.1217] 0.1997 0.1861 0.0136
+19
+
+PublishedasaconferencepaperatICLR2026
+Figure4: TheACIVoftheAIconfidencevaluesoverhumandecisionsfordifferenttasks. Theerror
+barsare95%confidenceintervals.
+D STATISTICAL TESTS ON EXPERIMENT RESULTS
+Wecalculatethep-valuesofthesignificancetestswithWelch’st-test,withα=0.05. Thedegreesof
+freedom(ν)ofWelch’st-testiscalculatedwiththefollowingformula:
+(s2 1 + s2 2)2
+ν = N1 N2 (10)
+s2
+1 +
+s2
+2
+N
+1
+2(N1−1) N
+2
+2(N2−1)
+wheres ands arethestandarddeviationsofthetwosamples,andN andN arethesizesofthe
+1 2 1 2
+twosamples(seesamplesizesandstandarddeviationsinTable5). WeusedBonferronicorrectionas
+themultiplecomparisonscorrectiontocontroltheoveralltypeIerrorrate. Theresultsareshownin
+Table3andTable4.
+Table3:95%confidenceintervalsforthereductionofAPEwithdifferentAImodelsandexplanations
+inFigure2.
+Noexplanation SHAP ILIV-SHAP+SHAP
+5.96% 5.88% 6.94%
+AI1
+[5.50%,6.42%] [5.47%,6.28%] [6.50%,7.38%]
+6.33% 6.22% 5.31%
+AI2
+[5.90%,6.76%] [5.71%,6.72%] [4.80%,5.83%]
+E COGNITIVE LOADS AND ANCHORING EFFECTS IN EXPERIMENT
+WealsoexaminethespenttimeontaskandthedegreeofanchoringonthehumanversusAIdecisions
+bylookingatthedistancebetweenhuman-AIteamdecisionsandAIorhuman-alonedecisions.
+Timespent. Table6showsthatthereisnosignificantincreaseinthedurationoftheexperimentfor
+ILIV-SHAP(23.3[13.1,32.1]minutesforAI1withILIV-SHAPand22.2[11.9,28.0]minutesfor
+AI2withILIV-SHAP,wherethesquarebracketsshowthe25%and75%quantiles).
+20
+
+PublishedasaconferencepaperatICLR2026
+Table4: P-valuesforsignificancetestsofreductioninAPEbetweenexperimentalconditions(after
+Bonferronicorrection).
+NullHypothesis(H ) P-value
+0
+AI1+ILIV-SHAP+SHAP<AI1+SHAP 0.002
+AI1+ILIV-SHAP+SHAP<AI1+Noexplanation 0.010
+AI1<AI2 0.555
+AI1+ILIV-SHAP+SHAP<AI2+ILIV-SHAP+SHAP <0.001
+Table5:SamplesizesandstandarddeviationsofthereductionofAPEforeachexperimentalcondition
+Model Explanation Participants Observations(N) StandardDeviation
+ILIV-SHAP+SHAP 70 840 0.0653
+AI1 SHAP 79 948 0.0642
+Noexplanation 69 828 0.0668
+Total(allexplanations) 218 2,616 0.0656
+ILIV-SHAP+SHAP 67 804 0.0746
+AI2 SHAP 62 744 0.0679
+Noexplanation 74 888 0.0673
+Total(allexplanations) 203 2,436 0.0700
+Total 421 5,052 0.0678
+Anchoringeffects. Table6alsoshowsthatILIV-SHAPdoesnotincreaseanchoringontheAIor
+humanalonedecisions,whilethepresenceofSHAPalonetendstomaketheparticipantsanchor
+moreontheAImodel. Withnoexplanation,theparticipantsanchormoreontheirowndecisionsin
+thefirstround.
+Table6: Thenumberofparticipants(afterfilteringbasedonthecriteriainthepre-registration),the
+meandurationoftheexperiment,andtheanchoringonAIandhumanforeachcondition. Anchoring
+onAIiscalculatedasthemeanoftheabsolutedifferencebetweenthehuman-AIteam’sprediction
+andtheAI’spredictionnormalizedbytheactualsaleprice,|dHuman-AI−dAI|/ω,andanchoringon
+humaniscalculatedasthemeanoftheabsolutedifferencebetweenthehuman-AIteam’sprediction
+andthehuman’spredictionnormalizedbytheactualsaleprice,|dHuman-AI−dHuman|/ω. Thesquare
+bracketsindicatethe25thand75thpercentiles.
+Condition #ofparticipants MeanDuration(minutes) AnchoringonAI(↓) AnchoringonHuman(↓)
+AI1+ILIV-SHAP+SHAP 70 23.3[13.1,32.1] 0.303[0.0277,0.253] 0.404[0.0746,0.491]
+AI1+SHAP 79 21.3[12.0,27.9] 0.211[0.0201,0.222] 0.427[0.0721,0.533]
+AI1+NoExplanation 69 22.4[14.5,28.4] 0.226[0.0276,0.258] 0.367[0.0740,0.483]
+AI2+ILIV-SHAP+SHAP 67 22.2[11.9,28.0] 0.206[0.0273,0.260] 0.458[0.0840,0.613]
+AI2+SHAP 62 23.1[13.2,27.0] 0.203[0.0215,0.224] 0.456[0.0777,0.602]
+AI2+NoExplanation 74 22.5[12.7,30.5] 0.259[0.0265,0.260] 0.434[0.0611,0.501]
+F DEMONSTRATION I: MODEL COMPARISON ON CHEST RADIOGRAPH
+DIAGNOSIS
+Weapplyourframeworktoawell-knowncardiacdysfunctiondiagnosistask(Rajpurkaretal.,2018;
+Tangetal.,2020;Shreekumar,2025). Wedemonstratehowourframeworkcanbeusedinmodel
+evaluationforanalyzinghowmuchcomplementaryinformationvalueasetofpossibleAImodels
+offerstotheradiologyreportswrittenbyexperts.
+21
+
+PublishedasaconferencepaperatICLR2026
+Figure5: Informationvalueofalldeep-learningmodelscalculatedunderourframework. Thefirst
+row represents the human-alone decisions (without considering any AI predictions as additional
+signals). Theotherrowsarethecombinationsofthehuman-alonedecisionsandtheAIpredictions
+fromdifferentpre-trainedmodels. WelisttheAIpredictionsalonetoshowtheAI-complementary
+informationvalueofferedbyhumandecisions.
+F.1 DATAANDMODEL
+WeusedatafromtheMIMICdataset(Goldbergeretal.,2000),whichcontainsanonymizedelectronic
+healthrecordsfromBethIsraelDeaconessMedicalCenter(BIDMC),alargeteachinghospitalin
+Boston,Massachusetts,affiliatedwithHarvardMedicalSchool. Specifically,weutilizechestx-ray
+imagesandradiologyreportsfromtheMIMIC-CXRdatabase(Johnsonetal.,2019)mergedwith
+patientandvisitinformationfromthebroaderMIMIC-IVdatabase(Johnsonetal.,2023). Thepayoff-
+relatedstate,cardiacdysfunctionω ∈{0,1},iscodedbasedontwocommontests,theNT-proBNP
+andthetroponin, usingtheage-specificcutoffsfromMuelleretal.(2019)andHeidenreichetal.
+(2022). Welabeltheradiologyreportsbyarule-basedtool(Irvinetal.,2019)andusethelabelsasthe
+humandecisions(withoutAIassistance)inthediagnosistasktosolvetheproblemofcomputational
+feasibilitywithhigh-dimensionaltextualreports. Thelabelsarerepresentedbythesymptomsas
+positive,negative,oruncertain,i.e.,d∈{+,?,−}. Wefine-tunedfivedeep-learningmodelsonthe
+cardiacdysfunctiondiagnosistask,VisionTransformer(Alexey,2020),SwinTransformer(Liuetal.,
+2021),ResNet(Heetal.,2016),Inception-v3(Szegedyetal.,2016),andDenseNet(Huangetal.,
+2017). Ourtrainingsetcontains12,228images,andthevalidationsetcontains6,115images. Ona
+hold-outtestsetwith12,229images,theAUCachievedbythefivemodelsis: DenseNetwith0.77,
+Inceptionv3with0.76,ResNetwith0.77,SwinTransformerwith0.78,andVisionTransformerwith
+0.80.
+WeconsiderBrierscore, a.k.a., quadraticscore, asthepayofffunction: S(ω,d) = 1−(ω−d)2.
+The scale of the quadratic score is [0,1] and a random guess (d ∼ Bernoulli(0.5)) achieves 0.75
+payoff. Weusethequadraticscoreinsteadofthemeanabsoluteerrorthatisusuallyusedincardiac
+dysfunction diagnosis task because the quadratic score is a proper scoring rule where truthfully
+reportingthebeliefmaximizesthepayoff11. Wealsoconductarobustanalysisconsideringvarious
+V-shapedpayofffunctionswithdifferentkinksonadiscretizedgridof[0,1]withastepof0.01. We
+usethehold-outtestsettoestimatethedata-generatingprocess,whichdefinesthejointdistribution
+ofstate,humandecisions,andAImodels’predictions.
+Weconstructthescaleofperformancesbyano-informationboundandafull-informationbound.
+The no-information bound is Rπ,S(∅), the baseline as we define the information value. The full-
+informationboundisdefinedastheexpectedpayoffofarationalDMwhohasaccesstoallsignals,
+humanlabelfromradiologyreportandpredictionsfromfiveAImodels.
+11Wepreferaproperscoringrulesothattherationaldecision-maker’sstrategyistorevealtheirtruebelief,
+ensuringthatthesignal’sinformationvalueaccuratelyreflectsitsroleinformingbeliefs.
+22
+
+PublishedasaconferencepaperatICLR2026
+Figure6: Informationvaluecalculatedunderourframeworkintheinformationmodeldefinedby
+theexperimentofGrohetal.(2022). Basicsignalsincludethesevenvideolevelfeaturesandthree
+typesofagentdecisions. Thebaselineontheleftrepresentstheexpectedpayoffgivennoinformation,
+i.e., Rπ,S(∅), and the benchmark on the right represents the expected payoff given all available
+information, i.e., Rπ,S({Σ ,...,Σ ,DHuman,DHuman-AI,DAI}). All the payoffs are calculated by
+1 n
+Rπ,S(·),where·isthesignalonthey-axis.
+F.2 RESULTS
+CantheAImodelscomplementhumanjudgment? Wefirstanalyzetheagent-complementary
+information values in Figure 5, using the Brier score as the payoff function. We find that all AI
+modelsprovidecomplementaryinformationvaluetotheaforementionedhumanjudgment. Asshown
+inFigure5(comparisonbetweenRπ,S(DHuman∪DAI)andRπ,S(DHuman)),allAImodelscaptureat
+least20%ofthetotalavailableinformationvalue(acrossallAImodelandhumandecisions)thatis
+notexploitedbyhumandecisions. ThismotivatesdeployinganAItoassisthumansinthisscenario.
+Intheotherdirection,thehumandecisionsalsoprovidecomplementaryinformationtoallAImodels,
+comparingRπ,S(DHuman)withRπ,S(DAI)inFigure5. Thisobservationmightinspire,forexample,
+furtherinvestigationoftheinformationthehumanscanaccesstothatisnotrepresentedinAItraining
+data.
+WhichAImodeloffersthemostdecision-relevantinformationoverhumanjudgments? Fig-
+ure5showsthatVisionTransformercontainsslightlyhigherinformationvaluethantheothermodels,
+andInceptionv3containsslightlylowerinformationvaluethantheothermodels. Weassessthe
+stabilityofVisionTransformer’ssuperiorityovertheotherAImodelsacrossmanypossiblelossesto
+testifthereisaBlackwellorderingofmodels. ByTheoremB.3,wetestthepayoffofmodelsonall
+V-shapedscoringrules,showninFigure7. AcrossalltheV-shapedpayofffunctions,wefindthat
+VisionTransformerisBlackwellmoreinformativeandInceptionv3isBlackwelllessinformative
+thanallothermodels. TheVisionTransformerachievesahigherinformationvalueonallV-shaped
+scoringrules,implyingahigherinformationvalueonalldecisionproblems.
+G DEMONSTRATION II: BEHAVIORAL ANALYSIS ON DEEPFAKE DETECTION
+Weapplyourframeworktoanalyzeadeepfakevideodetectiontask(Dolhanskyetal.,2020),where
+participantsareaskedtojudgewhetheravideowascreatedbygenerativeAI,includingwiththe
+assistanceofanAImodel.
+G.1 DATAANDMODEL
+WedefinetheinformationmodelontheexperimentdataofGrohetal.(2022).Non-expertparticipants
+(n=5,524) were recruited through Prolific and asked to examine the videos. They reported their
+23
+
+PublishedasaconferencepaperatICLR2026
+decisions in two rounds. They first reviewed the video and reported an initial decision (DHuman)
+withoutaccesstotheAImodel.Then,inasecondround,theywereprovidedwiththerecommendation
+(DAI) of a multitask cascaded convolutional neural network (Zhang et al., 2016), with estimated
+65%accuracyonholdoutdata,andchosewhethertochangetheirinitialdecision. Thisproduceda
+finaldecision(DHuman-AI). Bothdecisionswereelicitedasapercentageindicatinghowconfidentthe
+participantwasthatthevideowasadeepfake,measuredin1%increments:d∈{0%,1%,...,100%}.
+WeroundthepredictionsfromtheAImodeltothesame100-scaleprobabilityscaleavailabletostudy
+participants.
+WeusetheBrierscoreasthepayofffunction,withthebinarypayoff-relatedstate: ω ∈ {0,1} =
+{genuine,fake}. ThischoicediffersfromthemeanabsoluteerrorusedbyGrohetal.(2022),but
+againweusethequadraticscorebecauseitisaproperscoringrulewheretruthfullyreportingthe
+beliefmaximizesthescore.
+Weidentifyasetoffeaturesthatwereimplicitlyavailabletoallthreeagents(human,AI,andhuman-
+AI).Becausethevideosignalishighdimensional,wemakeuseofsevenvideo-levelfeaturesusing
+manuallycodedlabelsbyGrohetal.(2022): graininess,blurriness,darkness,presenceofaflickering
+face,presenceoftwopeople,presenceofafloatingdistraction,andthepresenceofanindividualwith
+darkskin,allofwhicharelabeledasbinaryindictors. Thesearethebasicsignalsinourframework.
+Weestimatethedata-generatingprocessπusingtherealizationsofsignals,state,first-roundhuman
+decisions,AIpredictions,andsecond-roundhuman-AIdecisions. Theno-informationboundisthe
+sameasSectionFwhilethefull-informationboundisdefinedastheexpectedpayoffofarational
+DMwhohasaccesstoallvideo-levelfeaturesandthreeagents’decisions.
+G.2 RESULTS
+How much decision-relevant information do agents’ decisions offer? We first compare the
+informationvalueoftheAIpredictionstothatofthehumandecisionsinthefirstround(withoutAI
+assistance).Figure6(a)showsthatAIpredictionsprovideabout65%ofthetotalpossibleinformation
+valueovertheno-informationbaseline,whilehumandecisionsonlyprovideabout15%. Because
+thenoinformationbaseline,0.75,isequivalenttoarandomguessdrawnfromBernoulli(0.5),human
+decisionsareonlyweaklyinformativefortheproblem.
+We next consider the human-AI decisions. Given that the AI predictions contain a significant
+portionofthetotalpossibleinformationvalue,wemighthopethatwhenparticipantshaveaccessto
+theAIpredictions,theirperformancewillbeclosetothefullinformationbaseline. However,the
+informationvalueofthehuman-AIdecisionsonlyachievesasmallproportionofthetotalpossible
+informationvalue(30%). ThisisconsistentwiththefindingsofGuoetal.(2024)thathumansare
+badatdistinguishingwhenAIpredictionsarecorrect.
+Howmuchadditionaldecision-relevantinformationdotheavailablefeaturesofferoveragents’
+decisions? Tounderstandwhatinformationmightimprovehumandecisions,weassesstheACIVs
+ofdifferentsignalsoverdifferentagents. Thisdescribestheadditionalinformationvalueinthesignal
+afterconditioningontheexistinginformationintheagents’decisions. Asshownonthefifthrow
+inFigure6,thepresenceofaflickeringfaceofferslargerACIV overhumandecisionsthanover
+AIpredictions,meaningthathumandecisionscouldimprovebyagreateramountiftheywereto
+incorporatethisinformation. Meanwhile,asshownonthefourthrowinFigure6,thepresenceof
+an individual with dark skin offers larger ACIV over AI predictions than over human decisions,
+suggestingthathumansmakegreateruseofthisinformation. ThissuggeststhattheAIandhuman
+relyondifferinginformationtomaketheirinitialpredictions,wheretheAIreliesmoreoninformation
+associatedwiththepresenceofaflickeringfacewhilehumanparticipantsrelymoreoninformation
+associatedwiththepresenceofanindividualwithdarkskin.
+BycomparingtheACIVsofdifferentsignalsoverhumandecisionsandhuman-AIdecisions,we
+alsofindthatsimplydisplayingAIpredictionstohumansdidnotleadtotheAI-assistedhumans
+exploitingtheobservedsignalsintheirdecisions. AsshowninFigure6,withtheassistanceofAI,
+the ACIVs of all signals over the human-AI teams’ decisions do not change much compared to
+theACIVsoverhumandecisions,withtheexceptionofaslightimprovementinthepresenceofa
+flickeringface. ThisfindingfurtherconfirmsthehypothesisthathumansaresimplyrelyingonAI
+predictionswithoutprocessingtheinformationcontainedinthem.
+24
+
+PublishedasaconferencepaperatICLR2026
+H SENSITIVITY ANALYSIS OF THE RATIONAL BELIEF ESTIMATOR
+In this section, we first present a theoretical analysis on the quality of the ACIV estimator by
+connectingthecalibrationerrorofthegivenA. Then,wepresentanempiricalanalysisonthechest
+X-raydiagnosisdemonstrationwithdifferentalgorithms(linearregression(LR),gradientboosting
+methods(GBM),andneuralnetwork(NN))asA.
+H.1 THEORETICALANALYSIS
+Inthissection,wetheoreticallyshowhowthequalityoftheACIVestimator(Algorithm1)isrelated
+tothecalibrationerroroftherationalbeliefestimatora=A({v ,db,ω }n ). Weusetheregretof
+i i i i=1
+thedecisionmakertorepresentthequalityoftheestimationontherationaldecisionrules,i.e.,how
+muchpayoffcanbeimprovedifwecorrectthedecisionsinhindsight12. BecausetheACIVisdefined
+astheimprovementofthebest-attainableperformancewiththesignalandtheagentdecisionover
+theonewiththeagentdecisionalone,thedecisionsdˆr anddˆrbinAlgorithm1shouldhaveassmall
+regretaspossible. WefirstderiveourdefinitionoftheregretofAlgorithm1usingtheswapregretby
+Roth&Shi(2024).
+DefinitionH.1(SwapRegret(Roth&Shi,2024)). Givenasetofobservations{(v ,db,ω )}n ,a
+i i i i=1
+decisionruled(·),andadecisiontaskwithpayofffunctionS,theswapregretoftheDMis:
+n
+SWAPS (d,{(v
+i
+,db
+i
+,ω
+i
+)}n
+i=1
+)=
+n
+1
+σ:
+m
+D
+a
+→
+x
+D
+(cid:88)(cid:2) S(σ(d(v
+i
+,db
+i
+)),ω
+i
+)−S(d(v
+i
+,db
+i
+),ω
+i
+) (cid:3) (11)
+i=1
+Theswapfunctionσ isapermutationoftheactionspaceDthatmapstheactionofdr(v ,db)to
+i i
+theanotheraction. WedefinetheregretoftheACIVestimatorasthedifferencebetweentheACIV
+underthebest-respondingdecisionrules—d∗r andd∗rb—andtheACIVundertheestimateddecision
+rules—dˆr anddˆrb.
+DefinitionH.2(RegretoftheACIVestimator). Givenanempiricaldistributionasthedata-generating
+process, π = Uniform({v ,db,ω }n ), theestimateddecisionrulesdˆr : V×D → Danddˆrb :
+i i i i=1
+D → D from Algorithm 1, and a decision task with payoff function S, the regret of the ACIV
+estimatoris:
+REGACIV
+S,π
+(dˆr,dˆrb;V,Db)=ACIVπ,S,d∗r,d∗rb (V;Db)−ACIVπ,S,dˆr,dˆrb (V;Db) (12)
+whereACIVπ,S,dˆr,dˆrb denotestheACIVestimatedundertherationaldecisionrulesdˆr anddˆrb. d∗r
+andd∗rbaretheoptimaldecisionrulesthatwecangetfromdˆr anddˆrb:
+n
+d∗r(·,·)=σr(dˆr(·,·))whereσr =argmax
+(cid:88)(cid:104)
+S(σ(dˆr(v ,db)),ω )
+(cid:105)
+i i i
+σ:D→D
+i=1
+n
+d∗rb(·)=σrb(dˆrb(·))whereσrb =argmax
+(cid:88)(cid:104)
+S(σ(dˆrb(db)),ω )
+(cid:105)
+i i
+σ:D→D
+i=1
+LemmaH.3. TheregretoftheACIVestimatorisupperboundedbytheswapregretofdˆr:
+REGACIV
+S,π
+(dˆr,dˆrb;V,Db)≤ SWAPS (dˆr,{(v
+i
+,db
+i
+,ω
+i
+)}n
+i=1
+) (13)
+12WeusethenotionofregrettoquantifythequalityofourACIVestimatorbecausetheperfectdecisionsare
+usuallyunidentifiablewithfinitesignals.
+25
+
+PublishedasaconferencepaperatICLR2026
+Proof.
+REGACIV
+S,π
+(dˆr,dˆrb;V,Db)=E
+(v,db,ω)∼π
+[S(σr(dˆr(v,db)),ω
+i
+)]−E
+(v,db,ω)∼π
+[S(dˆr(v,db),ω
+i
+)]−
+(cid:16) (cid:17)
+E [S(σrb(dˆr(db)),ω )]−E [S(dˆr(db),ω )]
+(db,ω)∼π i i (db,ω)∼π i i
+≤E [S(σr(dˆr(v,db)),ω )]−E [S(dˆr(v,db),ω )]
+(v,db,ω)∼π i (v,db,ω)∼π i
+(cid:34) n (cid:35)
+= max
+1 (cid:88)(cid:104)
+S(σ(dˆr(v ,db)),ω )−S(dˆr(v ,db),ω )
+(cid:105)
+σ:D→D n i i i i i i
+i=1
+= SWAPS (dˆr,{(v
+i
+,db
+i
+,ω
+i
+)}n
+i=1
+)
+(14)
+Claim H.4 (Kleinberg et al. (2023), Theorem 12). Given a decision task with payoff function
+S :D×Ω→[0,1],iftheDMrespondsbytakingd(v,db)=d∗(a(v,db)),whereaisanestimatorof
+theprobabilityofthepayoffstategiventhesignalandactionandd∗(p)=argmax E [S(d,ω)]
+d∈D ω∼p
+is the best response to the probability p, the swap regret of the DM is bounded by the expected
+calibrationerror(ECE)oftheestimatora:
+SWAPS (dˆr,{(v
+i
+,db
+i
+,ω
+i
+)}n
+i=1
+)≤2ECE(a,{(v
+i
+,db
+i
+,ω
+i
+)}n
+i=1
+) (15)
+TheoremH.5. GivenadecisiontaskwithboundedpayoffS :D×Ω→[M ,M ],theregretofthe
+1 2
+ACIVestimatorisboundedbytheexpectedcalibrationerroroftheestimatoraˆ=A({v ,db,ω }n ):
+i i i i=1
+REGACIV
+S,π
+(dˆr,dˆrb;V,Db)≤2(M
+2
+−M
+1
+)ECE(aˆ,{(v
+i
+,db
+i
+,ω
+i
+)}n
+i=1
+) (16)
+TheproofnormalizesthepayoffinTheoremH.3into[0,1]andthenappliesTheoremH.4.
+TheoremH.5showsthat,inAlgorithm1,whenwechooseapredictivealgorithmAthatyieldslow
+ECE,theACIVestimatedbyAlgorithm1isclosetotheACIVundertheoptimaldecisionrules.
+H.2 EMPIRICALANALYSIS
+Inthissection,wetakethechestX-raydiagnosistaskinSectionFasanexampletoempiricallyanalyze
+the estimation of the full information value by Algorithm 1 with different modeling approaches
+(linearregression(LR),gradientboostingmethods(GBM),andneuralnetwork(NN)).
+Taskanddata. WeusethechestX-raydiagnosistaskinSectionFastheexample. Thetaskisto
+predicttheprobabilityofthepresenceofadiseasegivenachestX-rayimage. Thedecisionspaceis
+D = ∆[0,1]andthepayoffspaceisΩ = {0,1}. ThepayofffunctionisS(d,ω) = 1−(d−ω)2.
+Thesignalspaceisahigh-dimensionalfeaturevectorofthechestX-rayimage. Wesplitthedataset
+thatweusedinSectionFintoa70/30train/testsplit.
+PredictiveModels. Weusethefollowingmodels:
+• LinearRegression(LR)fromscikit-learnpackage.
+• Extreme Gradient Boosting (GBM) from xgboost package with n_estimators =
+100, max_depth = 6, and learning_rate = 0.3.
+• MLPclassifier(NN)fromscikit-learnpackagewith2hiddenlayersof256and64
+neuronseach.
+EvaluationMetrics. Wereportthefollowingevaluationmetricsforeachestimator:
+• BrierScore: 1 (cid:80)n (pˆ −ω )2
+n i=1 i i
+• Accuracy: 1 (cid:80)n 1(1(pˆ ≥0.5)=ω )
+n i=1 i i
+• ExpectedCalibrationError(ECE): 1 (cid:80)n |pˆ −E[ω|pˆ]|
+n i=1 i i
+26
+
+PublishedasaconferencepaperatICLR2026
+Table7: PerformanceofdifferentalgorithmsforACIVestimationinthechestX-raydiagnosistask.
+MetricsfortheestimatorsincludeBrierScore,Accuracy,F1-Score,andExpectedCalibrationError
+(ECE).WereporttheestimatedACIV(V;∅)foreachestimatorwithAlgorithm1.
+Model BrierScore↑ Accuracy↑ ECE↓ ACIV(V;∅)↑
+LinearRegression(LR) 0.834 0.775 0.039 0.086
+GradientBoosting(GBM) 0.841 0.771 0.026 0.108
+NeuralNetwork(NN) 0.853 0.789 0.036 0.0757
+Results. TheresultsareshowninTable7. WecanseethattheGBMestimatorachievesthebest
+performanceintermsofECE,whiletheNNestimatorachievesthebestperformanceintermsof
+BrierScoreandAccuracy. Thisvalidatesourtheoreticalresult: ECEisagoodproxyfortheregretof
+theestimationoftheACIVbyAlgorithm1comparedtotheBrierScoreandAccuracy.
+I ROBUSTNESS ANALYSIS IN DEMONSTRATION I
+Figure7: RobustanalysisforexperimentIonallV-shapedpayofffunctions. Thekinkµisshownon
+thex-axis. EachsubplotdisplaysthedifferencebetweentheACIVontherowmodeloverhuman
+decisionsandtheACIVonthecolumnmodeloverhumandecisions. Apositivevalue(coloredin
+blue)atµindicatesthemodelontherowcontainsmoreinformativethanthemodelonthecolumn
+undertheevaluationofV-shapedscoringrulewithkinkµ. Thesubplotsaresymmetricalongthe
+diagonal,e.g.,(1,2)subplotand(2,1)subplotdisplaythesamedistributionwithoppositesigns.
+J SCREENSHOTS OF THE EXPERIMENT
+27
+
+PublishedasaconferencepaperatICLR2026
+Figure8: Screenshotofthehuman-alonetrialsinthefirstroundoftheexperiment.
+28
+
+PublishedasaconferencepaperatICLR2026
+Figure9: Screenshotofthenoexplanationconditioninthesecondroundoftheexperiment.
+29
+
+PublishedasaconferencepaperatICLR2026
+Figure10: ScreenshotoftheSHAPconditionofAI1inthesecondroundoftheexperiment.
+30
+
+PublishedasaconferencepaperatICLR2026
+Figure11: ScreenshotoftheSHAPconditionofAI2inthesecondroundoftheexperiment.
+31
+
+PublishedasaconferencepaperatICLR2026
+Figure 12: Screenshot of the ILIV-SHAP + SHAP condition of AI1 in the second round of the
+experiment.
+32
+
+PublishedasaconferencepaperatICLR2026
+Figure 13: Screenshot of the ILIV-SHAP + SHAP condition of AI2 in the second round of the
+experiment.
+33

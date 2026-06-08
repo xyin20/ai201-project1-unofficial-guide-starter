@@ -1,0 +1,2010 @@
+20 November 2025
+Mutual Adaptation and Influence: Survey of Latent
+Dynamics Models in Human-Robot Interaction
+1 1 2 1 1
+Mason O. Smith , Sunny Amatya , Seyed Yousef Soltanian , Jonathan Bush , Wenlong Zhang
+1. School of Manufacturing Systems and Networks, Arizona State University
+2. School for Engineering of Matter, Transport and Energy, Arizona State University
+Keywords
+human-robot interaction, influence, latent dynamics, mutual adaptation, robotics and control
+systems
+Posted on 20 November 2025 — CC-BY 4.0 — This is a preprint and has not been peer reviewed. Data may be preliminary. — https://
+doi.org/10.36227/techrxiv.175459948.88124600/v2
+
+Mutual Adaptation and Influence: Survey of Latent Dynamics
+Models in Human-Robot Interaction
+Mason O. Smith* Sunny Amatya Seyed Yousef Soltanian Jonathan Bush Wenlong Zhang
+M. O. Smith, S. Amatya, J. Bush, W. Zhang
+School of Manufacturing Systems and Networks
+Ira A. Fulton Schools of Engineering
+Arizona State University
+Mesa, Arizona, USA
+{mosmith3, samatya, jebush2, wenlong.zhang}@asu.edu
+S. Y. Soltanian
+School for Engineering of Matter, Transport and Energy
+Ira A. Fulton Schools of Engineering
+Arizona State University
+Tempe, Arizona, USA
+ssoltan2@asu.edu
+Keywords: Human-robot interaction, Influence, Latent dynamics, Mutual adaptation
+Abstract:
+Recent advances in robotics have enabled more dynamic and interactive roles when working with humans. This is partially afforded
+by the use of latent states, which allow the robot to predict human actions in a compact and tractable way. This paradigm has al-
+lowed robots not only to respond and adapt to human behavior but also to anticipate and plan proactively through the use of latent
+dynamics models. This survey explores the use of such models in the field of human-robot interaction (HRI). Current works revealed
+three classes of latent dynamics models: Bayesian, Markovian, and encoded. To connect these works, we synthesize a unified frame-
+work consisting of a prediction and control step. This framework shows how the traditional one-way adaptation extends to mutually
+adaptive behaviors by using latent dynamics in the prediction step. Similarly, we show how influence is an extension of mutual adap-
+tation by using latent dynamics in the control step. We then review state-of-the-art approaches to mutual adaptation and influence
+for the three latent dynamics classes and discuss emergent properties as they relate to application, update frequency, and specific
+considerations for mutual adaptation or influence. Using this review, we highlight gaps in the current literature and propose future
+directions.
+ToC Figure: Robots are becoming better teammates by learning hidden patterns in how people act. This survey covers
+how state of the art approaches leverage these patterns to help robots not only react, but also anticipate and guide cooper-
+ation. Here, we synthesize a unifying framework for these approaches, classify and review existing works, and highlight key
+trends and open challenges in this field.
+1
+
+1 Introduction
+observe the human’s action in the previously observed state
+s to estimate which door the human preferred, denoted
+t−1
+as θ . This estimate can then be used to modulate robot
+With continued technological advances, the problem of col- t−1
+behavior in the current state s .
+laboration between humans and robots in complex tasks t
+has risen to the forefront. In collaborative interactions, hu- However, the human will likely observe the interaction
+mans and robots work together simultaneously on shared forces that the robot previously applied in s , similarly
+t−1
+tasks, where team performance can be improved by mod- to how the robot did in one-way adaptation. Consequently,
+ifying the robot’s behavior to better coordinate with hu- the human may update their preferred door to θ based on
+t
+man actions [1]. To that end, it is essential for the robot this observation in order to adapt to the robot’s behavior,
+not only to model the environment but also to model its which would make θ an outdated estimate. Thus, the
+t−1
+human partner. Providing a robot with a theory of mind robot acknowledging the human’s update and adapting its
+(ToM)—the ability to reason about human beliefs, desires, behavior accordingly is referred to as mutual adaptation.
+and goals—can significantly improve human-robot coordina- This affords the robot the ability to better anticipate the hu-
+tion [2]. The standard approach to planning in this setting man’s preferred door in the upcoming interaction, compared
+is to modify robot behavior in response to some latent state to one-way adaptation, thereby improving the robot’s action
+that compactly represents the human’s policy. By estimat- planning.
+ing the previous latent state from the previous interaction,
+the robot can better predict the future behavior of the hu- Taking this one step further, we can exemplify influence,
+man and plan supplemental actions [3]. We refer to this as where the robot takes a more active role in planning future
+one-way adaptation, where the robot creates a new, one-shot team behavior by repeatedly reasoning about how the hu-
+estimate at every timestep. man would adapt their preferred door in response to the
+robot’s future interaction forces. Assume that the robot has
+However, humans are often non-stationary and adapt to a vested interest in which door the table is carried through.
+robot actions, which is a critical consideration for successful By using its model of how the human updates their prefer-
+HRI [4]. The change in a human’s latent state over time de- ence in response to the robot’s actions, the robot can reason
+pends on past interaction with the robot, as well as on their about what sequence of actions would lead the human to
+previous latent state. We refer to the change of latent state prefer door θ′ instead of door θ after τ timesteps. The
+t+τ t+τ
+over time as latent dynamics. A robot can leverage latent robot could then take the corresponding sequence of actions
+dynamics to better anticipate the latent state in the cur- to guide the human to prefer the door that better suits the
+rent interaction by reasoning about how past robot actions robot’s needs (i.e., θ′ ).
+t+τ
+caused the previous latent state to evolve into the current
+one. Consequently, the robot can then use the improved pre-
+diction of the current latent state to plan actions that are 1.1 Objective
+better coordinated. We refer to this as mutual adaptation,
+which anticipates the current, unseen latent state—whereas Due to the use of latent dynamics being somewhat novel
+one-way adaptation only estimates the previous latent state and the diversity of domains in HRI (e.g., human factors [7],
+at best. AI [8], and controls [9]), researchers have implemented vary-
+ing methods in several applications (e.g., autonomous ve-
+Not only can latent dynamics be used to anticipate the hu-
+hicles [10] and contact robots [11]) without a strong inter-
+man’s current latent state, it can also be used iteratively
+connecting theory. Consequently, there is a general lack of
+during planning of future actions. Thus, applying a model
+formalism for the distinction between mutual adaptation
+of latent dynamics to robotic control extends mutual adap-
+and influence, thereby causing these terms to often be used
+tation to influence—a concept linked to improved perfor-
+interchangeably.
+mance in HRI [5]. Here, the robot incorporates latent dy-
+namics into its control policy to anticipate how its actions The primary objective of this paper is to synthesize a unify-
+will shape the human’s future latent state. By doing so, the ing framework for mutually adaptive and influential models
+robot can guide the human to a latent state that results in from the existing literature on non-stationary humans with
+a more desirable outcome. Although influence operates on latent dynamics models in HRI. This framework provides a
+the human’s latent state, the objective may or may not in- clear system of organization in an attempt to reduce confu-
+clude eliciting a particular latent state known in advance. sion caused by the conflation of these distinct approaches.
+Consequently, influence emerges naturally from planning Secondly, we bring attention to state-of-the-art research in
+with access to a latent dynamics model. this field while applying the proposed framework as an or-
+ganizational tool. Thus, readers have access to a breadth
+To further elaborate, consider the scenario in Figure 1,
+of approaches spanning the full scope of the framework
+where a robot and a human attempt to move a table through
+such that they can easily access information that suits their
+one of three doors. Knowing which door the human prefers
+needs. Lastly, this review identifies future directions for this
+(latent state) can help the robot predict the force the hu-
+field in a way that is grounded and motivated through the
+man will apply to move the table (action), so that the robot
+reviewed works.
+can plan its action accordingly. Accurate prediction of this
+latent state is therefore essential for smooth and effective in- The remainder of the paper is organized as follows: Section
+teraction. In the case of one-way adaptation, the robot can 2 provides the background information required to main-
+2
+
+Figure 1: A table carrying task (adapted from [6]) where the goal is for the human and robot to move a table through one
+of three doors by jointly applying interactive forces (actions) to the table. In the previous state s , the human action
+t−1
+(black line from human) and robot action (orange line from robot) was observed and caused the human to update their
+preferred door from θ (left door) to θ (middle door) in the upcoming interaction in s . The robot can form a prediction
+t−1 t t
+θˆ to deduce what it believes the human action will be (orange line from human) in s and plan an action that minimizes
+t t
+conflicting forces. In one-way adaptation, the robot uses the past human action in s to estimate the human’s pre-
+t−1
+vious door preference θˆ = θ . This is now incorrect as θ ̸= θ which causes the robot to incorrectly deduce human
+t t−1 t t−1
+action (misaligned orange and black arrows from human) and produce conflicting interaction forces (misaligned black
+human arrow and orange robot arrow). In mutual adaptation, the robot now reasons about how its past action affects
+θ to better anticipate θ . With the correct the prediction θˆ =θ , the robot can align its action in s (parallel black and
+t−1 t t t t
+orange lines). In influence, the robot can repeatedly apply this reasoning during planning to determine how a series of τ
+actions (red or green arrows) lead to different door preferences (θ or θ′ ). The robot can then guide the human to a
+t+τ t+τ
+latent state that robot better optimizes its reward (i.e., θˆ′ ).
+t+τ
+tain a consistent discussion throughout the remainder of the two steps: 1) prediction: the robot attempts to predict
+paper. Section 3 describes our proposed latent dynamics what θ can best be used to describe human policy and 2)
+framework that unifies the mutual adaptation and influ- control: the robot attempts to find an optimal policy π∗ in
+R
+ence models for HRI. We then begin the review of relevant response to θ such that it optimizes its own reward.
+works where we state the methodology in Section 4. In the
+subsequent sections, we review Bayesian (Section 5), Marko-
+vian (Section 6), and encoded (Section 7) latent dynamics 2.1 Interactive Setting
+classes where we first provide formalism for each class and
+then review how they are used for mutual adaptation or We consider HRI to evolve according to a transition model
+influence in the field of HRI. Section 9 then discusses emer- s ∼ P(s ,aR ,aH ) where the state of the world at
+t t−1 t−1 t−1
+gent themes identified in these works and highlights future any timestep s is a function of the previous state s and
+t t−1
+directions and challenges. previous actions aR and aH of the robot and human,
+t−1 t−1
+respectively. Agent i’s actions ai are the output of their
+t
+policy π (s ,θ ) which is a function of state s and latent
+i t t t
+2 Preliminaries state θ . After the joint action {aR,aH} is performed, the
+t t t
+timestep is progressed t ← t+1 and an observation of the
+states and actions o ←{s ,aR ,aH } is taken.
+t−1 t−1 t−1 t−1
+This section provides a brief overview of the concepts and
+notation underlying the proposed unified framework, as
+described in Section 3. In order to effectively coordinate, 2.1.1 Interaction Data
+it is useful for the robot to have a model of human policy
+π H to predict the human’s actions. However, the large di- The model for predicting latent state takes the observation
+mensionality of π H can make learning a robotic policy π R from the previous timestep o t−1 to make a prediction of
+intractable when conditioned directly on π H . Therefore, a the current human latent state θˆ t in the upcoming interac-
+more compact representation of π H can be used instead, tion. These observations can be a one-step observation like
+where each unique π H is described by a latent state θ ∈ Θ. {s t ,aR t ,aH t }, a trajectory of observations, or any arbitrary
+The robotic planning problem can then be decomposed into dataset. Depending on the latent dynamic function, ϕ, dif-
+3
+
+2.2 Latent State Representation
+ferent types of observations can be used. For example [6] 2.3 Latent State Dynamics
+takes a one-step observation to update the latent state, [12]
+takes the trajectory from the previous interaction, and [13] Latent state dynamics assert that the human’s latent state
+takes a dataset to update their latent state. For the sake of evolves according to some functional ϕ(·) such that θˆ ←
+t
+generality, we use o t to represent any input in these forms. ϕ(θˆ t−1 ,·). We define the three latent dynamics classes that
+describe how the robot models this update based on the
+interaction data. While some conceptual overlaps may ex-
+2.1.2 Prediction and Control Framework
+ist between these classes, this review focuses on the exact
+formulation and implementation of a model, instead of the
+This framework first predicts the human’s latent state and
+type of system that a model predicts, to remove ambigu-
+then performs control optimization over a policy condi-
+ity. Note that while some works choose to define the bi-
+tioned on this prediction. The predictor takes in the previ-
+directional nature of mutual adaptation as the human being
+ous observation o and predicts the latent state θˆ for the
+t−1 t adaptive to some robot latent state (e.g., robot intent [18]),
+current timestep. Then, the control block finds an optimal
+we generalize this in our model and assume that the robot’s
+robot policy π∗ which maximizes the expected discounted
+R latent state is implicitly encoded from o t−1 in the human la-
+accumulated reward conditioned on the robot’s estimation
+tent update ϕ without explicitly defining it (i.e. we skip the
+of human latent state θˆ such that:
+t step where the human first estimates robot latent state and
+directly assert that the human updates their latent state
+L from observations). The proposed framework could easily be
+π R ∗ =argmax E
+(cid:104)(cid:88)
+γτR
+(cid:16)
+s t+τ ,π R ,π H (θˆ t )
+(cid:17)(cid:105)
+(1) modified to reflect this.
+πR
+τ=1
+where τ ∈[1,L] is the time index for the unseen future inter-
+actions during policy optimization, γ is a discounting factor, 3 Unified Framework
+and R(·) is some reward function. Here, the time horizon L
+differentiates the planning time index τ from the time index
+of the current interactive episode t. Note that the policy
+optimization is conditioned on the latent state θˆ which is
+t
+formulated differently between one-way adaptation, mutual
+adaptation, and influence as shown in Figure 2. Further-
+more, when the latent state update takes place (i.e. between
+or within an interactive episode), determines how frequently
+(1) is used to solve for π∗. We further discuss the latent
+R
+state in Section 2.2 and Section 2.3.
+2.2 Latent State Representation
+In a classical ToM setting, latent states represent an agent’s
+mental state, such as intent, beliefs, and desires [2]. Judg-
+ments about the other’s latent states dictate how we under-
+stand and remember others’ actions, how we respond, and
+what we predict about their future actions [14]. This con-
+cept of latent states has also been expanded into computer
+science as feature embeddings, which capture the essential
+features of input data in a lower-dimension space [15].
+Latent state representations can be either explicit or im-
+plicit [16]. Explicit representations describe latent states Figure 2: The proposed prediction and control framework
+that have a practical description within the task (e.g., nav- showing how one-way adaptation extends to mutual adap-
+igation goal [17], reach objective [18], and sorting pref- tation and mutual adaptation to influence. Changes to the
+erences [17]) or about an agent (e.g., adaptability [19], model from the preceding approach are shown by the bolded
+trust [20], and knowledge [21]). Implicit representations boxes. The difference between one-way and mutual adap-
+describe latent states that have no semantic meaning and tation is that the latent state prediction of θˆ t = θ t−1 from
+are behavioral encodings that maximize predictive accu- Estimate(·) is improved to the more accurate prediction
+racy. While some implicit features may encode semantically θˆ t = θ t by using the latent dynamics function ϕ(·) during
+meaningful states, we do not consider them as explicit un- the prediction step. Mutual adaptation extends to influence
+less the values themselves have semantic meaning. In the by now incorporating ϕ(·) into policy optimization during
+reviewed works, implicit representations are mostly seen in the control step.
+autoencoding frameworks such as [22].
+In this section, we introduce the proposed framework by
+4
+
+3.1 One-Way Adaptation
+first formalizing one-way adaptation. Then, we show how on an outdated prediction of the latent state which results
+mutual adaptation is a natural extension by considering in a suboptimal strategy.
+that the human’s latent state evolves according to a latent
+Referring back to our toy example in Figure 1, in one-way
+dynamics model during the prediction step. Furthermore,
+adaptation, although the robot tries to estimate the hu-
+we show how influence is an extension of mutual adaptation
+man’s preferred door based on the previous observations, it
+by considering latent dynamics during the control step. In
+does not consider that this door could have changed since
+short, both mutual adaptation and influence utilize latent
+the last interaction due to the human adapting to robot
+dynamics, but mutual adaptation focuses on improving one-
+actions. Consequently, this would cause the robot to inaccu-
+step predictions of the current latent state, while influence
+rately predict human actions and plan poorly coordinated
+recursively incorporates these predictions into planning in
+interaction forces.
+an attempt to guide the human to a more desirable future
+latent state.
+3.2 Mutual Adaptation
+3.1 One-Way Adaptation
+For a robot to adapt to a non-stationary human partner,
+it may not be sufficient to estimate what their latent state
+Substantial research has been done on one-way robot adap-
+was in the previous interaction. Therefore, it can be crucial
+tation to humans. Conceptually, “one-way” refers to the
+to anticipate what their latent state will be in the current
+unidirectional adaptation of the robot to the human (i.e.
+interaction to predict how their behavior changed since the
+even though they may do so, the human is not modeled as
+last observation. In other words, it may be necessary to
+adapting their strategy in response to robot actions). Esti-
+consider human adaptation in response to robot actions
+mating the human’s desired direction of motion from previ-
+when planning robot behavior.
+ous state velocities [23] and task-level plans from previously
+applied forces [24] would be considered one-way adaptation Mutual adaptation occurs when both agents update their
+as they only consider previous state or human action while control policies in relation to their partner’s behavior to ful-
+neglecting the effect that the robot action had on the cur- fill team or individual goals [26]. For the purpose of this re-
+rent latent state. view, we define mutual adaptation as leveraging the human’s
+latent dynamics to better predict (anticipate) the unobserved
+During the prediction step in one-way adaptation, the latent
+latent state in the upcoming interaction, thus allowing the
+state of the human is estimated online based on previous
+robot to adapt its control algorithm accordingly. This com-
+observations as in (2).
+plies with other definitions of mutual adaptation [6,26,27].
+θˆ =Estimate(o ) (2)
+t t−1 While mutual adaptation has been formulated as an emer-
+gent feature of one-way adaptation as in [28], we only use
+where the Estimate(·) function can be any estimation pro-
+the term mutual adaptation when the robot is benefiting
+cess (e.g., maximum likelihood estimation [25]).
+from implementing latent dynamics in the prediction step
+Consider the standard one-way Bayesian estimate of la- only, as seen by the bolded box in mutual adaptation’s pre-
+tent state: the robot models its belief over human features diction step in Figure 2. Conversely, the use of latent dy-
+bR(θ), which is a robotic reasoning mechanism (inference). namics in the control step would instead satisfy our later
+t
+In contrast, modeling the human as performing a Bayesian definition for influence in Sec. 3.3.
+estimate over robot features is considered a latent dynam-
+In mutual adaptation models, it is assumed that the hu-
+ics model, since it is instead modeling a human reasoning
+man’s latent state θ changes according to a latent dynamics
+mechanism. The key distinguishing factor here is where the t
+function ϕ(·) in response to the previous observations o
+Bayesian update is located: in the robot’s mind (modeling t−1
+containing, in part, past robot actions. Having access to ϕ
+the human) or in the human’s mind (modeling the world
+will allow anticipation of the human’s latent state and their
+and/or robot). Thus, simply having the robot attempt to
+policy at the current timestep, consequently solving the
+find which θ is most likely to be true (i.e. best describes
+aforementioned issue of one-way adaptation (i.e. θˆ ≈θ ).
+o ) without modeling how the human arrived at θ implies t t−1
+t−1 t A general way to express the latent update ϕ(·) is:
+that (2) does not satisfy the requirements for the aforemen-
+tioned latent dynamics classes.
+θˆ ←ϕ(θˆ |o ) (3)
+An important characteristic of one-way adaptation is that, t t−1 t−1
+without a model of latent dynamics, the best prediction of
+Using the improved prediction in (3), relative to one-way
+the human’s latent state is the one that describes previous
+interactions such that θˆ = θ . In other words, there is adaptation, to anticipate latent state will then provide a
+t t−1
+more accurate solution to the policy optimization problem
+a one-step time delay in the prediction step for one-way
+adaptation, causing an inaccurate prediction θˆ ̸= θ when in (1).
+t t
+the human is sufficiently non-stationary (i.e. the human Here, θˆ is predicted from (3) at the current timestep t and
+t
+agent adapts to robot actions and changes their latent state
+is fixed during the policy optimization time horizon τ ∈
+between timesteps). As a result, the subsequent control step
+[1,L]. Key to mutual adaptation, the control step is now
+will attempt to solve (1) to find a robot policy conditioned
+5
+
+3.3 Influence
+solved over a fixed θˆ ≈θ instead of θˆ ≈θ as in one-way dynamics function as a means to explore and exploit the
+t t t t−1
+adaptation. modeled system (i.e. world and latent state dynamics) to
+better maximize its expected reward. Naturally, the robot
+Returning to our table-carrying example in Figure 1, the
+objective can be defined to induce a specific latent state for
+human may adapt to previous robotic interaction forces by
+the human as in [29], but this is not required for influence
+changing their preferred door from the left door θ to the
+t−1 to occur.
+middle door θ . By anticipating this change, the robot can
+t
+more appropriately adapt its actions to reduce conflicting In summary, the robot can now repeatedly reason about ϕ(·)
+interaction forces that would otherwise occur when apply- in the same way that mutual adaptation did to anticipate
+ing one-way adaptation due to the robot’s estimate of the the current θˆ during influence’s control step in (4). Now,
+t
+human’s preferred door being θˆ ≈ θ ̸≈ θ . As a result, recall the example of the collaborative table carrying task
+t t−1 t
+in mutual adaptation, the robot can better respond to the in Figure 1. This modification yields the ability to evaluate
+human’s adaptive behavior by correctly predicting the mid- how a sequence of robotic interaction forces can alter the
+dle door as the human’s current preference (i.e. θˆ ≈ θ ) to human’s preferred door in the future θˆ . Thus, the robot
+t t t+τ
+improve coordination. has the opportunity to explore different possible latent state
+outcomes and “choose” the latent state that best suits its
+needs. Given that the rightmost door has a higher payoff
+3.3 Influence
+for the robot, the robot will naturally learn to influence
+the human’s preferred door during policy optimization to
+Expanding on mutual adaptation, influence takes the idea of realize this superior payoff. For example, the robot may
+anticipating the human’s current latent state a step further learn to apply large interaction forces to the right early in
+by repeatedly applying the same logic during the control the interaction to elicit the human to prefer the rightmost
+step. Thus, we have a model of how the human latent state door in the future. Thus, this small change of allowing θˆ
+t+τ
+will evolve given a series of future actions which, in turn, to evolve according to ϕ(·) during policy optimization can
+affords the robot the ability to optimize a policy that guides achieve a large change in policy.
+the human to a latent state that better supports robot ob-
+For the purpose of this review, we only consider a robot to
+jectives.
+be influential if it explicitly models latent dynamics dur-
+For the purpose of this review, we will define influence as ing policy optimization (4). Therefore, influence must be
+leveraging the human’s latent dynamics in robotic planning intentional and modeled within robotic planning. This ex-
+(control step) to generate observations such that the hu- cludes more passive means for influence such as an unpow-
+man is guided to a latent state that better optimizes expected ered robot “influencing” the path of a human walking by or,
+robot reward. Our definition is most similar to “the ego more realistically, methods such as [18] that promote legible
+agent learns to generate interactions...which lead the other motion without modeling how such robot actions shape the
+agent to adopt future latent strategies that the ego agent human’s latent dynamics toward certain states.
+can exploit for higher rewards” that is provided in [22], but
+is generally compliant with descriptions provided in other
+reviewed works. 3.4 Summary
+Influence has two prerequisites: 1) we have a sufficiently
+This paper aims to demonstrate how the latent dynamics
+accurate model of the human’s latent dynamics and 2)
+function ϕ(·) is utilized in various HRI tasks, enabling re-
+that the robot has the means to take a sequence of actions
+searchers to implement mutual adaptation or influence
+{aR,...,aR ,...,aR } that generate a set of observations
+t t+τ t+L within our proposed framework. The distinction between
+{o ,...,o ,...,o } used by the human during their latent
+t t+τ t+L mutual adaptation and influence arises from the way ϕ(·) is
+state update (i.e. the system is at least partially control-
+integrated into the prediction and control steps. It is impor-
+lable).
+tant to note that the proposed framework is agnostic to the
+Formally, we will describe this by extending the mutual latent dynamics class and the policy solution method used
+adaptation model in Section 3.2 to arrive at our model of in the control step.
+policy optimization for influence:
+The latent dynamics function can be implemented using a
+π R ∗ =argmax E
+(cid:104)(cid:88) L
+γτR
+(cid:16)
+s t+τ ,π R ,π H (θˆ t+τ )
+(cid:17)(cid:105) v
+re
+a
+p
+ri
+r
+e
+e
+t
+s
+y
+en
+o
+t
+f
+a
+m
+tio
+e
+n
+th
+s.
+od
+T
+s
+h
+,
+i
+w
+s
+h
+c
+i
+o
+c
+n
+h
+si
+w
+st
+e
+s
+r
+o
+e
+f
+fe
+b
+r
+o
+t
+t
+o
+h
+a
+t
+s
+ra
+l
+d
+at
+it
+e
+i
+n
+o
+t
+na
+d
+l
+y
+c
+n
+o
+a
+n
+m
+tr
+ic
+o
+s
+l
+πR
+τ=1
+(4)
+approaches [30] and modern deep reinforcement learning
+s.t. θˆ ←ϕ(θˆ |o ) methods used in many of our reviewed works. While we
+t+τ t+τ−1 t+τ−1
+briefly discuss how these approaches incorporate ϕ(·), we
+Here, the online prediction step (anticipation) is identical to
+refer the reader to [31,32] for a more in-depth exploration
+mutual adaptation as described in (3). The key difference
+of these techniques in robotics and HRI. Additionally, we
+between influence and mutual adaptation is that θˆ is now
+t+τ examine various methods for modeling the latent dynamics
+subject to ϕ(·) and is time-varying during the control step’s
+function ϕ(·), ranging from simple hand-crafted functions to
+policy optimization. This is what gives influence its emer-
+autoencoders, Bayesian networks, recurrent neural networks
+gent property [22]. The policy optimization in (4) is still op-
+(RNNs), transformers, and more. However, our primary
+timizing for the robot reward R(·) and only uses the latent
+6
+
+focus is on how these latent state dynamics modeling ap- classes can be found in Sections 5, 6 and 7 respec-
+proaches are integrated into different HRI tasks, their role tively.
+in capturing human behavior, and how they are used for
+• Latent Dynamics Representation: Within each
+mutual adaptation or influence. Therefore, we consider de-
+latent dynamics class, we further organize works ac-
+tailed discussion of exact methods for solving the control
+cording to their specific model and implementation, as
+step (e.g., deep reinforcement learning algorithms) to be
+introduced in Section 3.4. We go deeper and describe
+largely out of scope.
+a unique set of models and methods for each class.
+• Latent State Representation: Furthermore, we
+4 Review Methodology
+motivate the use of latent state and its formulation in
+Section 2.2 where we define two types of latent state
+representations: implicit and explicit.
+For our review purposes we searched Google Scholar and
+four popular databases: Scopus, IEEE Xplore, Science Di- • Update Frequency: We further discuss papers based
+rect and Springer Link. We used the search terms of “adap-
+on when the update of the latent state is applied with
+tion” or “influence” in fields of “human-(robot/machine/
+respect to the interaction. Depending on the applica-
+AI/automation /multi-agent),” with additional keywords
+tion, this latent state update can occur within a single
+“latent,” “intent,” and “latent dynamics” in the article ab-
+interactive episode (e.g., at each time step of the in-
+stract, title, or author specified keywords to target articles
+teraction) or between repeated interactions, where the
+with a ToM framework.
+entire previous interaction episode may influence the
+human’s latent state in the next one.
+As the field has yet to agree upon a precise set of termi-
+nology, works may apply latent dynamics models in their
+algorithms but not refer to them by name. We attempted The justification for using these dimensions to discuss each
+to mitigate the impact of this by performing an additional approach stems from the following rationale: Models of
+breadth-first search of works in the first round of articles how human latent state evolves fit into one of three distinct
+meeting our selection criteria. latent dynamics classes that describe the underlying
+structure and assumptions of varying methods [33]. How-
+The selection criteria for articles are as follows:
+ever, the exact implementation (i.e., latent dynamics rep-
+resentation) can vary within each latent dynamics class
+• Must be applicable to HRI tasks. Application-specific
+and was found to motivate use of certain latent state rep-
+approaches that do not reflect the dynamic nature
+resentations [16]. Lastly, we found that the timing of the
+of HRI, such as multi-robot interaction, were not in-
+dynamics update yielded significantly different results in
+cluded.
+real-world applications [34].
+• Must utilize a physically or virtually embodied robotic For the reader’s reference, a summary of the aforementioned
+agent, able to act in the environment independently dimensions classifying the reviewed works is provided in
+(e.g., purely text-based chatbots do not qualify). To Table 1. A more detailed discussion of these dimensions will
+allow for socially assistive robots, we do not require then be provided in Sections 5, 6, and 7.
+direct physical interaction between the human and
+robot [21].
+4.1 Limitations
+• Must explicitly use a latent dynamics model for the
+human within the robotic planning framework.
+This review focuses specifically on mutual adaptation and
+• Must explicitly use some representation of latent hu- influence methods that leverage explicit modeling of latent
+man state, although exact terminology may vary. dynamics. Although outside the scope of this review, there
+are other methods of achieving directed mutual adaptation
+and influence: reward manipulation and explicit design of
+After filtering by the selection criteria, we uncovered a to-
+heuristic influence measures [37], explicit announcement of
+tal of 51 papers that fulfill the goals of this review. The
+intent [72], information sharing [73], online learning [74],
+qualifying works were then evaluated along the following
+logic-based planning [75], sampling-based or data-driven
+dimensions:
+modeling with latent dynamics [76,77]. The remainder of the
+paper is organized based on latent dynamics class (Bayesian
+• Approach: The focus of this survey is to review two
+in Section 5, Markovian in Section 6, and encoded in in
+approaches to applying latent dynamic models in HRI:
+Section 7), where we first describe the model by highlight-
+mutual adaptation and influence.
+ing the strengths and limitations and then review relevant
+• Latent Dynamics Class: Latent dynamics model works for that class as it is applied to mutual adaptation
+and influence.
+non-stationary humans with an evolving latent state.
+In our review, we have identified three distinct classes
+of latent dynamics functions: Bayesian, Markovian,
+and encoded dynamics. Formal definitions of these
+7
+
+Table 1: Taxonomy of Latent Dynamics Dimensions
+Dynamics Update Class Approach Representation Frequency Citations
+naiseyaB Mutual BeliefUpdate Within [35,36]
+Adaptation
+BeliefUpdate Between [37,38,39]
+Influence BeliefUpdate Within [18,40,41,42]
+vokraM
+FixedFunction Between [43] Mutual
+Adaptation FixedFunction Within [30,44,45,46]
+TransitionMatrix Within [6,19,26,47]
+Beta-Distribution Between [48]
+Beta-Distribution Within [49,50]
+Influence FixedFunction Between [51,52]
+LinearGaussianSystem Between [53]
+LinearGaussianSystem Within [20,54,55]
+TransitionMatrix Within [21,56,57,58]
+dedocnE
+where ϕ := BeliefUpdate for Bayesian latent dynamics.
+Here, the Bayesian belief update can be carried out with a
+singular observation from a previous timestep [35] or collec-
+tion of observed trajectories [78].
+An important note discussed in Figure 3 is that the predic-
+tion of latent state θˆ is directly expressed as the human’s t
+new belief distribution bH(x) at time t such that θˆ :=bH(x) t t t
+Consequently, the set of possible latent states Θ contains all
+feasible human belief distributions.
+Here, we strictly maintain that the human is a Bayesian
+learner and is not concerned with robotic reasoning mecha-
+nisms (e.g., Bayesian inference of human intent by the robot
+Autoencodera Between [59,60] is not a sufficient condition for Bayesian latent dynamics).
+Autoencodera Within [10,61,62] Consequently, all Bayesian latent dynamics models assert
+Mutual FixedApproximator Within [11,63]
+Adaptation PredictiveNetwork Within [64,65] that the human performs the belief update in (5). We will
+Transformer Between [17] refer to this latent dynamics representation as belief update.
+Transformer Within [66]
+Autoencodera Between [13,22,29,67] Modeling the human with Bayesian dynamics provides the
+Autoencodera Within [68,69]
+simplest and most direct of the reviewed models as there
+Influence PredictiveNetwork Between [70]
+PredictiveNetwork Within [71] is no learning or training involved in the update rule. How-
+Transformer Within [12] ever, such a simple dynamics model with a fixed procedure
+aautoencodersaretheonlydynamicsrepresentationthataffordimplicitlatentstate
+representation. Allothermodelsuseanexplicitlatentstaterepresentation. comes with some limitations. Computationally, Bayesian
+models may struggle to be tractable in high-dimensional
+latent spaces due to the belief on every latent state need-
+ing to be updated in each transition. We also observe that
+the outcome of a transition is highly dependent on prior
+belief. While a prior can be a powerful feature to integrate
+pre-existing information, a poor choice of prior can lead to
+misinterpretation of new evidence and degrade the model.
+Next, Bayes rule relies on fixed and rational assumptions
+about the probabilistic relationship between variables which
+Figure 3: Given a stream of observations o , a Bayesian limits its ability to personalize the dynamics to different
+t
+latent dynamics model for the human consists of them types of humans. For example, humans have a tendency to
+updating their belief distribution bH(x) over a set of aux- resist change in their belief (i.e., confirmation bias [79]) and
+t
+iliary features x using observations o as evidence in suboptimally weight or interpret new evidence based on its
+t−1
+their BeliefUpdate(·). The robot typically directly adopts availability or recency [80]. Similarly, Bayesian latent state
+the human belief distribution as the current latent state dynamics is only relevant when modeling the human’s belief
+θˆ :=bH(x) at every timestep. about something other than themselves and is thus limited
+t t
+in the types of latent states it can describe.
+5 Bayesian Latent Dynamics
+5.1 Bayesian Mutual Adaptation
+Here, it is assumed that the human maintains a belief bH(x)
+t
+which is modeled as a probability distribution over a set of One way to model the human’s latent dynamics in a mutual
+features x ∈x at time t. These features can describe either adaptation setting is by assuming that the human performs
+k
+some characteristic of the world or their robotic partner a Bayesian update to recover their new belief according to
+where the distribution over bH(x) evolves with t based on (6). The examples of using the Bayesian latent dynamics
+t
+some observation o , as seen by the sequences of blocks model in mutual adaptation scenarios can be found in [35,
+t−1
+in Figure 3. Based on o , the agent performs a Bayesian 36] where both articles use an explicit representation of
+t−1
+belief update on bH (x) to form a new belief distribution the human’s latent state and update their latent dynamics
+t−1
+bH(x) using Bayes rule for each x : model within interactive episodes.
+t k
+bH(x |o )∝P(o |x )bH (x ) (5) In [36], in a multi-agent interaction scenario, the “intimacy
+t k t−1 t−1 k t−1 k
+of the partner” has been used as an explicit latent state,
+which refers to the human agent’s friendliness toward the
+From the human’s perspective, given o which consists of
+t−1
+ego agent in a game-theoretic framework. A Bayesian net-
+the observed states and joint-actions, the belief update at
+work was utilized and trained using expectation maximiza-
+time t is a deterministic function of the prior belief bH (x).
+t−1 tion of the observations to update a friendliness parame-
+As a shorthand for this deterministic computation, we write:
+ter. The approach’s effectiveness was examined in a mutual
+bH ←BeliefUpdate(bH |o ). (6) adaptation task (an iterative prisoner’s dilemma game) by
+t t−1 t−1
+8
+
+5.2 Bayesian Influence
+showing how the predicted friendliness from the latent dy- where a robot attempts to provide modified observations
+namics model increases with each iteration as the agents get to a Bayesian human to better align their belief about the
+to know each other. world state with the true world state in a driving task such
+that humans could be influenced towards more optimal be-
+Similar approaches have also been used for human intent
+haviors.
+recognition tasks [35] where the human intention in an HRI
+task has been modeled as a sequence of latent states of an
+evolving hidden Markov model which was first trained on
+6 Markovian Latent Dynamics
+observed data using Baum-Welch algorithm. The human
+intention was recognized as the most likely latent state se-
+quence based on the output of the Bayesian update using
+the recent observations. The success of the approach was
+shown by the positive self-report of the participants in a
+collaborative assembly task with the robot.
+5.2 Bayesian Influence
+Applied repeatedly during planning in the control step, the
+robot can find a way to optimally influence human belief
+Figure 4: Given a stream of observations o , a Markovian
+such that the series of beliefs bH (x), ∀ τ ∈ [1,L] bet- t
+t+τ latent dynamics model consists of the human stochasti-
+ter allows the robot to optimize its reward over some time
+cally transitioning between singular latent states θˆ with
+horizon. This mechanism of planning over the human’s in- t
+probability p determined by their observation o . Here the
+ference is often referred to as inference inversion [41]. t t
+human only follows a single process and occupies one latent
+We refer to this process as Bayesian influence, which is typi- state at a time in reality but the robot can probabilistically
+cally used when the human is updating their belief about a reason about which process has occurred to form a belief
+latent state describing their robotic partner. This can take distribution over Θ.
+the form of the human’s belief over robot goals [18,38,42],
+reward [37,39], or internal state [40,41]. We observe that Markovian latent dynamics assert that the human’s la-
+all Bayesian influence approaches model dynamics over an tent update ϕ maintains the Markovian property: the la-
+explicit latent state, as human belief must be contextual- tent state θ depends only on the previous latent state θ
+t t−1
+ized within a representative feature. Generally, the goal of and some observation o . Hence the dynamics of a latent
+t−1
+Bayesian influence is to better align human belief with real- Markovian system can expressed as:
+ity [70], increase human understanding of robot actions, or
+improve team performance [18,38,39,42]. However, it can θˆ t ←f(θˆ t−1 |o t−1 ) (7)
+also be done to promote certain perceptions of robot char-
+where ϕ:=f for Markovian latent dynamics models.
+acteristics, such as attention [41] or trust [40]. Of particular
+note is the concept of legible motion, where the robot seeks Here, the human is assumed to occupy a single unknown
+to generate motion that allows a Bayesian human to better latent state at any time, and to transition between discrete
+infer the robot’s navigation goal [18,38]. Here, successful latent states in a stochastic manner. In other words, the
+influence can be verified by showing more accurate human human can only follow a single Markovian process, as shown
+prediction of robot actions or by showing the correspond- in Figure 4.
+ing latent state change through self-report measures (e.g.,
+increased trust from post-test surveys [40]). Alternatively, Again, this classification only applies to the human latent
+in [37], the authors take the opposite objective and attempt dynamics model and not to robotic reasoning mechanisms.
+to increase uncertainty in the human’s belief of robot goals For example, Bayesian inference methods can estimate pa-
+between interactions by injecting entropy into robot actions. rameters that specify a Markovian human transition func-
+This was done to better maintain long-term influence be- tion (p t in Figure 4) or reason probabilistically about what
+tween interactions, which would otherwise degrade once Markovian process the human followed. These methods
+the human learns to anticipate the robot’s actions. These would maintain the Markovian latent dynamics classifica-
+authors verified that their approach better maintained long- tion as they still assert that the human follows a Markovian
+term influence in an intersection-type task by being able to transition, albeit with some uncertainty about exactly which
+influence the human to insist on going first less frequently. process is being followed.
+Influencing human belief about the robot, particularly about These transitions in Markovian dynamics can be either
+robot goals, is likely more popular than attempting to in- stochastic or deterministic. To further clarify, we use the
+fluence beliefs about the world due to a greater ability to term “Markov” to describe the memoryless quality of these
+control latent state with robot actions and its compliance models; hence, while Figure 4 depicts a stochastic process,
+with a ToM framework. However, influencing a Bayesian first-order deterministic models like [30] can still be classi-
+human’s belief about the external world is shown in [70], fied under Markovian dynamics in this review.
+9
+
+6.1 Markovian Mutual Adaptation
+While all Markovian latent dynamics can be expressed as that encodes the probability of transition from the current
+a transition matrix, we will focus on organizing them ac- latent state to the next one [6,19,26,47].
+cording to methods for recovering transition probabilities.
+Many works in physical HRI (pHRI) have utilized a game-
+First, this can be done by directly learning transition ma-
+theoretic framework to construct a deterministic Marko-
+trix entries from data with methods like the Baum-Welch
+vian latent dynamic representation (e.g., a first-order dy-
+algorithm [81]. We will refer to this latent dynamics rep-
+namic) [30,45,46]. The importance of relying on a determin-
+resentation as a transition matrix. Alternatively, one may
+istic latent dynamic in the mentioned works is that it allows
+choose to specify transition probabilities to follow a Marko-
+for the application of optimal control-based approaches to
+vian function that constrains these transition probabilities.
+demonstrate performance guarantee (e.g., Lyapunov stabil-
+These include beta-distribution, linear Gaussian system, or
+ity) or to formulate update rules for modeling human behav-
+fixed functions . The latter refers to custom-designed func-
+ior (e.g., through coupled Riccati equations [30]). Based on
+tions that do not learn or fit model parameters from data.
+the dynamic game’s coupled nature and the human agent’s
+Once a transition function is defined, Markovian latent dy- optimality assumptions, [30,45,46] have successfully gener-
+namics are the most computationally efficient of the re- ated latent dynamics functions that update the latent state
+viewed latent update procedures. However, the inherent within interactions. In this framework, the latent state is
+assumption in all types of Markovian latent dynamics is represented explicitly as either the human’s control gains
+that the system cannot account for the history of the la- during the physical task [30] or the amount of human con-
+tent state (i.e., memoryless) and thus cannot model long- tribution in a cooperative game played between the human
+term dependencies. Depending on the latent state, this may and the robot. Based on the reviewed works [30,45,46], this
+be a limiting factor as there may be many latent systems game theoretic interactive framework allows for representing
+in real-world HRI that are not Markovian (e.g., fatigue or the latent dynamics in different task-specific ways. In [30],
+mood does not depend solely on your state one minute ago). the authors modeled a coupled physical interaction using a
+Most commonly, Markovian latent dynamics are specified by dynamic game by considering the human and the robot as
+some constraining function that is either manually authored two players, each minimizing their corresponding cost func-
+(i.e., fixed functions) or has learnable parameters. These tion. This formulation resulted in two coupled Riccati equa-
+approaches require a degree of prior knowledge about the tions for each player; then, they proposed an update rule
+latent system such that the constraining function’s assump- to represent the latent dynamics for predicting the human
+tions are not invalidated. However, functions with learn- matrix solution to their Riccati equation within interactions
+able parameters (e.g., beta distribution [48,49,50]) may be and consequently anticipated the human’s control gain.
+more flexible in describing real humans but require a mod-
+In [43], another game-theoretic formulation has been used
+est dataset to learn from. Without some prior knowledge,
+to model the human as a partially adaptable agent to the
+Markovian dynamics may instead solely rely on learning
+robot in a table-clearing task. It was assumed that the hu-
+transition probabilities from data (e.g., Baum-Welch algo-
+man was unaware of the robot’s payoff function entities at
+rithm). However, this comes at the cost of a higher data
+the beginning of the task and might learn those entities
+requirement, such that every latent state transition in the
+after each set of interactions with a probability of α and
+system is observed a sufficient number of times to define a
+might not learn it with a probability of 1 − α (partially
+probability. Thus, there are a spectrum of approaches to
+adaptable). The human understanding of the robot’s payoff
+Markovian latent dynamics that balance the trade-off be-
+entities can be understood as the latent state, and the prob-
+tween limitations of prior knowledge and available training
+ability function of learning the entities can be understood
+data.
+as the latent dynamics in this framework. Compared to the
+previously mentioned game-theoretic approach that updates
+6.1 Markovian Mutual Adaptation the latent state within interactions, the latent state update
+in this work occurs between each set of interactions.
+Markovian latent dynamics models focus on anticipating the The above-proposed models were validated by their suc-
+current latent state θˆ t directly based on the previous latent cess in predicting human behavior [43] or by improving the
+state θˆ t−1 according to (7). The key feature of these models overall human-robot performance [30,45]. However, game the-
+is their Markovian property, which makes them a convenient oretic or optimal control formulations of HRI often rely on
+choice for mutual adaptation tasks as they rely on predict- strong assumptions about human rationality or full knowl-
+ing the next latent state only based on the current time edge of cost functions which may be limiting, but also afford
+information. analysis of convergence guarantees as in [30].
+Two approaches to representing the latent dynamics func- To address the above-mentioned problems, partially observ-
+tion were observed among the reviewed Markovian mutual able Markov decision processes (POMDPs) [82] and mixed
+adaptation models. The first approach relies on the task- observability Markov decision processes (MOMDPs) [83]
+specific latent dynamics representation that uses high-level have been used to reason about uncertainties regarding hu-
+information regarding the task (e.g., trust models) [43,44]. man intentions [84]. In [6,19,26], a MOMDP framework has
+We will call these Markovian models the “fixed function” been used to model the mutual adaptation task and struc-
+dynamic representation. The second approach is to con- ture the latent dynamics setting. In [6,19,26], the authors
+struct the latent dynamics in the form of a transition matrix have introduced the bounded-memory adaptation model
+10
+
+6.2 Markovian Influence
+(BAM) to capture human adaptive behaviors. The BAM This is because trust is “significantly influenced by trust at
+assumes that the human operates in one of several collabora- the previous moment” [86], which satisfies the Markovian
+tion “modes” and adapts the behavior by switching among property, and is critical for maintaining effective interaction
+the modes based on their decision to adapt to the robot or online by preventing over or under-reliance [87]. The latter
+resist the robot’s decision. The human adaptability level, criteria implies that trust would benefit from actively mod-
+which is the probability of switching from one collaborative ulating (influencing) trust, not just mutually adapting to it.
+mode to another, is a BAM model parameter unknown to The trust-influence problem is applied so that the robot can
+the robot a priori. Basically, BAM represents the latent modulate human trust to align it appropriately with robotic
+dynamics as a transition matrix that captures human adapt- capabilities.
+ability and predicts the next latent state (the collaboration
+In the reviewed trust-influence works, a trust dynamics
+mode) within interactions based on the current latent state
+model is typically used to constrain the full Markovian dy-
+and the adaptability level. In [26], the BAM model was in-
+namics. The authors in [51,52] used a fixed function based
+tegrated into a POMDP. However, MOMDPs have been
+on the explicability of robot actions. Alternatively, one may
+shown to have high computational efficiency in motion plan-
+specify a constrained transition function with a model with
+ning tasks compared to POMDPs [26,85].
+learned parameters. An example of this is using the Beta-
+Another use of transition matrices for representing human distribution to model trust evolution where model parame-
+latent dynamics in a mutual adaptation task can be seen ters are recovered using a gradient decent algorithm either
+in [47], where human intent is considered as an explicit la- between [48] or within [49,50] an interaction. A linear Gaus-
+tent state. The authors of this work provide an intent pre- sian system trust model was also used in [20,53,54,55] where
+diction framework using transition matrix modeling of the model parameters were recovered using Bayesian inference
+latent dynamics to update the latent state prediction within using Hamiltonian Monte Carlo (HMC) sampling [88]. All
+interactions. The authors proposed a Bayesian generative of these trust dynamics models apply their respective con-
+model for social navigation that generalizes a popular class straints by informing the Markovian system of how trust is
+of deterministic multi-agent motion models (in navigation) impacted by robot capability or other relevant features [86].
+and is capable of encoding traffic agents in probabilistic A parameterized Markovian function is commonly imple-
+space. Their model learning was formulated as a maximum mented due to the balance between the integration of prior
+likelihood estimation problem, maximizing the marginal like- trust evolution information that constrains the Markovian
+lihood by integrating out the latent dynamical states from transition and the personalization provided from learning
+the joint probability of the complete data (observed and la- model parameters. However, one work did choose to am-
+tent). Notably, they showed that their algorithm’s inference biguously learn the trust transition matrix directly from
+run time scaled linearly with task complexity. data (i.e., no constraining trust model) [57] using an ex-
+tended Baum-Welch algorithm [81]. In all cases except for
+Modeling human trust as an explicit latent state in mutual
+fixed function approaches, a data prior may be a limiting in
+adaptation tasks is also a common way of anticipating hu-
+such settings as collecting labeled transitions requires costly
+man behavior during interactions [19,26,44]. An example
+interventions like trust surveys.
+of using trust models as a Markovian latent dynamics rep-
+resentation in mutual adaptation can be seen in [44] where, This trust-influence problem is often solved as a trust-MDP
+inspired by the time series human-to-robot trust model [86], [49,50,51,52,57] which asserts that trust is the state of
+a fixed function dynamics model for predicting human-robot the system. Similarly, [20,55] proposed the trust-POMDP
+mutual trust has been proposed. This model was used in model where trust dynamics are modeled as a linear Gaus-
+a (semi)autonomous underwater robot control task where sian system and is nested within the cumulative POMDP
+the robot updated the trust parameter prediction within transition dynamics. Solving the trust-POMDP under this
+interactions and decided whether to switch between the tele- trust dynamics model allows the robot to modulate appro-
+operated and autonomous mode to fulfill the objective in a priate trust to achieve effective interaction as in [53], where
+mutual adaptation task with the human operator. the authors used this framework for trust-based navigation
+of autonomous vehicles where trust dynamics are modeled
+between interactions. In [54], the authors extend this lin-
+6.2 Markovian Influence ear Gaussian system in the trust-POMDP model by im-
+plementing a sparse Gaussian process to address dynamic
+Next, we will look at how existing works use Markovian la- robot capabilities to improve accuracy in the trust evolution
+tent dynamics to influence the human. It is important to model within an interaction. Modeling trust is a popular
+keep in mind that the robot can maintain Bayesian reason- topic of research, and there are several other models of trust
+ing over a human modeled with Markovian latent dynamics, dynamics (see [89] for a review of potential models) that
+as is the case in Figure 4, and that we are only concerned have yet to be applied to solve this trust-influence problem.
+with the latter to classify Markovian latent dynamics func- Typically, this problem is shown to successfully demonstrate
+tions. This is particularly relevant in POMDP settings as influence by verification of appropriate trust levels through
+the structure prompts this paradigm. self-report surveys post-test since this is the only way to
+recover a ground-truth measure of this latent state.
+Of particular note is that Markovian latent dynamics mod-
+els are most commonly applied to influence human trust. Similarly to trust, Markovian influence has been applied
+11
+
+to other human factors objectives: enhancing human at- state θˆ , thus giving us a function expressing dynamics.
+t−1
+tention [56] and knowledge [21] in POMDP settings where This can be seen in Figure 5 where each prediction of θˆ
+t
+latent transitions matrices are directly learned from data. is not dependent on the previous prediction while dynam-
+The former applied the Baum-Welch algorithm and success- ics is still expressed through the time differential between
+fully observed influence through improved response times the input o and output θˆ of E. In the reviewed works,
+t−1 t
+while the latter directly observed the likelihood of transi- encoded latent dynamics representations consist of autoen-
+tion probabilities from prior data and showed the ability to coders, predictive networks, transformers, and fixed approx-
+influence through post-test surveys. Besides this, Marko- imators. Similar to the aforementioned fixed function, the
+vian influence can attempt to alter human goals such as latter representation refers to encoded approximators with
+reach objective [58] by applying an Agent Markov Model fixed parameters that are not learned.
+(AMM) [90] that specifies latent transitions within agent
+Encoded latent dynamics methods are typically the most
+decision dynamics. Interestingly, these Markovian influence
+flexible as they can take any arbitrary input to ϕ. However,
+methods learn unconstrained transition functions directly
+a large portion of these approaches focus on using deep
+from data, likely because pre-existing models for these la-
+learning to recover a dynamics function from a dataset in a
+tent state transitions do not yet exist since they are often
+way that may be susceptible to overfitting. This can be miti-
+task-specific. This is not the case with trust, where trust dy-
+gated with a sufficiently large training dataset which results
+namics are often determinate of features common through-
+in the main limitation of encoded methods: a sufficiently
+out all tasks (e.g., performance), thereby allowing ubiqui-
+large dataset may be expensive or infeasable to collect. The
+tous models to be available.
+computational resources needed to train these models is
+Markovian influence tends to lend itself to modeling and often larger than those of other methods. Alternatively, in
+influencing humans within a single interaction [20,21,49,50, the case of a fixed approximator, these dynamic functions
+54,55,56,57,58]. This is due to the form of the latent dynam- have to be manually authored which can lead to errors if
+ics being explicitly defined for each state-observation pair the latent system is not correctly or sufficiently specified.
+which is particularly compliant with updating within inter-
+active episodes. However, Markovian influence can also take
+place between interaction episodes if framed as a meta-MDP 7.1 Encoded Mutual Adaptation
+problem [48,51,52,53] which plans to influence hierarchically
+separate from low-level planning. Also, similarly to Bayesian Encoded latent dynamics methods are another approach
+influence, all the reviewed Markovian influence approaches to modeling human adaptive behavior and latent dynamics
+model an explicit latent state. inspired by traditional approaches in robots learning from
+human data [91,92]. In contrast to Markovian models and
+Bayesian models, the encoded latent dynamics model di-
+7 Encoded Latent Dynamics rectly maps the stream of observations o to θˆ as shown
+t t+1
+in Figure 5.
+Similar to Markovian latent dynamics models, encoded mod-
+els have also been used in a game theoretic interactive set-
+ting for modeling HRI [11,60,66]. Authors in [11] modeled
+a pHRI task as a cooperative game between the human and
+the robot and used bargaining theory to update the weight
+of each player’s cost in the overall cost as the latent state
+within interactions. The latent dynamic used in this work
+Figure 5: Given a stream of observations o , an encoded has a predefined structure based on bargaining theory that
+t
+latent dynamics model for the human consists of encoder gets the previously observed data and outputs the weight
+using a less compact representation of latent state o to of the human’s cost in the overall cost function of the coop-
+t
+predict the next latent state θˆ . Here, the “dynamics” erative game. Here, the authors also provide a convergence
+t+1
+is captured by a time differential between the input and guarantee of their approach. In [60], the HRI task has been
+output of the encoder where, typically, the robot discretely considered as a cooperative Markov game. A neural net-
+adopts the encoded latent state instead of forming a belief work called a co-policy has been trained using a dataset of
+over Θ. human-human interactions to output the solution of this
+Markov game at each timestep by getting the current states
+In encoded latent dynamics, we do not directly find a map and the human strategy code as the latent state. Instead of
+from the previous latent state to the next. Instead, we rely solving for the co-policy using RL, which requires a complex
+on less-compact representations of human latent state o t−1 reward function for human-robot collaboration, imitation
+that implicitly encode θˆ t−1 to predict θˆ t . Encoded latent learning directly learns from demonstrations. Thus, human-
+dynamics therefore use an encoder ϕ := E as our latent human demonstration data is recorded, and co-policy learn-
+dynamics function: ing is formulated using MA-GAIL, a multi-agent extension
+θˆ t ←E(o t−1 ) (8) of the Generative Adversarial Imitation Learning (GAIL).
+Notice how the current latent state θˆ is determined by the The implicit latent state is modeled as the output of an au-
+t
+past observation o , which characterizes the past latent toencoder (as the representation of the latent dynamics)
+t−1
+12
+
+7.2 Encoded Influence
+that gets an observation history and encodes it to θˆ. Com- a compact representation of the physical human state, and
+t
+bining these two trained networks, the robot can predict the latent dynamics consist of a feedback loop, which is a
+the strategy code and use it to find the appropriate action Markovian function, and a feed-forward loop, which is a
+using the co-policy network to satisfy the game solution. neural network that acts within interactions based on the
+In another game-theoretic approach [66], a more state-of- observation history, combining a Markovian approach with
+the-art representation of encoded latent dynamics is used. an encoded approach. However, as noted by the authors,
+The authors have used pre-trained Motion Transformers maintaining the Markovian property in such a framework
+(MTR) [93], a transformer-based encoder-decoder architec- is challenging. In response to this issue, an RNN was em-
+ture that takes as input the previously observed trajectory ployed to estimate the current latent state from a sequence
+of the human agent and outputs the parameters of a Gaus- of past observations. Their network was first trained on a
+sian Mixture Model (GMM). This GMM is then used to pHRI task dataset and then their model was validated by
+predict the possible future trajectories of the human driver. its success in predicting the next physical state.
+These predictions are subsequently integrated into a game-
+Using trust as the latent state has also been observed among
+theoretic Hamilton-Jacobi-Bellman (HJB) reachability anal-
+encoded latent state dynamics approaches. The OPTIMO
+ysis to enable safe trajectory planning for the autonomous
+model presented in [63,94] benefits from combining Bayesian
+agent.
+and encoded approaches by considering a Dynamic Bayesian
+Among all the latent dynamics representations, autoen- Network (DBN) as the latent dynamics representation and
+coders are a popular choice in encoding approaches. They predicting human trust within interactions. With a trust
+learn features and provide a compact representation of hu- parameter prediction, the robot can switch to more conser-
+man behavior during tasks as an implicit representation of vative (less aggressive) control mode to reduce trust losses.
+the latent state [10,59,61,62]. The study in [59] focuses on Model validation was done by showing how the robot oper-
+learning effective latent representations for the demonstra- ating under OPTIMO can accurately adapt to the human
+tion of human policies. Using simulation data, the authors collaborator’s actions and attitudes compared to other ap-
+trained an autoencoder to predict the upcoming human proaches.
+policy, then adjusted the representation with test-time in-
+The use of state-of-the-art architectures, such as transform-
+teraction data to not rely solely on simulated populations.
+ers, for modeling latent dynamics in mutual adaptation is
+Their model updates the implicit latent state between in-
+demonstrated in [17] and [64]. In [17], the authors develop a
+teractions by maximizing the likelihood of observed human
+human intent prediction model that estimates the probabili-
+behavior, enabling more accurate human policy prediction
+ties of transitioning between latent states (i.e., high-level in-
+for robust robot adaptation in physical assistance scenarios.
+tents) across interactions. Although the time-varying intent
+Alternatively, in [10], the latent state is represented as the
+model is initially introduced as a Markovian function, it is
+human’s goal position that does not come directly from an
+estimated through encoded latent dynamics. Their model is
+autoencoder. Instead, it is derived from a GMM. In this
+implemented using a transformer architecture that takes the
+model, within each interaction, the distribution parameters
+history of observed data as input and is trained in simula-
+of the GMM are updated and come from an autoencoder as
+tion across various navigation tasks to capture all possible
+the latent dynamics representation. A Modified Extended
+high-level human intents during the task. To mitigate the
+Kalman Filter (MEKF) algorithm fine-tunes the model
+risk of incorrect intent prediction, the model actively queries
+parameters and executes online adaptation for better indi-
+the human when uncertainty is high.
+vidual customization and scenario transfer where they show
+scalability of their algorithm to different task complexities. Finally in [64], Generative Pre-trained Transformers (GPTs)
+Similarly, in [61], autoencoders are used to generate a latent and Multilayer Perceptrons (MLPs) have recently been uti-
+embedding of the human’s future joint positions in a feed- lized in constructing a neural network representation of
+ing assistance task. The predicted joint positions are then the latent dynamics. The authors developed the method
+used to derive a human-aware policy for the robot, which (BeTrans) for both long and short-term human goal antici-
+generates an action that more closely aligns with the user’s pation as the latent state. Their transformer was trained in
+motion tendencies. Finally, in [62], autoencoders are em- two phases: pre-training and fine-tuning. In pre-training, us-
+ployed in a pursuer-evader game. Vision-based RGB camera ing simulated human behaviors (to avoid the need for large
+data are used to generate a latent embedding of the human datasets) they formed their model prediction error to form
+evader’s navigation intent via an autoencoder. This latent their training loss for learning the weight of the network.
+representation is then used to model the evader’s policy, en- In fine-tuning, the model used predicted latent variables
+abling a robotic pursuer to effectively intercept the evading along with state and action inputs to forecast the next state
+human. The autoencoder is trained offline with fully ob- and reward. They validated their method by comparing its
+servable possible evader policies, then the trained network performance with ORACLE.
+has been used in real time where the human policy is not
+observable.
+7.2 Encoded Influence
+The use of predictive networks to represent latent dynamics
+in mutual adaptation includes the use of RNNs to repre-
+In the same way that Bayesian and Markovian mutual adap-
+sent how time series of past observations might affect an
+tation can be extended to influence, so can encoded latent
+explicit latent state. In [65], the latent state is defined as
+13
+
+dynamics by additionally integrating it into planning during showed promise for influencing real humans towards more
+the control step. optimal behavior, where LILI and SILI failed to effectively
+do so outside simulated settings [67].
+Much of the work on encoded latent dynamics to enable
+influence stems from the creative use of autoencoders. Tra- Most recently, [69] has attempted to relax limitations of
+ditionally, autoencoders create implicit latent embeddings LILI, SILI, and RILI on limited complexity in policies, re-
+by optimizing reconstruction loss between a feature set iden- quirement for online data, and the ability to only influence
+tically used as input to the encoder and output to the de- between interactions by showing the ability to influence
+coder. However, to capture dynamics, an autoencoder can humans towards more optimal policies. This was done by
+optimize reconstruction loss between a previous observation training an autoencoder to model latent dynamics using
+o and the same feature set in the next timestep o . The a human-human data prior. With this available dynamics
+t−1 t
+reviewed works primarily formulate the interaction problem function, an agent was then able to learn to influence offline.
+as a series of HiP-MDPs [95] where the latent state is as- While [68] does not directly frame the learning problem in
+sumed to be fixed within a single interaction and transition an HRI setting, the FURTHER algorithm applies an au-
+between interactions. toencoder framework to estimate the latent dynamics of the
+partner agent in a very similar way to LILI, SILI, and RILI.
+This line of work began with the Learning and Influencing
+Latent Intent (LILI) algorithm [22] that trains an autoen- In [12], the authors deviate from the autoencoder framework
+coder to encode the previous trajectory o and recon- and use a transformer encoder to represent a wide range of
+t−1
+struct the next trajectory o using a maximum likelihood possible learning dynamics functions. Here, they simultane-
+t
+objective over observed transitions. Here, the output of the ously infer the initial latent state θˆ and the latent dynam-
+0
+encoder is the implicit representation of the human latent ics approximation parameters using maximum likelihood
+strategy, which can be expressed as θˆ ←E(o ). By maxi- estimation and gradient-based optimization over previous
+t t−1
+mizing expected reward across future interactions, under the observations within an interaction. More directly, in [70],
+dynamics represented by the implicit encoding θˆ, a robot the authors used an RNN to encode a sequence of observa-
+t
+can learn to influence the human between interactions. The tions into latent states that approximated a human’s biased
+authors were able to show that the robot could successfully belief update between interactions. Both former articles
+influence another robot’s (human-proxy) shooting strategy show the influence towards more optimal human behavior
+in an air hockey experiment, but failed to do so with real through a more successful policy. Lastly, the authors of [71]
+humans as the influencing robot’s policy was found to be extend this to a multi-human setting where they train a
+too “brittle” when playing against a human with imperfect robotic policy to exert social influence on a group by using
+action emissions. a dynamic leader-follower graph, approximated by a long
+short-term memory (LSTM) network, where they are able
+This framework was extended to Stable Influencing of La-
+to show that they can influence the team’s navigation goals
+tent Intent (SILI) by adding an auxiliary reward that penal-
+within an interaction.
+izes large distances between θ and θ [29]. This enforces
+t−1 t
+pairwise stability on the human’s latent state to promote
+more consistent interactive policies. By doing so, the robotic
+8 Applications
+agent learns to take actions that influence the human be-
+tween interactions to maintain their current latent state
+such that θ t+1 ≈ θ t . Generally, stability was achieved in In this section, we study the distribution of latent dynamics
+several settings with a simulated human collaborator. models used for mutual adaptation and influence tasks in
+various applications in HRI. To achieve better organization,
+Alternatively, Robustly Influencing Latent Intent (RILI) [67]
+the classification system proposed in [96] was adapted to
+was developed to consider latent dynamics functions that
+sort HRI applications into different groups based on the
+differ between individual humans. Here, an additional latent
+robot task and the human role.
+hyperparameter that describes different latent dynamics
+functions is learned with another encoder trained on the his- According to the definitions proposed in [96], robot tasks
+tory of past latent states {θ t−1 ,θ t−2 ,...}. This hyperparame- in various applications can be categorized into five groups:
+ter is then used as input alongside the previous trajectories manipulation (e.g., pick-and-place [43]), transport (e.g., au-
+to predict the next latent state in a similar way to LILI to tonomous vehicles [10]), cognitive stimulation (e.g., tutoring
+achieve a latent dynamics encoding. This parameter is then robots [21]), information exchange (e.g., recommendation
+inferred between interactions, and planning is done condi- systems [50]), and physical stimulation1 (e.g., motor impair-
+tionally (i.e., robustly) by considering possible variations ment assistance [59]). Examples of these tasks can be found
+over latent dynamics functions and states. A slightly differ- in Figure 6. Moreover, the role of the human can be classi-
+ent formulation of RILI was proposed in [13] where authors fied in six ways: collaborator (e.g., table carrying [6]), oper-
+forgo this hyperparameter and instead rely on past interac- ator (e.g., teleoperation [26]), supervisor (e.g., intermittent
+tion data {o t−1 ,o t−2 ,...} to inform which dynamics function control [57]), cooperator (e.g., leader-follower games [71]),
+is being used. Thus, they robustly train a single model with coactive2 (e.g., collision avoidance [47]) and competitor (air
+several partners such that the encoder can predict multi-
+ple types of latent dynamics functions. While most of these
+1Referrerstobothphysicalstimulationandloadreductionin[96]
+2Referredtoasbystanderin[96]
+models were verified to influence simulated humans, RILI
+14
+
+Table 2: Taxonomy of Robot Task and Human Role
+Bayesian Markovian Encoded
+Mutual Mutual Mutual
+Influence Influence Influence
+Adaptation Adaptation Adaptation
+ksaT
+toboR
+[38,40], [6,17,43] [20,55], [13,22,67],
+Manipulation [35] [60,64,65]
+[18,42] [19,26,30] [57,58] [12,68]
+[10,63],
+Transport - [37,39] [44,46,47] [51,52,54] [29,69,71]
+[62,66]
+[38,39],
+Info Exchange - - [49,50,58] - [70]
+[18,42]
+[48,56],
+Cognitive Stim. [36] [41] - - -
+[21,53]
+Physical Stim. - - [30,45] - [11,59,61] -
+eloR
+namuH
+[6,26,43], [20,54,55], [59,64,65],
+Collaborator [35,36] [18,38] [13,67,69]
+[30,45] [56,58] [60,61]
+Operator - [42] [19,44,46] [53,57] - [12]
+[49,50,51,52],
+Supervisor - [40] [17,44] [63] -
+[53,56,57]
+Cooperator - - [30] [21,48] [11] [70,71]
+Coactive - [37,39,41] [47] - [10,66] [29]
+Competitor - - - - [62] [22,68]
+(a) Manipulation with human (b) Transport with coactive (c) Info exchange with human
+collaborator [43] humans [10] supervisor [50]
+(d) Cognitive stim. with human (e) Physical stim. with human
+cooperator [21] collaborator [59]
+Figure 6: Illustration of examples of latent dynamics being used for mutual adaptation and influence in the many domains
+of HRI. Figures 6a-6e provide a classification of both the robot task and the human role for each cited work.
+15
+
+hockey [22]). Organizing applications in this manner allows on robots providing physical assistance to humans [59] or
+for a clear understanding of how different latent dynam- joint control problems [11,30,45] where anticipation of la-
+ics models may be either effective or ineffective in various tent state (i.e. mutual adaptation) is sufficient to achieve
+scenarios. This is particularly valuable when determining assistive objectives whereas we typically do not want to be
+whether mutual adaptation or influence is best suited for directly changing the underlying features of the human (i.e.
+a particular HRI application. This categorization has been influence). While rehabilitation robotics could be a notable
+applied to all reviewed literature in this paper and has been physical stimulation task where influence plays a role, this
+summarized in Table 2. For a broader view how these ap- approach has not been explored in existing latent dynamics
+plications correlate with all dimensions presented in this literature, to the best of our knowledge, likely due to a la-
+survey, we refer the readers to Figure 7. tent dynamics model of neuromuscular recovery mechanisms
+being exceedingly complex.
+An immediate observation from Table 2 is that the majority
+of the reviewed literature falls under the categories of ma- Regarding Bayesian latent dynamics, we observed that it
+nipulation (23 papers) and transport (15 papers) in terms of is predominantly used for influencing humans rather than
+robot tasks. We believe this reflects a natural characteristic for mutual adaptation. This is likely because Bayesian mod-
+of HRI, as current state-of-the-art research in HRI is most els primarily deal with the human’s belief about external
+commonly framed as a robotic arm or autonomous vehicle features like the world [70] or, more typically, their robot
+interacting with a human. Similarly, a significant portion partner [18,38,40,41,42]. Thus, Bayesian latent dynam-
+of the papers consider the human role as a collaborator (21 ics complies well with robot objectives that seek to align
+papers). This aligns with the tendency of HRI to be framed human beliefs with reality, which is inherently an influence
+as a collaborative problem, highlighting the strong interest problem.
+in collaborative tasks within state-of-the-art HRI research.
+We can also observe that mutual adaptation saw very few
+9 Discussion
+applications in information exchange and cognitive stimula-
+tion robot tasks. This is because, according to our proposed
+framework, these two tasks are inherently an influence prob- In this section, we first provide an outline of how researchers
+lem. In information exchange and cognitive stimulation may make decisions when implementing latent dynamics.
+tasks, as the names suggest, the robot’s primary objective is This discussion is provided in the context of the classified
+to stimulate or alter the internal state of the human—either works in Table 1 along the listed dimensions of approach,
+by providing information to the human (e.g., legible mo- latent dynamics class, latent dynamics representation, and
+tion [18,38,39,42], verbal communication [58], text-based update frequency. Then, we discuss emergent themes that
+communication [49,50], or synthesized observations [70]) arise from subsets of works to highlight existing trends
+or by influencing cognitive features like knowledge [21], at- in the current field of latent dynamics. We support these
+tention [41,56], or trust [48]. At the same time, we observe trends with analysis provided in Figure 7 that shows fre-
+that most cognitive stimulation and information exchange quency of co-occurrence between the presented dimensions.
+tasks utilize Markovian latent dynamics, closely followed by Finally, we provide a summary of research areas that could
+Bayesian latent dynamics, with minimal use of encoded la- warrant further investigation.
+tent dynamic models for these applications. We believe this
+observation can be attributed to two primary reasons. First,
+studies have shown that many human internal states are 9.1 Latent Dynamics Implementation
+effectively Markovian in nature [97], while Bayesian models
+are widely regarded as a simple and cognitively valid repre- Selecting an Approach: The work until this point has
+sentation of human reasoning [98]. Second, most encoded been structured to independently review approaches to mu-
+latent dynamics models create a unique challenge here as tual adaptation and influence within the context of each
+obtaining numerous, high-quality samples to train a dynam- latent dynamics model. But how do we know which ap-
+ics model can be difficult when measuring latent states that proach is better in practice? Theoretically, influence is a
+can only be observed through costly and indirect means like better maximizer of cumulative robot reward since it can
+surveys. However, this only applies to when the model is not only anticipate, but also leverage sequential reasoning
+learned. As observed in Table 2, most applications where about latent state to its advantage. Putting aside the ob-
+the human agent is considered a supervisor employ Marko- vious computational challenge of solving the control step
+vian latent dynamics, as in such tasks, the robot primarily under a dynamic latent state, this does not guarantee its
+interacts with human internal states, often with the goal of superiority in all practical scenarios. To exemplify this, con-
+calibrating trust. Thus, we also observe little works in en- sider an assistive robot that applies low-limb torques to
+coded latent dynamics with a human supervisor due to the minimize human walking effort where the human’s latent
+aforementioned issue of costly training samples. state is their intended gait.
+In contrast to the limited use of mutual adaptation in cog- If we have an inaccurate model of how robot torques change
+nitive stimulation and information exchange, physical stim- the human’s intended gait (i.e., latent state dynamics), then
+ulation applications are exclusively proposed as a mutual the influential actions will not realize the expected higher
+adaptation problem. This is because these studies focus payoff. In other words, compounding error from latent state
+16
+
+9.2 Emergent Properties
+Approach D. E. F. G. H. I. J. K. L. M. N. O. P. Q. R. S.
+Adaptation 1 22 0 Approach 11 9 2 5 2 1 6 2 4 0 0 18 4 10 1 5
+Influence 2 0 29 Class 7 6 2 0 2 1 4 3 4 17 12 13 5 0
+Bayesian 3 2 7 9 0 0 Class 0 0 0 0 0 0 0 0 6 3 5 2 0
+Markov 4 9 13 0 22 0 11 4 1 1 3 0 0 0 12 8 9 0 3
+Encoded 5 11 9 0 0 20 Dynamics Representation 17 5 9 4 2
+Belief Update 6 2 7 9 0 0 9 0 0 0 0 0 0 0 0 Dynamics
+Representation
+Finally, influence may not always be ethical to implement
+[99], especially when this would cause a human to act against
+their own interests (e.g., develop a compensatory gait that
+hinders non-assisted walking). Thus, we should only look
+to influence when we have an accurate model of latent state
+dynamics, a well specified objective, and it is ethical to do 3 5 2 0
+Fixed Function 7 5 2 0 7 0 0 7 0 0 0 0 0 0 0 6 5 0 2 so. Otherwise, mutual adaptation may be a superior ap-
+Transition Matrix 8 4 4 0 8 0 0 0 8 0 0 0 0 0 0 1 2 0 0 proach.
+Beta-Distribution 9 0 3 0 3 0 0 0 0 3 0 0 0 0 0 0 0 0 0
+Linear Gaussian Sys.10 0 4 0 4 0 0 0 0 0 4 0 0 0 0 3 2 0 3 Selecting a Latent Dynamics Class: Once an approach
+Fixed Approximator11 2 0 0 0 2 0 0 0 0 0 2 0 0 0 1 2 0 0
+is selected, a latent dynamics class can be chosen depend-
+Autoencoder12 5 6 0 0 11 0 0 0 0 0 0 11 0 0 0 5 2 0
+Predictive Network13 2 2 0 0 4 0 0 0 0 0 0 0 4 0 1 0 1 0 ing on access to human data and prior knowledge about the
+Transformer14 2 1 0 0 3 0 0 0 0 0 0 0 0 3 Update 2 1 0 structure of the latent dynamics function as presented in
+Within15 18 17 6 17 12 6 5 8 2 3 1 5 3 2 35 0 1 1 1 Table 1. The fact that these latent dynamics representations
+Between16 4 12 3 5 8 3 3 0 1 1 0 6 1 1 0 16 1 1 1 and classes can be used interchangeably within each ap-
+Manipulation17 10 13 5 9 9 5 2 5 0 2 0 5 2 2 16 7 1 1 1
+proach is a direct result of the unifying framework proposed
+Transport18 7 8 2 6 7 2 4 1 0 1 1 4 1 1 10 5 1 1 1
+Information Exchange19 0 8 4 3 1 4 0 1 2 0 0 0 1 0 5 3 1 1 1 in this paper and provides a structured method for mak-
+Cognitive Stimulation20 1 5 2 4 0 2 0 2 1 1 0 0 0 0 4 2 1 1 1 ing these decisions. For instance, Bayesian latent dynamics
+Physical Stimulation21 5 0 0 2 3 0 3 0 0 0 0 2 0 0 4 1 1 1 1 may be useful when there is no human data prior (i.e., the
+Collaborator22 12 10 4 10 8 4 3 4 0 3 0 6 2 0 16 6 1 1 1
+ability to start with a uniform prior) and little additional
+Operator23 5 8 1 8 4 1 4 3 1 1 0 0 2 1 10 3 1 1 1
+Supervisor24 3 8 1 8 2 1 3 2 2 1 1 0 0 1 7 4 1 1 1 knowledge of how the human performs their latent update.
+Cooperator25 2 4 0 3 3 0 2 1 1 0 0 0 2 0 4 2 1 1 1 However, if knowledge of the structure of the latent update
+Coactive26 3 4 3 1 3 3 0 1 0 0 0 2 0 1 4 3 1 1 1 is available with some human data to fit a model, a Marko-
+Competitor27 1 2 0 0 3 0 0 0 0 0 0 3 0 0 2 1 1 1 1
+vian latent dynamics representation may be best. Finally,
+A B C D E F G H I J K L M N O P 1 1 1
+Adaptation Influence Bayesian M arkov Encoded Belief U pd F a ix te ed Fu T nc ra ti n o s n ition B M et a a t - r D ix ist L ri i b n u e t a io r n G a F u ix s e s d ia A n p S p A y r u o s t . x o i e m n a c t o o P d r r e e r dictive T r N a e n t s w fo o r r m W k e it r hin Betw een e t n la h n a r e c m g o e u i d c p h e s d u d s a m t l t a r a e u t n e c r n u t d u t l a e r d t e a ( y ) i s n . e g e a t . i m v t n e o i o n cs t p t r a h a r r i i a o n e t r u t t k h s h n e e e f o r u m e w l o l i f e s d o d r e a g l c a . e c m e o s b f s i t g t h u o e o a u la s s t l u y e ffi n l t e c a d ie r y n n - i t n ly g
+Selecting a Latent Dynamics Representation Simi-
+Figure 7: Bibliographic co-occurrence matrix showing the
+larly to selecting the class, the choice of latent dynamics
+frequency of co-occurrence between all presented dimensions
+representation is a matter of personalization and prior
+in this paper (defined in Sec. 4 and Sec. 8). Darker colors
+knowledge. Fixed functions and approximators both as-
+indicate higher frequencies relative to other co-occurrences
+sert a constant representation of the dynamics but alleviate
+within each bounded cross-section of dimensions (e.g.,
+the need for data. Conversely, constraining dynamics to a
+within the 2×3 Update-Class rectangle). Cross-sections
+certain form as in other Markovian representations allows
+may not sum to the total paper count in cases where works
+more efficient use of data when learning parameters. Finally,
+satisfied multiple criteria. Co-occurrence between Robot
+if no prior knowledge of how the latent state progresses is
+Task and Human Role is excluded for brevity.
+available, one can rely on purely data-driven methods such
+as encoded representations or learn a Markovian transition
+matrix directly as in [57].
+dynamics in the control step may produce actions that are
+largely erroneous. In contrast, this error only occurs once Selecting an Update Frequency: Rationale for selecting
+in mutual adaptation during the prediction step. Thus, if update frequency and exact latent dynamics representation
+inaccuracies are small enough to improve prediction com- are subject to particular setting of the task. For example,
+pared to one-way adaptation but generate erroneous influ- update frequency should be selected based on how often the
+ence, then mutual adaptation is likely the best approach. human latent state is likely to change. For example, within
+This consideration is especially critical in light of the real- interaction may be better suited for fickle latent states like
+world difficulties in modeling an unobservable transition adaptability [6] while between interaction may be better
+with noisy observations (e.g., stochastic humans or sensor suited for things like sorting preferences [17] that may have
+noise). some resilience once the interaction has started.
+Additionally, influence may suffer under an ill-specified ob-
+jective where the robot function fails to capture all task
+9.2 Emergent Properties
+aspects. Even with a perfect latent dynamics model, if the
+measured human walking effort (objective) is incorrectly de-
+The remainder of this section will now review particular
+fined or subject to sensing errors, then the control step may
+observations that arose as part of this survey to better allow
+produce actions that risk steering the human toward gaits
+researchers to make decisions on how to apply these models.
+(latent state) with unintended consequences. This effect is
+less prevalent with mutual adaptation, as the human retains Latent Dynamics Classes: Among all reviewed papers,
+higher task arbitration and is not subject to the erroneous Markovian models are the most prevalent class for both
+influence. mutual adaptation and influence (Figure 7, Col A-B Row
+17
+
+9.2 Emergent Properties
+3-5). We believe this popularity stems from the usefulness of Evaluation Methods: The success of a given mutually
+Markovian dynamics in planning optimal actions [100], their adaptive or influential model was found to be evaluated in
+computational efficiency, and capacity to personalize human four ways: task performance, model validity, tractability,
+behavior through parameterization of constraining functions. and generalizability.
+The latter point comes from the fact that human latent
+Almost ubiquitously, the reviewed works rely on objective
+states can often be accurately described as Markovian [97].
+measures of task performance (i.e., the ability to interact
+For example, the human trust parameter exhibits inherent
+effectively and achieve task goals) such as reward. Typically,
+Markovian properties, as it is significantly influenced by
+performance was then compared to baseline algorithms,
+previous moments of trust [86]. In addition, POMDPs are
+such as Oracle [22,64] or standard Q-learning [36], to show
+a common interactive setting in the reviewed works and
+whether their model led to improved outcomes within a
+are fully compliant with Markovian latent dynamics due
+specific task. Task performance metrics commonly include
+to the partially observable transition function’s ability to
+success rate, response time, path tracking error, and percep-
+be decomposed into world (observable) and latent state
+tual measures like trust and collaboration. Since measuring
+(unobservable) transition functions.
+task performance inherently depends on the nature of the
+Conversely, Bayesian latent dynamics are notably less com- task, there are no standard metrics that would be applica-
+mon (Figure 7, Col C). This is particularly surprising given ble to all of the reviewed works. However, using statistical
+the widespread use of Bayesian inference in one-way adap- significance tests to show a significant improvement in task
+tation [101,102,103], its computational efficiency in lower- performance over an existing baseline provides good evi-
+dimensional spaces, and its simplicity as a representative dence that mutual adaptation and influence methods can
+model for human cognition [98]. We believe that this dispar- translate to real-world benefits.
+ity indicates that the application of Bayesian latent dynam-
+As latent dynamics models refer to a hidden variable, it may
+ics has not been fully explored in mutual adaptation and
+also be helpful to evaluate model validity (i.e., the coherence
+influence. This may be due to the fact that, compared to
+between the predicted and true latent state). However, it is
+Markovian and encoded latent dynamics models, Bayesian
+not always easy or necessary to directly verify that the pre-
+models are less personalizable and provide fewer options
+dicted latent state accurately recovers the ground truth. In
+to tune the model for different tasks and scenarios, which
+mutual adaptation, this is typically not done as the focus is
+makes Bayesian models less enticing for researchers who
+on model performance, not latent state elicitation. Although
+are exploring the potential of latent dynamics modeling in
+some works do validate latent state in this way [17], most
+mutual adaptation and influence.
+leverage that fact that adaptability is intrinsically linked
+Update Frequency: The other interesting observation to performance [104] and compare to some non-mutually
+that can be made by looking at Figure 7 is that the number adaptive baseline as in [19]. Similarly, indirect influence (i.e.,
+of articles that used within interaction updates is approxi- eliciting a latent state only as a means to an end) usually
+mately double the number of articles that used between in- does not verify latent state accuracy, as it also focuses solely
+teraction updates (Figure 7, Col O-P Row 15-16). One pos- on performance outcomes. However, direct influence (i.e.,
+sible reason is that, typically, it is easier to perform within the goal is to elicit a specific latent state) requires a mea-
+interaction studies as they are more sample-efficient. Also, surement to validate the model since robot performance is
+when modeling the latent update as occurring between in- defined by its ability to elicit that latent state. Here, latent
+teractions, it may be a strong assumption to assert that the states can be measured by induction of empirical observa-
+human’s latent state is stationary within an episode depend- tions like policy distributions [22] or through measures of
+ing on the setting. However, between-interaction updates human trust [49,51], knowledge [21], or perceptions of robot
+may afford an opportunity for longer-term influence [37], characteristics [41]. Alternatively, some works elect to val-
+but this has yet to be thoroughly explored. idate with a simulated human such that the latent state is
+directly observable [22,40,70].
+Types of Influence: We also observe two types of influ-
+ence that arise in the reviewed works. First, influence can Evaluating the tractability of these models has also received
+be indirect where the robot attempts to manipulate the la- some attention. Compared to more standard approaches
+tent state as a means to an end and only cares about the (e.g., one-way adaptation), introducing latent state dynam-
+final outcome of the interaction. This can be seen when the ics increases computational complexity. While mutual adap-
+latent state is not directly considered in the reward function tation and influence generally utilize the same evaluation
+but is dynamically modeled during the control step (e.g., techniques, tractability may be of higher importance for in-
+you should not care what your air hockey opponent’s latent fluence due to the repeated application of latent dynamics
+strategy is so long as it allows you to score more goals [22]). during the control step. Thus, some works analyze theo-
+Alternatively, influence can be more direct where the robot retical computational complexity with Big O [6,20,55] to
+intentionally drives the human to a desired latent state (e.g., ensure tractability. However, most works simply provide
+modulating trust [20]) and is achieved by adding the latent empirical evidence of finite time convergence. Evaluating
+state as a reward parameter. Deciding which approach to the convergence speed to a stable policy [64] may also be
+influence is best depends on the interactive goals; is the helpful in determining the relative tractability of models
+goal to simply improve robot task performance or elicit a given that similar performance is achieved. Similarly, abla-
+particular quality or belief for the human? tion studies [13,71] are used to evaluate the tradeoff between
+18
+
+9.3 Open Challenges and Future Work
+computational cost and performance of different latent dy- mation [106] have been proposed and demonstrated to be
+namics models. For example, [29] compared continuous and effective in practice [91]. Also, more efficient latent dynam-
+discrete latent spaces and found that a continuous latent ics models can support long-term prediction accuracy and
+space leads to a noisy reward, which may make learning the speedup in complex or high-dimensional latent spaces. One
+optimal policy less tractable. Similarly, [64] discretized a promising approach is to apply Neural ODEs for more effi-
+continuous latent space to formulate a tractable problem. cient multi-step predictions by extrapolating future latent
+While discretization may afford more tractable approaches, states constrained by ODEs instead of repeatedly perform-
+higher resolution latent spaces can provide more descriptive ing single-step transitions [107]. Additionally, influential
+power which motivates evaluating latent dynamics models policy solutions can be complex when solving the control
+at different task complexities [60]. step with a non-stationary human partner. Thus, applying
+state-of-the-art methods for solving these non-stationary
+Finally, evaluating the generalizability across individuals
+problems can aid effectiveness of latent dynamics influence
+and tasks has also received a lot of attention. Simply put,
+and reduce convergence time. For example, sample efficiency
+works that study generalization across individuals study
+of these solutions can be improved with meta-learning [108]
+how population-level [13,69], online personalization [17,63],
+for few-shot adaptation of influential strategies or LLM-
+or sim-to-real [59,67] models transfer to an unseen partner.
+informed exploration [109,110] that provide reasonable policy
+More uniquely, a theoretical bound on generalization to an
+priors.
+unseen distribution of human partners was given by [67].
+Alternatively, some attention is also given to how models Improving Generalizability: The majority of existing
+transfer to out-of-distribution tasks. This can be studied works formulate task-oriented latent state and dynam-
+by evaluating scenarios not observed in the training dataset ics (e.g., navigation goal [42]) or a fixed modality for the
+within a particular task [10,47] or how well a single model dynamics function which limits the range of supported
+generalizes to a completely new task [26]. Similarly, tasks tasks. Thus, models that consider multimodal latent dy-
+can be scaled to evaluate how a model performs with differ- namics [111] can better describe variance in dynamics across
+ent team compositions (e.g., single robot and multi-robot individuals and tasks, while generative methods like diffu-
+team [44]). sion models [112] may further aid generalization in com-
+pletely new scenarios, unlike current task generalization,
+which requires high similarity between training and testing
+9.3 Open Challenges and Future Work tasks. At the same time, diffusion-based latent dynamics
+models present a promising direction for modeling multi-
+In this section, we identify some open challenges based on modal latent state distributions (e.g., multi-modal human
+our review, and propose some promising and important belief distributions represented as latent states). They also
+future directions for the community. offer new opportunities for influence, such as steering the
+sampling dynamics of diffusion models to guide behavior in
+Standardization and Comparison: The lack of for-
+different directions, as demonstrated in [113]. Leveraging
+mal standards generally leads to a fragmented evaluation
+the reasoning capabilities of foundation models may also
+methodology (i.e., tasks and measures) for the field of la-
+be an interesting direction for generalization. For example,
+tent dynamics. A standardized benchmark that fulfills
+vision language models (VLMs) [114] may provide a means
+the requirements of many applications is challenging to
+for generalizing to unseen scenarios by affording zero-shot
+develop [105] but could better afford meaningful conclusions
+semantic reasoning about the observations that support la-
+about the relative effectiveness of different models. This
+tent dynamics. Future work could explore coupling VLMs
+review also did not identify any articles that compared mu-
+with latent dynamics models, where the VLM provides high-
+tual adaptation and influence within the same experimental
+level semantic embeddings or task descriptions that inform
+conditions. In fact, alternatives within any single dimension
+the structure or priors of the latent state space. Such inte-
+were not compared as indicated by the upper diagonal in
+gration could enable agents to reason about latent states
+Figure 7. Similarly, with such an agnostic approach to la-
+or affordances using natural language supervision, paving
+tent dynamics provided by this review, many unexplored
+the way toward more interpretable and generalizable latent
+areas in both implementation and application are revealed
+representations in human–robot interaction.
+by Figure 7 (e.g., encoded dynamics representations for in-
+formation exchange and cognitive stimulation in Col K-N Latent Dynamics Alignment: In general, as the name
+Row 19-20). Such comparative evaluations would be helpful suggests, latent state is a hidden variable that cannot be
+to uncover the benefits and challenges of extending mutual directly observed. In order to effectively track human latent
+adaptation to influence in the real world. states over time, we need aligned representations for both
+the latent state and the latent dynamics. Latent state rep-
+Improving Tractability: As previously mentioned, incor-
+resentation alignment [16] asks whether the chosen latent
+porating latent dynamics introduces additional computa-
+state reflects not just functionally descriptive features, but
+tional challenges. Primarily, Many of the studies reviewed
+also what the human internally values and models. Such
+in this paper formulate the problem as a POMDP, which
+alignment enables models to represent causal features of
+is known to be intractable in general with respect to com-
+behavior. Latent dynamics alignment refers to capturing
+puting the optimal policy. To address this challenge, var-
+the causal relationships between the latent states, not nec-
+ious approximation methods such as the QMDP approxi-
+essarily if the latent states themselves are descriptive of a
+19
+
+causal feature (e.g., even if a latent state of fatigue is well- dynamics. Finally, this survey concluded by discussing ap-
+represented in a task, a Markovian model might fail to re- plications, implementation, emergent properties, and open
+flect its cumulative, non-Markovian nature, causing poor challenges. In doing so, this paper connects existing work
+description of the relationship between one latent state and and provides a common framework for classifying, compar-
+the next). A misaligned latent dynamics may be able to ac- ing, and integrating latent dynamics models in HRI, thereby
+curately fit a dataset but fail to capture causal structures, supporting a more unified research effort in this field.
+leading to learning spurious correlations and overlooking
+fundamental processes. A deficit in alignment like this can Acknowledgments
+then degrade value alignment and generalized task learn-
+This material is based up on work supported by the Na-
+ing [16] which highlights the importance of studying latent
+tional Science Foundation under Grant Nos. 1828010, 192503,
+dynamics alignment. For example, [12] examines human
+and 1944833. M. O. Smith was additionally supported by
+learning in a shared control setting. Here, latent state align-
+the Air Force Office of Scientific Research under award num-
+ment asks whether the modeled latent state reflects what
+ber FA9550-23-1-0283. while M. O. Smith and J. Bush were
+the human is actually learning about (e.g., the robot’s iner-
+supported by the National Science Foundation under Grant
+tia matrix versus its goal position). Likewise, one could do
+No. 1828010. S. Amatya was supported by the National Sci-
+the same with the assumed learning rule (e.g., a Bayesian
+ence Foundation under Grant No. 1925403. S.Y. Soltanian
+update or gradient descent) and consider its alignment with
+was supported by the National Science Foundation under
+the human’s actual learning process—this would be referred
+Grant No. 1944833.
+to as latent dynamics alignment. Without considering both
+latent state and dynamics alignment, an influential robot
+can easily mislead the human learner and degrade team
+References
+performance. While prior work has focused on latent state
+representation alignment [16,115,116], alignment of latent
+dynamics, to the authors’ knowledge, has not been studied
+[1] M. Deniˇsa, A. Gams, A. Ude, and T. Petriˇc, “Learn-
+and remains an open challenge.
+ing compliant movement primitives through demon-
+Ethical Considerations: Applying influence in HRI raises stration and statistical generalization,” IEEE/ASME
+several ethical considerations that need to be further stud- Trans. Mechatronics, vol. 21, no. 5, pp. 2581–2594,
+ied [99]. For example, interaction data and personalized 2015.
+interaction profiles may contain personally identifiable in-
+[2] C. Baker, R. Saxe, and J. Tenenbaum, “Bayesian the-
+formation and may thus be subject to data privacy pro-
+ory of mind: Modeling joint belief-desire attribution,”
+tections [117]. Additionally, influence may be applied to
+in Proc. Annu. Meeting Cognitive Science Society,
+drive people to take actions that are not in their best in-
+vol. 33, no. 33, 2011.
+terest, such as utilizing social and emotional mechanisms
+to make people reliant on a paid service. This is particu- [3] A. Tiwari, A. Chugh, and A. Sharma, “Uses of artifi-
+larly important since humans have been shown to conform cial intelligence with human-computer interaction in
+to robot suggestions without having a strong basis to trust psychology,” in Innovations in Artificial Intelligence
+the robot [118]. Establishing ethical safeguards for trans- and Human-Computer Interaction in the Digital Era.
+parency, consent, and accountability in robot influence is Elsevier, 2023, pp. 173–205.
+an urgent and developing area of research. Methods, such
+as explainable AI, provide intent transparency can help hu- [4] M. Oudah, V. Babushkin, T. Chenlinangjia, and J. W.
+mans understand the motivation behind robot actions and Crandall, “Learning to interact with a human part-
+maintain informed consent during long-term HRI. ner,” in Proc. 10th Annu. ACM/IEEE Int. Conf.
+Human-Robot Interaction, 2015, pp. 311–318.
+[5] T. Ogata, M. Matsunaga, S. Sugano, and J. Tani,
+10 Conclusion
+“Human-robot collaboration using behavioral primi-
+tives,” in 2004 IEEE/RSJ Int. Conf. on Intelligent
+Although robot learning in stationary environments has Robots and Systems (IROS), vol. 2. IEEE, 2004, pp.
+progressed significantly, interactions with dynamic humans 1592–1597.
+present significant challenges. This review highlights the
+[6] S. Nikolaidis, A. Kuznetsov, D. Hsu, and S. Srini-
+importance of including latent state dynamics in robots’
+vasa, “Formalizing human-robot mutual adaptation: A
+prediction algorithms for better human-robot interactions
+bounded memory model,” in 2016 11th ACM/IEEE
+in such a non-stationary environment. We proposed a uni-
+Int. Conf. Human-Robot Interaction (HRI). IEEE,
+fied framework that extends one-way adaptation, where a
+2016, pp. 75–82.
+robot estimates past human latent states, to mutual adap-
+tation and influence where robots consider the impact of [7] M. Natarajan, E. Seraj, B. Altundas, R. Paleja, S. Ye,
+their actions on human behavior. We then used this frame- L. Chen, R. Jensen, K. C. Chang, and M. Gombolay,
+work to review compliant mutual adaptation and influence Intentions and intentionality: Foundations of social
+literature and organize the presented approaches into dis- cognition. The National Academies Press, 2022.
+tinct classes of Bayesian, Markovian, and encoded latent
+20
+
+REFERENCES
+[8] B. Baker, I. Kanitscheider, T. Markov, Y. Wu, [21] A. Ramachandran, S. S. Sebo, and B. Scassellati,
+G. Powell, B. McGrew, and I. Mordatch, “Emergent “Personalized robot tutoring using the assistive tu-
+tool use from multi-agent autocurricula,” in Int. Conf. tor pomdp (at-pomdp),” in Proc. AAAI Conf. Artif.
+Learn. Representations, 2019. Intell., vol. 33, no. 01, 2019, pp. 8050–8057.
+[9] W. Li, D. Sadigh, S. S. Sastry, and S. A. Seshia, “Syn- [22] A. Xie, D. Losey, R. Tolsma, C. Finn, and D. Sadigh,
+thesis for human-in-the-loop control systems,” in Tools “Learning latent representations to influence multi-
+and Algorithms for the Construction and Analysis of agent interaction,” in Conf. robot learning. PMLR,
+Systems: 20th Int. Conf., TACAS 2014. Springer, 2021, pp. 575–588.
+2014, pp. 470–484.
+[23] G. Kang, H. S. Oh, J. K. Seo, U. Kim, and H. R.
+[10] L. Wang, Y. Hu, L. Sun, W. Zhan, M. Tomizuka, and Choi, “Variable admittance control of robot manipula-
+C. Liu, “Transferable and adaptable driving behavior tors based on human intention,” IEEE/ASME Trans.
+prediction,” arXiv preprint arXiv:2202.05140, 2022. Mechatronics, vol. 24, no. 3, pp. 1023–1032, 2019.
+[11] P. Franceschi, N. Pedrocchi, and M. Beschi, “Adaptive [24] Z. Hou, T. Ma, W. Wang, and H. Yu, “Contextual
+impedance controller for human-robot arbitration policy search for task-level adaptation in physical hu-
+based on cooperative differential game theory,” in man–robot interaction,” IEEE/ASME Trans. Mecha-
+2022 Int. Conf. Robot. Autom. IEEE, 2022, pp. 7881– tronics, pp. 1–13, 2025.
+7887.
+[25] A. Bobu, D. R. Scobee, J. F. Fisac, S. S. Sastry,
+[12] R. Tian, M. Tomizuka, A. D. Dragan, and A. Bajcsy, and A. D. Dragan, “Less is more: Rethinking prob-
+“Towards modeling and influencing the dynamics of abilistic models of human behavior,” in Proc. 2020
+human learning,” in Proc. 2023 ACM/IEEE Int. Conf. ACM/IEEE Int. Conf. Human-Robot Interaction,
+Human-Robot Interaction, 2023, pp. 350–358. 2020, pp. 429–437.
+[13] S. Parekh, S. Habibian, and D. P. Losey, “Rili: Ro- [26] S. Nikolaidis, D. Hsu, and S. Srinivasa, “Human-robot
+bustly influencing latent intent,” in 2022 IEEE/RSJ mutual adaptation in collaborative tasks: Models and
+Int. Conf. Intell. Robots Syst. IEEE, 2022, pp. 01–08. experiments,” Int. J. Robot. Res., vol. 36, no. 5-7, pp.
+618–634, 2017.
+[14] R. Steyer, M. Schmitt, and M. Eid, “Latent state–
+trait theory and research in personality and individual [27] V. Gabler, T. Stahl, G. Huber, O. Oguz, and D. Woll-
+differences,” European J. Personality, vol. 13, no. 5, herr, “A game-theoretic approach for adaptive
+pp. 389–408, 1999. action selection in close proximity human-robot-
+collaboration,” in 2017 IEEE Int. Conf. Robot. Autom.
+[15] Y. Liu, E. Jun, Q. Li, and J. Heer, “Latent space car-
+(ICRA). IEEE, 2017, pp. 2897–2903.
+tography: Visual analysis of vector space embeddings,”
+in Computer Graphics Forum, vol. 38, no. 3. Wiley [28] S. Ikemoto, H. B. Amor, T. Minato, B. Jung, and
+Online Library, 2019, pp. 67–78. H. Ishiguro, “Physical human-robot interaction: Mu-
+tual learning and adaptation,” IEEE Robot. Autom.
+[16] A. Bobu, A. Peng, P. Agrawal, J. A. Shah, and A. D.
+Mag., vol. 19, no. 4, pp. 24–35, 2012.
+Dragan, “Aligning human and robot representations,”
+in Proc. 2024 ACM/IEEE Int. Conf. Human-Robot [29] W. Z. Wang, A. Shih, A. Xie, and D. Sadigh, “Influ-
+Interaction, 2024, pp. 42–54. encing towards stable multi-agent interactions,” in
+Conf. Robot Learn. PMLR, 2022, pp. 1132–1143.
+[17] J. Lidard, H. Pham, A. Bachman, B. Boateng, and
+A. Majumdar, “Risk-calibrated human-robot interac- [30] Y. Li, G. Carboni, F. Gonzalez, D. Campolo, and
+tion via set-valued intent prediction,” in Proc. Robot.: E. Burdet, “Differential game theory for versatile
+Science Syst., 2024. physical human–robot interaction,” Nature Machine
+Intelligence, vol. 1, no. 1, pp. 36–43, 2019.
+[18] A. D. Dragan, K. C. Lee, and S. S. Srinivasa, “Leg-
+ibility and predictability of robot motion,” in 2013 [31] C. Tang, B. Abbatematteo, J. Hu, R. Chandra,
+8th ACM/IEEE International Conference on Human- R. Mart´ın-Mart´ın, and P. Stone, “Deep reinforcement
+Robot Interaction (HRI). IEEE, 2013, pp. 301–308. learning for robotics: A survey of real-world successes,”
+Annu. Rev. Control, Robot. Auton. Syst., vol. 8, 2024.
+[19] S. Nikolaidis, Y. X. Zhu, D. Hsu, and S. Srinivasa,
+“Human-robot mutual adaptation in shared autonomy,” [32] F. Semeraro, A. Griffiths, and A. Cangelosi, “Human–
+in Proc. 2017 ACM/IEEE Int. Conf. Human-Robot robot collaboration and machine learning: A system-
+Interaction, 2017, pp. 294–302. atic review of recent research,” Robot. Comp.-Integr.
+Manuf., vol. 79, p. 102432, 2023.
+[20] M. Chen, S. Nikolaidis, H. Soh, D. Hsu, and S. Srini-
+vasa, “Trust-aware decision making for human-robot [33] G. Hoffman, T. Bhattacharjee, and S. Nikolaidis, “In-
+collaboration: Model learning and planning,” ACM ferring human intent and predicting human action
+Trans. Human-Robot Interaction, vol. 9, no. 2, pp. 1– in human–robot collaboration,” Annu. Rev. Control,
+23, 2020. Robot., Auton. Syst., vol. 7, 2023.
+21
+
+REFERENCES
+[34] S. Amatya, M. Ghimire, Y. Ren, Z. Xu, and [46] X. Ji, K. Yang, X. Na, C. Lv, and Y. Liu, “Shared
+W. Zhang, “When shall i estimate your intent? costs steering torque control for lane change assistance: A
+and benefits of intent inference in multi-agent interac- stochastic game-theoretic approach,” IEEE Trans.
+tions,” in 2022 American Control Conf. (ACC). IEEE, Industrial Electronics, vol. 66, no. 4, pp. 3093–3105,
+2022, pp. 586–592. 2018.
+[35] T. Liu, E. Lyu, J. Wang, and M. Q.-H. Meng, “Uni- [47] C. Blaiotta, “Learning generative socially aware mod-
+fied intention inference and learning for human–robot els of pedestrian motion,” IEEE Robot. Autom. Lett.,
+cooperative assembly,” IEEE Trans. Automation Sci- vol. 4, no. 4, pp. 3433–3440, 2019.
+ence and Engineering, vol. 19, no. 3, pp. 2256–2266,
+[48] C. Yu, B. Serhan, and A. Cangelosi, “Top-tom: Trust-
+2021.
+aware robot policy with theory of mind,” in 2024
+[36] T. Nagai, K. Abe, T. Nakamura, N. Oka, and IEEE Int. Conf. Robot. Autom. (ICRA). IEEE,
+T. Omori, “Probabilistic modeling of mental mod- 2024, pp. 7888–7894.
+els of others,” in 2015 24th IEEE Int. Symp. Robot
+[49] S. Bhat, J. B. Lyons, C. Shi, and X. J. Yang, “Clus-
+and Human Interactive Communication (RO-MAN).
+tering trust dynamics in a human-robot sequential
+IEEE, 2015, pp. 89–94.
+decision-making task,” IEEE Robot. Autom. Lett.,
+[37] S. Sagheb, Y.-J. Mun, N. Ahmadian, B. A. Christie, vol. 7, no. 4, pp. 8815–8822, 2022.
+A. Bajcsy, K. Driggs-Campbell, and D. P. Losey, “To-
+[50] ——, “Evaluating the impact of personalized value
+wards robots that influence humans over long-term
+alignment in human-robot interaction: Insights into
+interaction,” in 2023 IEEE Int. Conf. Robot. Autom.
+trust and team performance outcomes,” in Proc. 2024
+(ICRA). IEEE, 2023, pp. 7490–7496.
+ACM/IEEE Int. Conf. Human-Robot Interaction,
+[38] S. Habibian and D. P. Losey, “Encouraging human 2024, p. 32–41.
+interaction with robot teams: Legible and fair subtask
+[51] Z. Zahedi, M. Verma, S. Sreedharan, and S. Kamb-
+allocations,” IEEE Robot. Autom. Lett., vol. 7, no. 3,
+hampati, “Trust-aware planning: Modeling trust evo-
+pp. 6685–6692, 2022.
+lution in longitudinal human-robot interaction,” in
+[39] S. H. Huang, D. Held, P. Abbeel, and A. D. Dragan, ICAPS 2021 Workshop on Explainable AI Planning,
+“Enabling robots to communicate their objectives,” 2021.
+Auton. Robots, vol. 43, pp. 309–326, 2019.
+[52] ——, “Trust-aware planning: modeling trust evolu-
+[40] J. Lee, J. Fong, B. C. Kok, and H. Soh, “Getting to tion in iterated human-robot interaction,” in Proc.
+know one another: Calibrating intent, capabilities 2023 ACM/IEEE Int. Conf. Human-Robot Interaction,
+and trust for human-robot collaboration,” in 2020 2023, pp. 281–289.
+IEEE/RSJ Int. Conf. Intelligent Robots and Systems
+[53] S. Sheng, E. Pakdamanian, K. Han, Z. Wang,
+(IROS). IEEE, 2020, pp. 6296–6303.
+J. Lenneman, D. Parker, and L. Feng, “Planning for
+[41] J. J. Lee, F. Sha, and C. Breazeal, “A bayesian the- automated vehicles with human trust,” ACM Trans.
+ory of mind approach to nonverbal communication,” Cyber-Physical Systems, vol. 6, no. 4, pp. 1–21, 2022.
+in 2019 14th ACM/IEEE Int. Conf. Human-Robot
+[54] Y. Li, J. Xu, D. Guo, and H. Liu, “Trust-aware
+Interaction (HRI). IEEE, 2019, pp. 487–496.
+human–robot fusion decision-making for emergency
+[42] A. D. Dragan and S. S. Srinivasa, “A policy-blending indoor patrolling,” IEEE Trans. Autom. Sci. Eng.,
+formalism for shared control,” Int. J. Robot. Res., 2024.
+vol. 32, no. 7, pp. 790–805, 2013.
+[55] M. Chen, S. Nikolaidis, H. Soh, D. Hsu, and S. Srini-
+[43] S. Nikolaidis, S. Nath, A. D. Procaccia, and S. Srini- vasa, “Planning with trust for human-robot collabora-
+vasa, “Game-theoretic modeling of human adapta- tion,” in Proc. 2018 ACM/IEEE Int. Conf. Human-
+tion in human-robot collaboration,” in Proc. 2017 Robot Interaction, 2018, pp. 307–315.
+ACM/IEEE Int. Conf. Human-Robot Interaction,
+[56] Y. V. Pant, B. T. Kumaravel, A. Shah, E. Kraemer,
+2017, pp. 323–331.
+M. Vazquez-Chanlatte, K. Kulkarni, B. Hartmann,
+[44] Y. Wang, Z. Shi, C. Wang, and F. Zhang, “Human- and S. A. Seshia, “Modeling and influencing human
+robot mutual trust in (semi) autonomous underwater attentiveness in autonomy-to-human perception hand-
+robots,” Cooperative Robots and Sensor Networks offs,” in 2022 IEEE 25th Int. Conf. Intell. Transp.
+2014, pp. 115–137, 2014. Syst. IEEE, 2022, pp. 2585–2592.
+[45] Y. Li, K. P. Tee, R. Yan, W. L. Chan, and Y. Wu, [57] D. H. Mangalindan, E. Rovira, and V. Srivastava, “On
+“A framework of human–robot coordination based trust-aware assistance-seeking in human-supervised
+on game theory and policy iteration,” IEEE Trans. autonomy,” in 2023 American Control Conf. (ACC).
+Robot., vol. 32, no. 6, pp. 1408–1418, 2016. IEEE, 2023, pp. 3901–3906.
+22
+
+REFERENCES
+[58] V. V. Unhelkar, S. Li, and J. A. Shah, “Decision- [70] S. Reddy, S. Levine, and A. Dragan, “Assisted percep-
+making for bidirectional communication in sequen- tion: optimizing observations to communicate state,”
+tial human-robot collaborative tasks,” in Proc. 2020 in Conf. Robot Learn. PMLR, 2021, pp. 748–764.
+ACM/IEEE Int. Conf. Human-Robot Interaction,
+[71] M. Li, M. Kwon, and D. Sadigh, “Influencing leading
+2020, pp. 329–341.
+and following in human–robot teams,” Autonomous
+[59] J. Z.-Y. He, Z. Erickson, D. S. Brown, A. Raghu- Robots, vol. 45, pp. 959–978, 2021.
+nathan, and A. Dragan, “Learning representations
+[72] D. Strouse, M. Kleiman-Weiner, J. Tenenbaum,
+that enable generalization in assistive tasks,” in Conf.
+M. Botvinick, and D. J. Schwab, “Learning to share
+on Robot Learn. PMLR, 2023, pp. 2105–2114.
+and hide intentions using information regularization,”
+[60] C. Wang, C. P´erez-D’Arpino, D. Xu, L. Fei-Fei, Advances in Neural Inf. Proc. Syst., 2018.
+K. Liu, and S. Savarese, “Co-gail: Learning diverse
+[73] B. A. Christie and D. P. Losey, “Limit: Learning inter-
+strategies for human-robot collaboration,” in Conf.
+faces to maximize information transfer,” ACM Trans.
+Robot Learning. PMLR, 2022, pp. 1279–1290.
+Human-Robot Interaction, vol. 13, no. 4, pp. 1–26,
+2020.
+[61] J. Qin, S. Ban, W. Zhu, Y. Wang, and D. Samaras,
+“Learning human-aware robot policies for adaptive
+[74] R. Tian, L. Sun, A. Bajcsy, M. Tomizuka, and A. D.
+assistance,” arXiv preprint arXiv:2304.08539, 2024.
+Dragan, “Safety assurances for human-robot inter-
+action via confidence-aware game-theoretic human
+[62] A. Bajcsy, A. Loquercio, A. Kumar, and J. Malik,
+models,” in 2022 Int. Conf. Robot. Autom. (ICRA).
+“Learning vision-based pursuit-evasion robot poli-
+IEEE, 2022, pp. 11229–11235.
+cies,” in 2024 IEEE Int. Conf. Robot. Autom. (ICRA).
+IEEE, 2024, pp. 9197–9204. [75] Z. Zhou, S. Wang, Z. Chen, M. Cai, H. Wang, Z. Li,
+and Z. Kan, “Local observation based reactive tem-
+[63] A. Xu and G. Dudek, “Maintaining efficient collabo-
+poral logic planning of human-robot systems,” IEEE
+ration with trust-seeking robots,” in 2016 IEEE/RSJ
+Trans. Automation Science and Engineering, 2023.
+Int. Conf. Intelligent Robots and Systems (IROS).
+IEEE, 2016, pp. 3312–3319. [76] A. Broad, I. Abraham, T. Murphey, and B. Argall,
+“Data-driven koopman operators for model-based
+[64] R. Mon-Williams, T. Stouraitis, and S. Vijayakumar,
+shared control of human–machine systems,” Int. J.
+“A behavioural transformer for effective collaboration
+Robot. Res., vol. 39, no. 9, pp. 1178–1195, 2020.
+between a robot and a non-stationary human,” in
+2023 32nd IEEE Int. Conf. Robot and Human Inter- [77] L. Peters, D. Fridovich-Keil, C. J. Tomlin, and Z. N.
+active Communication (RO-MAN). IEEE, 2023, pp. Sunberg, “Inference-based strategy alignment for
+1150–1157. general-sum differential games,” in Proc. 19th Int.
+Conf. Auton. Agents and Multiagent Systems. ACM,
+[65] T. Kobayashi, S. Murata, and T. Inamura, “Latent
+2020, p. 1037–1045.
+representation in human–robot interaction with ex-
+plicit consideration of periodic dynamics,” IEEE [78] M. Li, A. Canberk, D. P. Losey, and D. Sadigh,
+Trans. Human-Mach. Syst., vol. 52, no. 5, pp. 928–940, “Learning human objectives from sequences of physical
+2022. corrections,” in 2021 IEEE Int. Conf. Robot. Autom.
+IEEE, 2021, pp. 2877–2883.
+[66] H. Hu, Z. Zhang, K. Nakamura, A. Bajcsy, and J. F.
+Fisac, “Deception game: Closing the safety-learning [79] J. Klayman, “Varieties of confirmation bias,” Psychol.
+loop in interactive robot autonomy,” in Proc. 7th of Learn. and Motivation, vol. 32, pp. 385–418, 1995.
+Conf. Robot Learning. PMLR, 2023, pp. 3830–3850.
+[80] A. Tversky and D. Kahneman, “Availability: A heuris-
+tic for judging frequency and probability,” Cognitive
+[67] S. Parekh and D. P. Losey, “Learning latent represen-
+Psychol., vol. 5, no. 2, pp. 207–232, 1973.
+tations to co-adapt to humans,” Auton. Robots, pp.
+1–26, 2023.
+[81] S. Koenig and R. G. Simmons, “Unsupervised learning
+of probabilistic models for robot navigation,” in Proc.
+[68] D.-K. Kim, M. Riemer, M. Liu, J. Foerster, M. Ev-
+IEEE Int. Conf. Robot. Autom., vol. 3. IEEE, 1996,
+erett, C. Sun, G. Tesauro, and J. P. How, “Influencing
+pp. 2301–2308.
+long-term behavior in multiagent reinforcement learn-
+ing,” Advances in Neural Inf. Process. Syst., vol. 35, [82] G. E. Monahan, “State of the art—a survey of par-
+pp. 18808–18821, 2022. tially observable markov decision processes: the-
+ory, models, and algorithms,” Management Science,
+[69] J. Hong, S. Levine, and A. Dragan, “Learning to in-
+vol. 28, no. 1, pp. 1–16, 1982.
+fluence human behavior with offline reinforcement
+learning,” Advances in Neural Inf. Proc. Syst., vol. 36, [83] S. C. Ong, S. W. Png, D. Hsu, and W. S. Lee, “Plan-
+pp. 36094–36105, 2023. ning under uncertainty for robotic tasks with mixed
+observability,” Int. J. Robot. Res., vol. 29, no. 8, pp.
+1053–1068, 2010.
+23
+
+REFERENCES
+[84] O. Lemon and O. Pietquin, Data-driven methods for [98] T. L. Griffiths, N. Chater, C. Kemp, A. Perfors, and
+adaptive spoken dialogue systems: Computational J. B. Tenenbaum, “Probabilistic models of cogni-
+learning for conversational interfaces. Springer Science tion: Exploring representations and inductive biases,”
+& Business Media, 2012. Trends in Cognitive Sciences, vol. 14, no. 8, pp. 357–
+364, 2010.
+[85] T. Bandyopadhyay, K. S. Won, E. Frazzoli, D. Hsu,
+W. S. Lee, and D. Rus, “Intention-aware motion plan- [99] A. Moon, S. Rismani, and H. M. Van der Loos,
+ning,” in Algorithmic Foundations of Robotics X: Proc. “Ethics of corporeal, co-present robots as agents of
+Tenth Workshop on the Algorithmic Foundations of influence: a review,” Current Robot. Reports, vol. 2,
+Robotics. Springer, 2013, pp. 475–491. pp. 223–229, 2021.
+[86] J. Lee and N. Moray, “Trust, control strategies and [100] B. Amos, I. Jimenez, J. Sacks, B. Boots, and J. Z.
+allocation of function in human-machine systems,” Kolter, “Differentiable mpc for end-to-end planning
+Ergonomics, vol. 35, no. 10, pp. 1243–1270, 1992. and control,” Advances in Neural Inf. Process. Syst.,
+vol. 31, 2018.
+[87] J. D. Lee and K. A. See, “Trust in automation: De-
+signing for appropriate reliance,” Human factors, [101] S. Jain and B. Argall, “Probabilistic human intent
+vol. 46, no. 1, pp. 50–80, 2004. recognition for shared autonomy in assistive robotics,”
+ACM Trans. Human-Robot Interaction (THRI), vol. 9,
+[88] S. Duane, A. Kennedy, B. J. Pendleton, and no. 1, pp. 1–23, 2019.
+D. Roweth, “Hybrid monte carlo,” Physics Letters
+[102] S. Iregui, J. De Schutter, and E. Aertbeli¨en, “Recon-
+B, vol. 195, no. 2, pp. 216–222, 1987.
+figurable constraint-based reactive framework for as-
+[89] K. Govindan and P. Mohapatra, “Trust computations sistive robotics with adaptable levels of autonomy,”
+and trust dynamics in mobile adhoc networks: A sur- IEEE Robot. Autom. Lett., vol. 6, no. 4, pp. 7397–
+vey,” IEEE Commun. Surveys Tuts., vol. 14, no. 2, pp. 7405, 2021.
+279–298, 2011.
+[103] A. Jonnavittula and D. P. Losey, “I know what you
+[90] V. V. Unhelkar and J. A. Shah, “Learning models of meant: Learning human objectives by (under) estimat-
+sequential decision-making with partial specification ing their choice set,” in 2021 IEEE Int. Conf. Robot.
+of agent behavior,” in Proc. AAAI Conf. Artif. Intell., Autom. (ICRA). IEEE, 2021, pp. 2747–2753.
+vol. 33, no. 01, 2019, pp. 2522–2530.
+[104] A. Tabrez, M. B. Luebbers, and B. Hayes, “A sur-
+[91] S. Javdani, S. S. Srinivasa, and J. A. Bagnell, “Shared vey of mental modeling techniques in human–robot
+autonomy via hindsight optimization,” Robot.: Sci. teaming,” Current Robot. Reports, vol. 1, pp. 259–267,
+Syst., vol. 2015, 2015. 2020.
+[92] A. Bajcsy, D. P. Losey, M. K. O’malley, and A. D. [105] M. O. Smith, S. Amatya, A. Amresh, J. Gorman,
+Dragan, “Learning robot objectives from physical M. Johnson, N. Cooke, and W. Zhang, “Research
+human interaction,” in Conf. Robot Learning. PMLR, needs in human-autonomy teaming: Thematic analysis
+2017, pp. 217–226. of priority features for testbed development,” in 2024
+IEEE Int. Conf. Robot and Human Interactive Com-
+[93] S. Shi, L. Jiang, D. Dai, and B. Schiele, “Motion
+munication (ROMAN). IEEE, 2024, pp. 1183–1190.
+transformer with global intention localization and
+local movement refinement,” Advances in Neural Inf. [106] M. L. Littman, A. R. Cassandra, and L. P. Kaelbling,
+Process. Syst., vol. 35, pp. 6531–6543, 2022. “Learning policies for partially observable environ-
+ments: Scaling up,” in Machine Learning Proceedings
+[94] A. Xu and G. Dudek, “Optimo: Online probabilistic 1995. Elsevier, 1995, pp. 362–370.
+trust inference model for asymmetric human-robot
+collaborations,” in Proc. 10th Annu. ACM/IEEE Int. [107] H.-g. Chi, K. Lee, N. Agarwal, Y. Xu, K. Ramani,
+Conf. Human-Robot Interaction, 2015, pp. 221–228. and C. Choi, “Adamsformer for spatial action local-
+ization in the future,” in Proc. IEEE/CVF Conf. on
+[95] F. Doshi-Velez and G. Konidaris, “Hidden parameter Computer Vision and Pattern Recognition, 2023, pp.
+markov decision processes: A semiparametric regres- 17885–17895.
+sion approach for discovering latent task parametriza-
+[108] Z. Bing, D. Lerch, K. Huang, and A. Knoll, “Meta-
+tions,” in IJCAI: Proc. Conf., vol. 2016. NIH Public
+reinforcement learning in non-stationary and dynamic
+Access, 2016, p. 1432.
+environments,” IEEE Transactions on Pattern Analy-
+[96] L. Onnasch and E. Roesler, “A taxonomy to structure sis and Machine Intelligence, vol. 45, no. 3, pp. 3476–
+and analyze human–robot interaction,” Int. J. Social 3491, 2023.
+Robot., vol. 13, no. 4, pp. 833–849, 2021.
+[109] J. de Curt`o, I. de Zarz`a, G. Roig, J. C. Cano, P. Man-
+[97] A. Pentland and A. Liu, “Modeling and prediction of zoni, and C. T. Calafate, “Llm-informed multi-armed
+human behavior,” Neural Comput., vol. 11, no. 1, pp. bandit strategies for non-stationary environments,”
+229–242, 1999. Electronics, vol. 12, no. 13, p. 2814, 2023.
+24
+
+REFERENCES
+[110] Z. Zhou, B. Hu, C. Zhao, P. Zhang, and B. Liu,
+“Large language model as a policy teacher for train-
+ing reinforcement learning agents,” in Proc. of the
+Thirty-Third International Joint Conference on Artifi-
+cial Intelligence. ACM, 2024, pp. 5671 – 5679.
+[111] V. Prasad, D. Koert, R. Stock-Homburg, J. Peters,
+and G. Chalvatzaki, “Mild: multimodal interactive
+latent dynamics for learning human-robot interaction,”
+in 2022 IEEE-RAS 21st Int. Conf. on Humanoid
+Robots. IEEE, 2022, pp. 472–479.
+[112] E. Ng, Z. Liu, and M. Kennedy, “Diffusion co-policy
+for synergistic human-robot collaborative tasks,”
+IEEE Robot. Autom. Lett., 2023.
+[113] Z. Huang, Z. Zhang, A. Vaidya, Y. Chen, C. Lv, and
+J. F. Fisac, “Versatile behavior diffusion for gen-
+eralized traffic agent simulation,” arXiv preprint
+arXiv:2404.02524, 2024.
+[114] A. Brohan, N. Brown, J. Carbajal, Y. Chebotar,
+X. Chen, K. Choromanski, T. Ding, D. Driess,
+A. Dubey, C. Finn et al., “Rt-2: Vision-language-
+action models transfer web knowledge to robotic con-
+trol,” arXiv preprint arXiv:2307.15818, 2023.
+[115] N. S. Dennler, S. Nikolaidis, and M. Mataric, “Using
+exploratory search to learn representations for human
+preferences,” in Companion 2024 ACM/IEEE Int.
+Conf. Human-Robot Interaction, 2024, pp. 392–396.
+[116] T. Tian, C. Xu, M. Tomizuka, J. Malik, and A. Ba-
+jcsy, “What matters to you? towards visual represen-
+tation alignment for robot learning,” in The Twelfth
+Int. Conf. Learn. Representations, 2024.
+[117] M. Natarajan, E. Seraj, B. Altundas, R. Paleja, S. Ye,
+L. Chen, R. Jensen, K. C. Chang, and M. Gombolay,
+“Human-robot teaming: grand challenges,” Current
+Robot. Reports, vol. 4, no. 3, pp. 81–100, 2023.
+[118] N. Salomons, M. Van Der Linden, S. Strohkorb Sebo,
+and B. Scassellati, “Humans conform to robots: Dis-
+ambiguating trust, truth, and conformity,” in Proc.
+2018 ACM/IEEE Int. Conf. Human-Robot Interaction,
+2018, pp. 187–195.
+25
+
+REFERENCES
+Arizona State University, USA. Mason is a Ph.D candidate in Systems Engineering specializing in integrating cognitive
+models risk-sensitive human bias into (deep) reinforcement learning architectures for zero-shot personalized adaptation to
+suboptimal humans in human-autonomy teams. He has formulated novel multi-agent risk-sensitive reinforcement learning
+algorithms, performed human-autonomy experiments on teaming and trust, and conducted participatory user research for
+the development human-autonomy teaming testbeds.
+Sunny Amatya received her BSE degree in Mechatronics Engineering from Asian Institute of Technology in 2015 and MSc
+degree in Advanced Robotics from the EMARO (European Masters in Advanced Robotics) Program in 2018. She received
+her PhD in Systems Engineering from the Ira A. Fulton Schools of Engineering at Arizona State University. Her research
+focuses on modeling human-like behavior in human-robot interaction using artificial intelligence and machine learning. Dr.
+Amatya is currently working at FANUC America as a research and development engineer.
+Arizona State University, USA. Yousef is a Ph.D. candidate in Mechanical Engineering, specializing in game-theoretic
+algorithms for human–robot interaction and multi-agent decision-making under incomplete information. His research
+focuses on mutual intent inference, adaptive planning, and safe control in dynamic games. He has developed frameworks
+for learning-based multi-agent games, intent-communication strategies, and control methods that enable robots to interact
+effectively with humans. His work spans applications in social navigation, autonomous systems, and wearable robotics.
+26
+
+REFERENCES
+Arizona State University, USA. Jonathan is a PhD candidate in Systems Engineering. He developed the ASU Smart Bike
+research platform for studying HRI in safety- and time-critical tasks. He is working on developing individualized and
+adaptive human operator models for assistive systems in two-wheel vehicles.
+Wenlong Zhang received his M.S. degree in mechanical engineering in 2012, the M.A. degree in statistics in 2013, and
+Ph.D. degree in mechanical engineering in 2015, all from the University of California, Berkeley, CA, USA. He is currently
+an Associate Professor with the School of Manufacturing Systems and Networks at Arizona State University, where he
+directs the Robotics and Intelligent System Laboratory (RISE Lab). His research interests include dynamic systems model-
+ing and control, wearable and soft robots, aerial robots, and human-machine collaboration. Dr. Zhang is a recipient of the
+NSF CAREER Award.
+27
